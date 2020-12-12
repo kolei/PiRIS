@@ -186,6 +186,7 @@ https://sites.google.com/site/anisimovkhv/learning/pris/lecture/tema1#p12
 ### Тема 5.3.1 Отладка и тестирование информационных систем
 
 1. [Тестирование и тестировщики](articles/5_3_1_1_intro.md)
+
 [6+0]: _
 
 2. [Жизненный цикл тестирования](articles/5_3_1_2_lifecycle.md)
