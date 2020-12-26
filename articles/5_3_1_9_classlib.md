@@ -145,32 +145,36 @@ class DateTimeWithCounter
     }
 }
 
-public List<DateTime> PopularMonths(List<DateTime> dates) {
-    // объавляем временный список объектов "ДатаСоСчетчиком"
-    var DateTimeWithCounterList = new List<DateTimeWithCounter>();
+
+public class Analytics
+{
+    public List<DateTime> PopularMonths(List<DateTime> dates) {
+        // объавляем временный список объектов "ДатаСоСчетчиком"
+        var DateTimeWithCounterList = new List<DateTimeWithCounter>();
     
-    int PreviousYear = DateTime.Now.Year-1;
-    foreach (DateTime IterDate in dates) {
-        if (IterDate.Year == PreviousYear){
-            // вычисляем начало месяца для текущей даты
-            var DateMonthStart = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
+        int PreviousYear = DateTime.Now.Year-1;
+        foreach (DateTime IterDate in dates) {
+            if (IterDate.Year == PreviousYear){
+                // вычисляем начало месяца для текущей даты
+                var DateMonthStart = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
 
-            // ищем эту дату во временном списке
-            var index = DateTimeWithCounterList.FindIndex(item => item.DateTimeProp == DateMonthStart);
+                // ищем эту дату во временном списке
+                var index = DateTimeWithCounterList.FindIndex(item => item.DateTimeProp == DateMonthStart);
 
-            if (index == -1)
-            {
-                // такой даты нет - добавляю
-                DateTimeWithCounterList.
-                    Add(new DateTimeWithCounter(DateMonthStart));
-            }
-            else {
-                // дата есть - увеличиваем счетчик
-                DateTimeWithCounterList[index].Counter++;
+                if (index == -1)
+                {
+                    // такой даты нет - добавляю
+                    DateTimeWithCounterList.
+                        Add(new DateTimeWithCounter(DateMonthStart));
+                }
+                else {
+                    // дата есть - увеличиваем счетчик
+                    DateTimeWithCounterList[index].Counter++;
+                }
             }
         }
+        ...
     }
-    ...
 }
 ```
 
