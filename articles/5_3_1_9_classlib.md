@@ -36,8 +36,8 @@
 Библиотека классов | CompanyCoreLib.dll
 Название класса | Analytics
 Название метода | PopularMonths()
-Входящие обязательные параметры | List<DateTime> dates
-Возвращаемые параметры | List<DateTime>
+Входящие обязательные параметры | List\<DateTime\> dates
+Возвращаемые параметры | List\<DateTime\>
 
 ## Реализация
 
