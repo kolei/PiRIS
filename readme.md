@@ -12,6 +12,17 @@ TODO
 - сервер АПИ на PHP
 - сетевые запросы C#, Kotlin (встроенными средствами)
 
+- Паттерны для новичков: MVC vs MVP vs MVVM https://habr.com/ru/post/215605/
+
+- что-то про интеграционное тестирование https://pozitivmag.ru/aksessuary/vidy-testirovaniya-i-podhody-k-ih-primeneniyu-integracionnoe/
+
+
+https://docs.microsoft.com/ru-ru/visualstudio/test/isolating-code-under-test-with-microsoft-fakes?view=vs-2019
+
+https://habr.com/ru/post/151185/
+
+http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.html
+
  -->
 
 * [МДК. 05.01 Проектирование и дизайн информационных систем](#МДК-0501-Проектирование-и-дизайн-информационных-систем)
