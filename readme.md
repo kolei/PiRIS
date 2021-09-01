@@ -75,7 +75,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 ### Лекции
 
-1. [Основные понятия и определения ИС.](articles/5_1_1_1_intro.md)
+1. [Основные понятия и определения ИС.](articles/5_1_1_1_intro2.md)
     
 <!-- 4+0 -->
 
