@@ -9,8 +9,7 @@
     <td style="text-align: center; border: none; height: 45em;">
         <h2>
             Курс лекций по предмету <br/>
-            "Проектирование и разработка информационных систем" <br/>
-            для группы И-31
+            "Проектирование и разработка информационных систем"
         <h2>
     </td>
   </tr>
@@ -31,7 +30,7 @@
 
 <div style="page-break-after: always;"></div>
 
-https://github.com/kolei/PiRIS
+# https://github.com/kolei/PiRIS
 
 # Содержание
 
@@ -39,8 +38,10 @@ https://github.com/kolei/PiRIS
 
 TODO
 
-- SQL: основы, триггеры, представления
+https://dev.mysql.com/downloads/windows/installer/8.0.html
+
 - ERD
+- SQL: основы, триггеры, представления
 - импорт данных
 - сервер АПИ на PHP
 - сетевые запросы C#, Kotlin (встроенными средствами)
@@ -66,17 +67,21 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 # МДК. 05.01 Проектирование и дизайн информационных систем
 
-[56+92=148, 34+72=106]: ФГОС
+<!-- 56+92=148, 34+72=106 -->
 
 ## Тема 5.1.1. Основы проектирования информационных систем
 
-[1]: https://sites.google.com/site/anisimovkhv/learning/pris/lecture
+<!-- https://sites.google.com/site/anisimovkhv/learning/pris/lecture -->
 
 ### Лекции
+
 1. [Основные понятия и определения ИС.](articles/5_1_1_1_intro.md)
+    
+<!-- 4+0 -->
 
-[4+0]: _
+2. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
 
+<!--
 2. [Жизненный цикл информационных систем.](articles/5_1_1_2_lifecycle.md)
 
 [4+0 => 8+0]: _
@@ -244,6 +249,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 ## Работа с БД
 
 1. [Знакомство с SQL](https://github.com/kolei/yotc/blob/master/articles/sql_for_beginner.md)
+-->
 
 <!--  
 ERD,
