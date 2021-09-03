@@ -81,6 +81,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 2. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
 
+3. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
+
 <!--
 2. [Жизненный цикл информационных систем.](articles/5_1_1_2_lifecycle.md)
 
