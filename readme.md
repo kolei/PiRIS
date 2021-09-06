@@ -77,13 +77,13 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 1. [Основные понятия и определения ИС.](articles/5_1_1_1_intro2.md)
     
-<!-- 4+0 -->
+2. [Анализ предметной области. Основные понятия системного и структурного анализа.](articles/5_1_1_4_analiz.md)
 
-2. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
+3. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
 
-3. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
+4. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
 
-4. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
+5. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
 
 
 ### Контрольные вопросы
@@ -108,7 +108,6 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 [4+0 => 12+0]: _
 
-4. [Анализ предметной области. Основные понятия системного и структурного анализа.](articles/5_1_1_4_analiz.md)
 
 [4+0 => 16+0]: _
 
