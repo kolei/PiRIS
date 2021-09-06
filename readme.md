@@ -321,7 +321,7 @@ ERD,
 
 ## [Учебная практика](articles/praktika_I.md)
 
-## [Курсовой проект](articles/kp.md)
+## [Курсовой проект](articles/kp2.md)
 
 <!-- ПООП
 
