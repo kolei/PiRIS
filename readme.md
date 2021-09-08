@@ -79,11 +79,13 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
     
 2. [Анализ предметной области. Основные понятия системного и структурного анализа.](articles/5_1_1_4_analiz.md)
 
-3. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
+3. [Диаграмма вариантов использования (прецедентов, use case)](articles/5_1_1_10_uml_use_case.md)
 
-4. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
+4. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
 
-5. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
+5. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
+
+6. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
 
 
 ### Контрольные вопросы
@@ -145,7 +147,6 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 [4+0 => 44+0]: ВМЕСТО_IDEF
 
-11. [UML. Диаграмма вариантов использования (прецедентов, use case)](articles/5_1_1_10_uml_use_case.md)
 
 [4+0 => 48+0]: ВМЕСТО_IDEF
 

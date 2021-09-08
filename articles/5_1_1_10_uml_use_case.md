@@ -4,6 +4,7 @@
 
 * [Диаграмма прецедентов (простенько, но не полно)](https://planerka.info/item/diagramma-precedentov-variantov-ispolzovaniya-uml/)
 * [Более полное описание](https://intuit.ru/studies/courses/32/32/lecture/1004)
+* [Конспект лекции (с видео) от WorldSkills](https://nationalteam.worldskills.ru/skills/proektirovanie-use-case-diagrammy-opredelenie-funktsionalnykh-vozmozhnostey-sistemy/)
 
 ## Диаграмма вариантов использования, общие понятия
 
