@@ -81,11 +81,13 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 3. [Диаграмма вариантов использования (прецедентов, use case)](articles/5_1_1_10_uml_use_case.md)
 
-4. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
+4. [Спецификация вариантов использования (прецедентов)](articles/5_1_1_10_uml_uc_spec.md)
 
-5. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
+5. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
 
-6. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
+6. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
+
+7. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
 
 
 ### Контрольные вопросы
@@ -154,7 +156,6 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 [4+0 => 52+0]: ВМЕСТО_IDEF
 
-12. [UML. Спецификация вариантов использования (прецедентов)](articles/5_1_1_10_uml_uc_spec.md)
 
 [4+0 => 56+0]: ВМЕСТО_IDEF
 
