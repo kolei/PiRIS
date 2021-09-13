@@ -89,9 +89,11 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 7. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
 
+8. [Основы SQL](./articles/sql_for_beginner.md)
 
 ### Контрольные вопросы
 
+* назовите основные элементы диаграммы прецедентов
 * Что такое **домен**?
 * Что входит в классическую ER-диаграмму?
 * Какие виды **ключей** Вы знаете?
