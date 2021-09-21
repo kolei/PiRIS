@@ -91,6 +91,13 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 8. [Основы SQL](./articles/sql_for_beginner.md)
 
+<!-- 
+В "основах" оставить только SELECT, добавив count и функции работы со временем (between)  
+INSERT, UPDATE, DELETE вынести в отдельную лекцию
+-->
+
+9. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
+
 ### Контрольные вопросы
 
 * назовите основные элементы диаграммы прецедентов
