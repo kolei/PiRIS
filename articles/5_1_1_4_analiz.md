@@ -1,6 +1,14 @@
-[https://studfile.net/preview/6354126/page:11/]: _
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/5_1_1_1_intro2.md">Основные понятия и определения ИС.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/5_1_1_10_uml_use_case.md">Диаграмма вариантов использования (прецедентов, use case)
+</a></td><tr></table>
 
-[содержание](/readme.md)
+<!-- 
+https://studfile.net/preview/6354126/page:11/ 
+-->
 
 # Анализ предметной области. Основные понятия системного и структурного анализа.
 
@@ -243,6 +251,10 @@
 3. Назовите базовые принципы проектирования
 4. Назовите организационно-технологические принципы создания АИТ
 
-[_]: //TODO
-
-[содержание](/readme.md)
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/5_1_1_1_intro2.md">Основные понятия и определения ИС.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/5_1_1_10_uml_use_case.md">Диаграмма вариантов использования (прецедентов, use case)
+</a></td><tr></table>
