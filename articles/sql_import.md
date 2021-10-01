@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/wpf_filtering.md">&nbsp;
+<a href="../articles/cs_mysql_connection.md">Создание подключения к БД MySQL. Получение данных с сервера.
 </a></td><tr></table>
 
 # Создание базы данных. 
@@ -446,3 +446,11 @@ CSV расшифровывается как comma-separated values — «зна�
         ```
 
 Самостоятельно загрузите данные из файлов `products_k_import.csv` и `productmaterial_k_import.xlsx`
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/sql_for_beginner.md">Основы SQL
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/cs_mysql_connection.md">Создание подключения к БД MySQL. Получение данных с сервера.
+</a></td><tr></table>

@@ -1,4 +1,10 @@
-[содержание](/readme.md)
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/5_1_1_1_erd2.md">Основы проектирования баз данных.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/5_1_1_1_erd_workbench.md">Создание ER-диаграммы в среде MySQL Workbench
+</a></td><tr></table>
 
 # Словарь данных
 
@@ -62,3 +68,12 @@ FK | GenderId | INT | Y | | Ссылка на словарь **Gender**
 &nbsp;| FirstVisit | DATE | | | Дата первого посещения (регистрации). В принципе эту дату можно достать из таблицы "Посещения клиента"
 &nbsp;| Photo | BLOB | | | Фотографию клиента можно хранить в базе, но можно и в каком-либо каталоге на сервере
 FK | TagId | INT | | | Ссылка на словарь **Теги клиента**. Причем тут опять же в зависимости от ТЗ может понадобиться промежуточная таблица, если у клиента может быть несколько тегов
+
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/5_1_1_1_erd2.md">Основы проектирования баз данных.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/5_1_1_1_erd_workbench.md">Создание ER-диаграммы в среде MySQL Workbench
+</a></td><tr></table>

@@ -1,3 +1,11 @@
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/5_1_1_10_uml_use_case.md">Диаграмма вариантов использования
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/5_1_1_1_erd2.md">Основы проектирования баз данных.
+</a></td><tr></table>
+
 # UML. Спецификация вариантов использования (прецедентов)
 
 https://glebradchenko.susu.ru/courses/bachelor/engineering/2013/SUSU_SE_08_UML_UseCase.pdf
@@ -75,3 +83,10 @@ https://studfile.net/preview/1712530/page:4/
 Постусловия | 1. Покупатель оставил заказ
 
 
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/5_1_1_10_uml_use_case.md">Диаграмма вариантов использования
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/5_1_1_1_erd2.md">Основы проектирования баз данных.
+</a></td><tr></table>

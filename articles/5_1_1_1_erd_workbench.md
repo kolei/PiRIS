@@ -1,4 +1,10 @@
-[содержание](/readme.md)
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/5_1_1_1_data_dictionary.md">Словарь данных
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/sql_for_beginner.md">Основы SQL
+</a></td><tr></table>
 
 # Создание ER-диаграммы в среде MySQL Workbench
 
@@ -137,3 +143,11 @@ MyFlix — это юридическое лицо, которое сдает в 
 Повторяем эти действия для всех связей, в итоге получится примерно следующее:    
 
 ![](../img/01021.png)
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/5_1_1_1_data_dictionary.md">Словарь данных
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/sql_for_beginner.md">Основы SQL
+</a></td><tr></table>
