@@ -26,15 +26,18 @@
 
 По макету видно, что на первом экране уже нужны все данные, которые мы импортировали ранее: список продуктов (Product), список материалов (Material) продукта (через таблицу ProductMaterial).
 
-Сразу оговорюсь, что получать данные с сервера можно по-разному: можно через **DataAdapter** загрузить данные в **DataTable** и привязать его к компоненту отображающему данные:
+Сразу оговорюсь, что получать данные с сервера можно по-разному: можно через **DataAdapter** загрузить данные в **DataSet** и привязать его к компоненту отображающему данные:
 
 ```cs
+private DataSet MyDataSet;
+...
 MySqlDataAdapter mda = new MySqlDataAdapter(
         "SELECT * FROM Product", 
         Connection);
-DataTable dt = new DataTable();
-mda.Fill(dt);
-ProductListView.DataContext = dt.DefaultView;
+
+productAdapter.Fill(MyDataSet, "Product");
+
+ProductListView.DataContext = MyDataSet.Tables["Product"].DefaultView;
 ```
 
 А можно используя **DataReader** заполнять список моделей ~~, что мы и будем дальше делать~~ Мы попробуем реализовать оба варианта.
@@ -43,7 +46,7 @@ ProductListView.DataContext = dt.DefaultView;
 
 ## Реализация с помощью моделей и **DataReader**-а.
 
-Шаблон приложения берем из лекций прошлого года.
+Шаблон приложения берём из лекций прошлого года.
 
 Первым делом рисуем модели для данных. Если в прошлом году вы их разрабатывали сами, то сейчас придумывать ничего не надо - просто смотрим на структуру таблиц:
 
@@ -238,30 +241,34 @@ public class Material
     class MySQLDataProvider2 : IDataProvider2
     {
         private MySqlConnection Connection;
+        private DataSet MyDataSet;
 
         public MySQLDataProvider2()
         {
             try
             {
                 Connection = new MySqlConnection("Server=kolei.ru;Database=ТУТ ВАША БАЗА;port=3306;UserId=ТУТ ВАШ ЛОГИН;password=ТУТ ПАРОЛЬ;");
-                Connection.Open();
+                MyDataSet = new DataSet();
             }
             catch (Exception)
             {
             }
         }
 
-        ~MySQLDataProvider2()
-        {
-            Connection.Close();
-        }
-
         public DataView GetProducts()
         {
-            MySqlDataAdapter mda = new MySqlDataAdapter("SELECT * FROM Product", Connection);
-            DataTable dt = new DataTable();
-            mda.Fill(dt);
-            return dt.DefaultView;
+            try
+            {
+                Connection.Open();
+                MySqlDataAdapter productAdapter = new MySqlDataAdapter(
+                    "SELECT FROM Product", Connection);
+                productAdapter.Fill(MyDataSet, "Product");
+                return MyDataSet.Tables["Product"].DefaultView;
+            }
+            finally
+            {
+                Connection.Close();
+            }
         }
     }
     ```
@@ -306,5 +313,16 @@ public class Material
     </DataGrid>
     ```
 
+## Получение связанных данных (словари и связи многие-ко-многим)
+
+Нам нужно подсчитать сумму материалов и вывести список этих материалов.
+
+
+
+<!-- 
+
 https://docs.microsoft.com/ru-ru/dotnet/api/system.data.dataset?view=net-5.0
 
+https://metanit.com/sharp/adonet/3.7.php
+
+-->
