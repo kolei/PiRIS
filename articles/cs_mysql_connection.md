@@ -313,11 +313,154 @@ public class Material
     </DataGrid>
     ```
 
-## Получение связанных данных (словари и связи многие-ко-многим)
+### Получение связанных данных (словари и связи многие-ко-многим)
 
-Нам нужно подсчитать сумму материалов и вывести список этих материалов.
+Нам нужно:
 
+* вывести тип продукта
+* подсчитать сумму материалов
+* вывести список материалов
 
+Для получения связанных данных из **DataSet**-а я нашел два варианта:
+
+* создание связей в таблицах набора данных и использование вычисляемых полей
+* использование конвертера данных
+
+### Cоздание связей в таблицах набора данных и использование вычисляемых полей
+
+>На примере таблицы **ProductType**
+
+1. Загружаем таблицу типов продуктов в набор данных
+
+    ```cs
+    MySqlDataAdapter productTypeAdapter = new MySqlDataAdapter(
+        "SELECT * FROM ProductType", 
+        Connection);
+    productTypeAdapter.Fill(MyDataSet, "ProductType");
+    ```
+
+2. У нас теперь в наборе данных есть таблицы **Product** и **ProductType**, добавляем связь между ними:
+
+    В глобальном классе создаем свойство для хранения созданной связи
+
+    ```cs
+    // Globals.cs
+    public static DataRelation ProductTypeRelation;
+    ```
+
+    В конструкторе поставщика данных после создания набора данных добавляем связь
+
+    ```cs
+    Globals.ProductTypeRelation = MyDataSet.Relations.Add(
+        // название связи
+        "ProductTypeRelation", 
+        // родительское поле
+        MyDataSet.Tables["ProductType"].Columns["ID"], 
+        // потомок (child)
+        MyDataSet.Tables["Product"].Columns["ProductTypeID"]);
+    ```
+
+    И в таблицу продукции добавляем вычисляемый столбец
+
+    ```cs
+    DataColumn ProductTypeTitle = new DataColumn();
+    ProductTypeTitle.DataType = Type.GetType("System.String");
+    ProductTypeTitle.ColumnName = "ProductTypeTitle";
+    ProductTypeTitle.Expression = "Parent.Title";
+                                   ^^^^^^^^^^^^ - связь с "родителем"
+    MyDataSet.Tables["Product"].Columns.Add(ProductTypeTitle);
+    ```
+
+3. В разметке таблицы добавляем отображение вычисляемого поля
+
+    ```xml
+    <DataGridTextColumn
+        Header="Тип продукта"
+        Binding="{Binding ProductTypeTitle}"/>
+    ```
+
+Для словарей код ещё не очень сложный, но для того, чтобы добраться до суммы материалов нужно добавлять две связи (напомню, что там у нас связь многие-ко-многим) через промежуточную таблицу. И если для суммы материалов ещё более менее понятно как достать данные (хотя и муторно), то как получить список материалов я пока не представляю.
+
+### Использование конвертера данных
+
+1. В разметке таблицы добавляем поле с конвертером
+
+    Сначала описываем ресурс:
+
+    ```xml
+    <Window.Resources>
+        <local:ProductTypeConverter x:Key="myConverter"/>
+    </Window.Resources>
+    ```
+
+    Здесь **ProductTypeConverter** класс, который будет использоваться для конвертирования данных, **myConverter** - алиас этого конвертера для использования в разметке
+
+    И для вывода типа продукта используем конвертер
+
+    ```xml
+    <DataGridTextColumn
+        Header="Описание"
+        Binding="{Binding ProductTypeID,Converter={StaticResource myConverter}}"/>
+    ```
+
+2. Реализуем конвертер данных
+
+    ```cs
+    public class ProductTypeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // тут старый вариант, использующий связи
+            // return (value as DataRowView).Row.GetParentRow(Globals.ProductTypeRelation)["Title"];
+
+            // LINQ-запрос для получения названия типа продукта по его ID
+            var Title = Globals.MyDataSet.Tables["ProductType"].AsEnumerable()
+                        .Where(t => t.Field<int>("ID") == (int)value)
+                        .Select(t => t.Field<string>("Title"))
+                        .ToArray();
+            if (Title.Count() > 0) return Title[0];
+            return "";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    ```
+
+И так для каждого вычисляемого поля...
+
+Например, так выглядит получение списка материалов (естественно, в набор данных надо загрузить таблицы **ProductMaterial** и **Material**)
+
+```cs
+public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+{
+    // выбираем идентификаторы материалов
+    var MT = Globals.MyDataSet.Tables["ProductMaterial"].AsEnumerable()
+                .Where(t => t.Field<int>("ProductID") == (int)value)
+                .Select(t => t.Field<int>("MaterialID")) 
+                .ToList();
+
+    // выбираем названия материалов
+    var Materials = Globals.MyDataSet.Tables["Material"].AsEnumerable()
+                .Where(t => MT.Contains(t.Field<int>("ID")))
+                .Select(t => t.Field<string>("Title"));
+
+    var res = "";
+
+    foreach (string m in Materials)
+        res += "," + m;
+
+    return res;
+}
+```
+
+![](../img/01064.png)
+
+Для получения суммы материалов вместо *Select* надо использовать метод *Sum*
+
+При реализации через классы, достаточно объявить атрибут класса, в геттере которого и реализовать LINQ-запрос для получения связанных данных.
 
 <!-- 
 
