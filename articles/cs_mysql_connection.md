@@ -464,18 +464,23 @@ public object Convert(object value, Type targetType, object parameter, CultureIn
 
 ```sql
 select 
-	p.ID, p.Title, 
+	p.*,
 	pt.Title as ProductTypeTitle,
-	(select GROUP_CONCAT(m.Title separator ', ') 
-		from 
-			Material m,
-			ProductMaterial pm
-		where m.ID=pm.MaterialID and p.ID=pm.ProductID) as materials
+	pp.materials, pp.total
 from 
-	Product p,
-	ProductType pt
-where 
-	p.ProductTypeID = pt.ID ;
+	Product p
+left join 
+	ProductType pt on p.ProductTypeID = pt.ID 
+left JOIN 
+	(select 
+        pm.ProductID, 
+        GROUP_CONCAT(m.Title separator ', ') as materials, 
+        sum(pm.Count * m.Cost/m.CountInPack) as total
+	from 
+	    Material m,
+		ProductMaterial pm
+	where m.ID=pm.MaterialID
+	group by ProductID) pp on pp.ProductID = p.ID
 ```
 
 <!-- 
