@@ -462,6 +462,22 @@ public object Convert(object value, Type targetType, object parameter, CultureIn
 
 При реализации через классы, достаточно объявить атрибут класса, в геттере которого и реализовать LINQ-запрос для получения связанных данных.
 
+```sql
+select 
+	p.ID, p.Title, 
+	pt.Title as ProductTypeTitle,
+	(select GROUP_CONCAT(m.Title separator ', ') 
+		from 
+			Material m,
+			ProductMaterial pm
+		where m.ID=pm.MaterialID and p.ID=pm.ProductID) as materials
+from 
+	Product p,
+	ProductType pt
+where 
+	p.ProductTypeID = pt.ID ;
+```
+
 <!-- 
 
 https://docs.microsoft.com/ru-ru/dotnet/api/system.data.dataset?view=net-5.0
