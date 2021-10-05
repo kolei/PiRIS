@@ -118,7 +118,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 ## Тема 5.1.3. C# и MySQL.
 
-1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection.md)
+1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection2.md)
 
 
 <!--
