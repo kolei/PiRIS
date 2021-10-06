@@ -120,6 +120,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection2.md)
 
+2. [Вывод данных согласно макету (ListView, Image).](./articles/cs_layout.md)
 
 <!--
 
