@@ -122,6 +122,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 2. [Вывод данных согласно макету (ListView, Image).](./articles/cs_layout.md)
 
+3. [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination.md)
 <!--
 
 https://office-menu.ru/uroki-sql Уроки SQL

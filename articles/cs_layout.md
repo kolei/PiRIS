@@ -3,13 +3,19 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_layout.md">Вывод данных согласно макету (ListView, Image).
+<a href="../articles/cs_pagination.md">Пагинация, сортировка, фильтрация, поиск
 </a></td><tr></table>
 
 # Вывод данных согласно макету (ListView, Image).
 
 >Напоминаю как выглядит макет списка продукции
 >![](../img/product_list_layout.jpg)
+>
+>Критерий | Баллы
+>---------|:-----:
+>Список продукции отображается в соответствии с макетом | 0.5
+>У каждой продукции в списке отображается изображение | 0.3
+>При отсутствии изображения отображается картинка-заглушка из ресурсов | 0.3
 
 Для создания такого макета используется элемент **ListView**
 
@@ -156,3 +162,11 @@ public string TypeAndName {
 Теперь окно должно выглядеть как положено:
 
 ![](../img/01067.png)
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/cs_mysql_connection2.md">Создание подключения к БД MySQL. Получение данных с сервера.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/cs_pagination.md">Пагинация, сортировка, фильтрация, поиск
+</a></td><tr></table>
