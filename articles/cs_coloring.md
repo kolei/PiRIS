@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_coloring.md">Подсветка элементов по условию. Дополнительные выборки.
+<a href="../articles/cs_min_sum_for_agent.md">Массовая смена цены продукции
 </a></td><tr></table>
 
 # Подсветка элементов по условию. Дополнительные выборки.
@@ -168,3 +168,11 @@ public string BackgroundColor {
 >Про цвета: их можно отдавать в формате **#RGB**. Причём, чем ближе к **F**, тем светлее (**#FFF** - белый)
 
 ![](../img/01069.png)
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/cs_pagination.md">Пагинация, сортировка, фильтрация, поиск
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/cs_min_sum_for_agent.md">Массовая смена цены продукции
+</a></td><tr></table>

@@ -125,6 +125,9 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 3. [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination.md)
 
 4. [Подсветка элементов по условию. Дополнительные выборки.](./articles/cs_coloring.md)
+
+5. [Массовая смена цены продукции](../articles/cs_min_sum_for_agent.md)
+
 <!--
 
 https://office-menu.ru/uroki-sql Уроки SQL
