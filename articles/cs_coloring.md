@@ -56,10 +56,10 @@
     INSERT INTO ProductSale
         (AgentID, ProductID, SaleDate, ProductCount)
     VALUES
-        (1, 2, '2021-10-09', 1),
-        (1, 3, '2021-10-09', 1),
-        (1, 4, '2021-10-09', 1),
-        (1, 5, '2021-10-09', 1);
+        (1, 2, '2021-10-01', 1),
+        (1, 3, '2021-10-02', 1),
+        (1, 4, '2021-10-03', 1),
+        (1, 5, '2021-10-04', 1);
     ```
 
     Добавляем несколько записей. Поля *AgentID* и *ProductID* смотрим в соответствующих таблицах. Дата продажи заполняется в формате `YYYY-MM-DD`
@@ -89,6 +89,7 @@ SELECT
     pt.Title AS ProductTypeTitle,
     pp.MaterialList, pp.Total,
     Sales.DaysFromLastSale
+--  ^^^^^^^^^^^^^^^^^^^^^^
 FROM
     Product p
 LEFT JOIN
@@ -116,7 +117,29 @@ LEFT JOIN
     ) Sales on Sales.ProductID = p.ID ;
 ```
 
-Атрибут *DaysFromLastSale* в модель и метод получения продукции пропишите сами.
+Атрибут *DaysFromLastSale* в модель пропишите сами.
+
+В методе получения данных с сервера надо вставить проверку на тип **NULL**
+
+```cs
+NewProduct.DaysFromLastSale = 
+    (Reader["DaysFromLastSale"] as int?) ?? 999;
+```
+
+Или просто завернуть чтение этого поля в `try...except` и, при возникновении исключения, подставлять данные по-умолчанию
+
+```cs
+try
+{
+    NewProduct.DaysFromLastSale = Convert.ToInt32(
+        Reader["DaysFromLastSale"].ToString());
+}
+catch (Exception)
+{
+    // нам не интересно всё, что больше 30
+    NewProduct.DaysFromLastSale = 999;
+}
+```
 
 ## Раскраска по условию
 
@@ -136,8 +159,12 @@ LEFT JOIN
 ```cs
 public string BackgroundColor {
     get {
-        if(DaysFromLastSale>30) return "#faa";
+        if(DaysFromLastSale>30) return "#fee";
         return "#fff";
     }
 }
 ```
+
+>Про цвета: их можно отдавать в формате **#RGB**. Причём, чем ближе к **F**, тем светлее (**#FFF** - белый)
+
+![](../img/01069.png)
