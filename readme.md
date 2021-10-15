@@ -128,6 +128,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 5. [Массовая смена цены продукции](./articles/cs_min_sum_for_agent.md)
 
+6. [Создание, изменение продукции](./articles/cs_edit_product.md)
+
 <!--
 
 https://office-menu.ru/uroki-sql Уроки SQL

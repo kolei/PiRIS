@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_min_sum_for_agent.md">Массовая смена цены продукции
+<a href="../articles/cs_edit_product.md">Создание, изменение продукции
 </a></td><tr></table>
 
 # Массовая смена цены продукции
@@ -265,3 +265,10 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
             }
         }
         ```
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/cs_pagination.md">Пагинация, сортировка, фильтрация, поиск
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/cs_edit_product.md">Создание, изменение продукции
+</a></td><tr></table>
