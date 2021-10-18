@@ -328,6 +328,9 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
 4. Проверка на ввод только числового значения.
 
     ```cs
+    // объявляем публичную переменную из которой
+    // будем считывать результат
+    public decimal Result;
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         try
