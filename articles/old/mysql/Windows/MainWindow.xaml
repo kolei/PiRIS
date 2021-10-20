@@ -1,0 +1,158 @@
+﻿<Window x:Class="mysql.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:mysql"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="1000">
+
+    <Window.Resources>
+        <BitmapImage 
+            x:Key='defaultImage' 
+            UriSource='./Images/picture.png' />
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <WrapPanel 
+                Orientation="Horizontal" 
+                ItemHeight="30">
+                
+                <Label 
+                    Content="Сортировка: "
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"/>
+                <ComboBox
+                    Name="SortTypeComboBox"
+                    SelectedIndex="0"
+                    VerticalContentAlignment="Center"
+                    MinWidth="200"
+                    SelectionChanged="SortTypeComboBox_SelectionChanged"
+                    ItemsSource="{Binding SortList}"/>
+
+                <Label 
+                    Content="Тип продукции" 
+                    VerticalAlignment="Center"/>
+                <ComboBox
+                    MinWidth="150"
+                    x:Name="ProductTypeFilter"
+                    VerticalAlignment="Center"
+                    SelectedIndex="0"
+                    SelectionChanged="ProductTypeFilter_SelectionChanged"
+                    ItemsSource="{Binding ProductTypeList}"/>
+
+                <Label 
+                    Content="Поиск" 
+                    VerticalAlignment="Center"/>
+                <TextBox
+                    Width="200"
+                    VerticalAlignment="Center"
+                    x:Name="SearchFilterTextBox" 
+                    KeyUp="SearchFilterTextBox_KeyUp"/>
+
+                <Button
+                    x:Name="CostChangeButton"
+                    Visibility="{Binding CostChangeButtonVisible}"
+                    Click="CostChangeButton_Click"
+                    Content="Изменить стоимость на..."
+                    />
+
+
+            </WrapPanel>
+
+
+            <ListView
+                Grid.Row="1"
+                Grid.Column="1"
+                x:Name="ProductListView"
+                SelectionChanged="ListView_SelectionChanged"
+                MouseDoubleClick="ProductListView_MouseDoubleClick"
+                ItemsSource="{Binding ProductList}"
+            >
+                <ListView.ItemContainerStyle>
+                    <Style 
+                        TargetType="ListViewItem">
+                        <Setter 
+                            Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border 
+                            BorderThickness="1" 
+                            BorderBrush="Black"
+                            Background="{Binding BackgroundColor}"
+                            CornerRadius="5">
+
+                            <Grid 
+                                Margin="10" 
+                                HorizontalAlignment="Stretch">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="64"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Image
+                                    Width="64" 
+                                    Height="64"
+                                    Source="{Binding ImagePreview,TargetNullValue={StaticResource defaultImage}}" />
+
+                                <StackPanel
+                                    Grid.Column="1"
+                                    Margin="5"
+                                    Orientation="Vertical">
+
+                                    <TextBlock 
+                                        Text="{Binding TypeAndName}"/>
+
+                                    <TextBlock 
+                                        Text="{Binding ArticleNumber}"/>
+
+                                    <TextBlock 
+                                        Text="{Binding MaterialString}"/>
+
+
+                                </StackPanel>
+
+                                <StackPanel
+                                    Grid.Column="2"
+                                    Margin="5"
+                                    HorizontalAlignment="Right" 
+                                    Orientation="Vertical">
+
+                                    <TextBlock 
+                                        Text="{Binding MinCostForAgent}" />
+                                    <TextBlock 
+                                        Text="{Binding Total}" />
+                                </StackPanel>
+                            </Grid>
+
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>                
+            </ListView>
+
+            <StackPanel 
+                x:Name="Paginator"
+                Margin="5"
+                Grid.Row="2" 
+                HorizontalAlignment="Right" 
+                Orientation="Horizontal"/>
+        </Grid>
+    </Grid>
+</Window>
