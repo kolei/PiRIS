@@ -128,6 +128,12 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 5. [Создание, изменение продукции](./articles/cs_edit_product.md)
 
+## Тема 5.1.4. Разработка мобильных приложений. Android Studio. Kotlin.
+
+1. [Основы языка Kotlin](./articles/kotlin.md)
+
+2. [Первый проект в Android Studio](./articles/android_studio.md)
+
 <!--
 
 https://office-menu.ru/uroki-sql Уроки SQL

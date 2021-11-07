@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_edit_product.md">Создание, изменение продукции
+<a href="../articles/kotlin.md">Основы языка Kotlin
 </a></td><tr></table>
 
 # Добавление/редактирование продукции
@@ -393,3 +393,10 @@
 
         Тут по идее надо делать запрос к базе, но у нас есть метод получения списка продукции и мы можем искать в нём используя LINQ-запросы
 
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/cs_coloring.md">Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/kotlin.md">Основы языка Kotlin
+</a></td><tr></table>
