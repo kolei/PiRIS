@@ -134,6 +134,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 2. [Первый проект в Android Studio](./articles/android_studio.md)
 
+3. [Стили и темы. Ресурсы. Фигуры. Обработчики событий.](./articles/themes.md)
+
 <!--
 
 https://office-menu.ru/uroki-sql Уроки SQL

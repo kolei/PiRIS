@@ -1,3 +1,11 @@
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/kotlin.md">основы Kotlin
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/themes.md">Темы. Фигуры. Обработчики событий.
+</a></td><tr></table>
+
 # Первый проект в Android Studio
 
 >Основано на [этих лекциях](https://metanit.com/java/android/1.2.php) (адаптировано под Kotlin)
@@ -403,3 +411,11 @@ val textView: TextView = findViewById(R.id.header)
 Практическое задание:
 
 Используя **LinearLayout** нарисовать разметку для калькулятора (за основу взять калькулятор Windows)
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/kotlin.md">основы Kotlin
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/themes.md">Темы. Фигуры. Обработчики событий.
+</a></td><tr></table>
