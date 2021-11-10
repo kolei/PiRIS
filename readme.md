@@ -136,6 +136,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 3. [Стили и темы. Ресурсы. Фигуры. Обработчики событий.](./articles/themes.md)
 
+4. [Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.](./articles/weather.md)
+
 <!--
 
 https://office-menu.ru/uroki-sql Уроки SQL
