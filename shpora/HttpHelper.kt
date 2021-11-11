@@ -14,6 +14,7 @@ import javax.net.ssl.HttpsURLConnection
 
 разрешение
 <uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 И атрибут в тег application
 android:usesCleartextTraffic="true"
