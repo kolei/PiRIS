@@ -13,32 +13,17 @@
 
 Создайте новый проект
 
-```
-mport android.Manifest
-import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.os.Bundle
-import android.os.Looper
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.gms.location.*
-import org.json.JSONObject
-```
-
-```
-dependencies {
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
-}
-```
+>Если ругается на несовместимость версии, то попробуйте откатить версии зависимостей:
+>
+>```
+>dependencies {
+>    implementation 'androidx.core:core-ktx:1.3.2'
+>    implementation 'androidx.appcompat:appcompat:1.2.0'
+>    implementation 'com.google.android.material:material:1.3.0'
+>    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+>    implementation 'com.google.android.gms:play-services-location:17.0.0'
+>}
+>```
 
 ## Геолокация
 
@@ -221,6 +206,8 @@ GET https://api.openweathermap.org/data/2.5/weather?lat={{lat}}&lon={{lon}}&unit
 Для http-запросов в Андроиде есть встроенный клиент. Он сильно устарел и вообще монстрообразный, в реальной разработке обычно используют библиотеки типа **okhttp**. Но т.к. на демо-экзамене не будет доступа в интернет, то придется использовать то что есть.
 
 Я нашел и адаптировал для вас синглтон (объект), для запросов. Лежит он в [каталоге](../shpora/HttpHelper.kt) `shpora` этого репозитория (тут я текст не привожу, т.к. он ещё не до конца отлажен). Его же я положу и в публичный репозиторий админа на демо-экзамене.
+
+Создайте у себя в проекте аналогичный файл, **обратите вснимание** на комментарии - в манифест надо добавить разрешения для работы с интернетом.
 
 Итак, в методе *onGetCoordinates* вместо вывода координат на экран вставьте http-запрос:
 
