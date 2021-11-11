@@ -13,6 +13,16 @@
 
 Создайте новый проект
 
+```
+dependencies {
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+}
+```
+
 ## Геолокация
 
 Последнее время Google сильно закрутили гайки. Мало того, что есть список разрешений в манифесте, но для использования геолокации мы должны ещё явно запросить разрешение у пользователя.
