@@ -10,7 +10,7 @@
         <h2>
             Курс лекций по предмету <br/>
             "Проектирование и разработка информационных систем"
-        <h2>
+        </h2>
     </td>
   </tr>
   <tr>
@@ -30,7 +30,7 @@
 
 <div style="page-break-after: always;"></div>
 
-# https://github.com/kolei/PiRIS
+# http://gogs.kolei.ru/ekolesnikov/PiRIS
 
 # Содержание
 
