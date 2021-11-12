@@ -1,3 +1,11 @@
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/themes.md">Стили и темы. Ресурсы. Фигуры. Обработчики событий.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/weather2.md">Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная)
+</a></td><tr></table>
+
 # Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
 
 На примере "Калькулятора" мы познакомились с интерфейсом *Android Studio*, более-менее разобрались со структурой проекта андроид.
@@ -385,3 +393,11 @@ HTTP.getImage("https://openweathermap.org/img/w/${icoName}.png") { bitmap, error
 # Задание
 
 Разобрать все перечисленные выше параметры погоды и вывести их на экран
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/themes.md">Стили и темы. Ресурсы. Фигуры. Обработчики событий.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/weather2.md">Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная)
+</a></td><tr></table>

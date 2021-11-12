@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/themes.md">Темы. Фигуры. Обработчики событий.
+<a href="../articles/weather.md">Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
 </a></td><tr></table>
 
 `&lt;` `&gt;`
@@ -431,3 +431,10 @@ fun onOperatorClick(view: View) {
 * сделать кнопки со скругленными углами используя фигуры
 * создайте обработчики нажатия кнопок и реализуйте работу калькулятора
 
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/android_studio.md">Первый проект в Android Studio
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/weather.md">Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
+</a></td><tr></table>
