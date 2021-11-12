@@ -139,6 +139,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 4. [Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.](./articles/weather.md)
 
 5. [Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная)](./articles/weather2.md)
+
 <!--
 
 https://office-menu.ru/uroki-sql Уроки SQL
