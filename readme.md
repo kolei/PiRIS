@@ -30,7 +30,7 @@
 
 <div style="page-break-after: always;"></div>
 
-# http://gogs.kolei.ru/ekolesnikov/PiRIS
+# https://github.com/kolei/PiRIS
 
 # Содержание
 

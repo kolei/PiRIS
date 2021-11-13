@@ -1,6 +1,12 @@
 @lat=56.638372
 @lon=47.892991
 @token=d4c9eea0d00fb43230b479793d6aa78f
+### Запрос текущей погоды
+GET https://api.openweathermap.org/data/2.5/weather?lat={{lat}}&lon={{lon}}&appid={{token}}&lang=ru&units=metric
 
-# Запрос текущей погоды
-GET https://api.openweathermap.org/data/2.5/weather?lat={{lat}}&lon={{lon}}&units=metric&appid={{token}}&lang=ru
+### Запрос погоды за 5 дней https://openweathermap.org/forecast5
+GET https://api.openweathermap.org/data/2.5/forecast?q=Йошкар-Ола&appid={{token}}&lang=ru&units=metric
+
+### Запрос погоды за 5 дней https://openweathermap.org/forecast5
+GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&appid={{token}}&lang=ru&units=metric
+
