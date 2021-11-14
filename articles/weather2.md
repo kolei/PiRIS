@@ -308,7 +308,7 @@ weatherAdapter.setItemClickListener {
 dailyInfoRecyclerView.adapter = weatherAdapter
 ```
 
-Класс **WeatherAdapter** мы должны написать сами. Я положил его в шпаргалки.
+Класс **WeatherAdapter** мы должны написать сами. Я положил его в [шпаргалки](../shpora/WeatherAdapter.kt).
 
 Разметка для элемента списка (не полная)
 
@@ -356,3 +356,12 @@ dailyInfoRecyclerView.adapter = weatherAdapter
 </shape>
 ```
 
+# Задание
+
+* вывести в элементы списка остальную информацию о погоде
+* при обновлени списка и при клике на элемент списка выводить в верхнюю часть детальную информацию о погоде
+
+
+# Это интересно
+
+https://habr.com/ru/company/true_engineering/blog/267497/
