@@ -305,7 +305,7 @@ dailyInfoRecyclerView = findViewById(R.id.dailyInfoRecyclerView)
 dailyInfoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 
 // создаем адаптер
-val weatherAdapter = WeatherAdapter(weatherList, onIconLoad)
+val weatherAdapter = WeatherAdapter(weatherList, this)
 
 // при клике на элемент списка показать подробную информацию (сделайте сами)
 weatherAdapter.setItemClickListener {
