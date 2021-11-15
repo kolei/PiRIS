@@ -308,8 +308,8 @@ dailyInfoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HOR
 val weatherAdapter = WeatherAdapter(weatherList, this)
 
 // при клике на элемент списка показать подробную информацию (сделайте сами)
-weatherAdapter.setItemClickListener {
-    Log.d("KEILOG", "Click on ${it.weatherIcon}")
+weatherAdapter.setItemClickListener { weather ->
+    Log.d("KEILOG", "Click on Weather item")
 }
 
 dailyInfoRecyclerView.adapter = weatherAdapter
