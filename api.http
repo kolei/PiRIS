@@ -8,5 +8,5 @@ GET https://api.openweathermap.org/data/2.5/weather?lat={{lat}}&lon={{lon}}&appi
 GET https://api.openweathermap.org/data/2.5/forecast?q=Йошкар-Ола&appid={{token}}&lang=ru&units=metric
 
 ### Запрос погоды за 5 дней https://openweathermap.org/forecast5
-GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&appid={{token}}&lang=ru&units=metric
+GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&appid={{token}}&lang=ru&units=metric&mode=xml
 

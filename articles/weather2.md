@@ -6,7 +6,7 @@
 <a href="../articles/weather2.md">Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная)
 </a></td><tr></table>
 
-# Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная)
+# Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.
 
 ## Содержание
 
@@ -14,6 +14,9 @@
 * [Выбор города](#выбор-города)
 * [Веделение лямбда-выражения в отдельную переменную](#выделение-лямбда-выражения-в-отдельную-переменную)
 * [Получение и разбор массива данных. Вывод списка на экран.](#получение-и-разбор-массива-данных-Вывод-списка-на-экран)
+* [Доработка SplashScrin-а](#Доработка-SplashScrin-а)
+* [Вывод сообщений](#Вывод-сообщений)
+* [Разбор XML](#Разбор-XML)
 
 ## SplashScreen
 
@@ -363,11 +366,198 @@ dailyInfoRecyclerView.adapter = weatherAdapter
 </shape>
 ```
 
+## Доработка SplashScrin-а
+
+По разным причинам данные мы можем и не получить. Чтобы наша заставка вечно не висела на экране приделаем таймер.
+
+* В конструктор добавляем таймер с обратным отсчётом, в параметрах которого указываем **макcимальное время ожидания** и **интервал** между тиками. На каждый тик срабатвает метод *onTick*, в котором мы можем принудительно закрыть таймер. Если за **макcимальное время ожидания** таймер не закроют в *onTick*, то сработает метод *onFinish* и таймер завершит свою работу.
+
+
+    >На уровне класса нужно объявить переменные `counter=0` и `ready=false`
+
+    ```kt
+    object : CountDownTimer(5000,1000){
+        override fun onTick(millisUntilFinished: Long) {
+            // заставляем пялиться на нашу заставку как минимум 3 секунды
+            counter++
+            if(counter>3 && ready){
+                // данные получены - скрываем заставку
+                splash.elevation = 0F
+                this.cancel()
+            }
+        }
+
+        override fun onFinish(){
+            splash.elevation = 0F
+        }
+    }.start()
+    ```
+
+    Не забудьте при получении данных установить `ready=true`. Хотя ничего страшного не произойдёт, если забудете - просто будут смотреть на заставку чуть подольше.
+
+## Вывод сообщений
+
+>В шпоры положил
+
+В принципе тут простой телескопический конструктор
+
+```kt
+AlertDialog.Builder(this)
+    .setTitle("Заголовок")
+    .setMessage("Текст сообщения")
+    .setPositiveButton("OK", null)
+    .create()
+    .show()
+```
+
+## Разбор XML
+
+Маловероятно, мо может встретиться XML-формат в данных. Разберёмся с ним на примере погоды. В URL добавьте параметр `&mode=xml`.
+
+Придёт примерно такой ответ:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<weatherdata>
+  <location>
+    <name>Йошкар-Ола</name>
+    <type></type>
+    <country>RU</country>
+    <timezone>10800</timezone>
+    <location altitude="0" latitude="56.6384" longitude="47.893" geobase="geonames" geobaseid="466806"></location>
+  </location>
+  <credit></credit>
+  <meta>
+    <lastupdate></lastupdate>
+    <calctime>0</calctime>
+    <nextupdate></nextupdate>
+  </meta>
+  <sun rise="2021-11-16T04:30:05" set="2021-11-16T12:36:33"></sun>
+  <forecast>
+    <time from="2021-11-16T15:00:00" to="2021-11-16T18:00:00">
+      <symbol number="600" name="небольшой снег" var="13n"></symbol>
+      <precipitation probability="0.69" unit="3h" value="0.28" type="snow"></precipitation>
+      <windDirection deg="275" code="W" name="West"></windDirection>
+      <windSpeed mps="5.56" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="13.37" unit="m/s"></windGust>
+      <temperature unit="celsius" value="-1.58" min="-2.05" max="-1.58"></temperature>
+      <feels_like value="-7.22" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1015"></pressure>
+      <humidity value="94" unit="%"></humidity>
+      <clouds value="пасмурно" all="99" unit="%"></clouds>
+      <visibility value="651"></visibility>
+    </time>
+    ...
+  </forecast>
+</weatherdata>
+```
+
+Для работы с XML в андроиде есть класс **XmlPullParser**. Разберём с его помощью ответ сервера.
+
+**Во-первых**, создадим сам объект парсера:
+
+```kt
+HTTP.requestGET(url) {result, error ->
+    if(result != null) {
+        val factory = XmlPullParserFactory.newInstance()
+        factory.isNamespaceAware = true
+        val parser = factory.newPullParser()
+        parser.setInput(StringReader(result))
+        ...
+```
+
+А дальше идёт тупой перебор тегов в цикле:
+
+```kt
+while (parser.eventType != XmlPullParser.END_DOCUMENT) {
+    when (parser.eventType) {
+        XmlPullParser.START_TAG -> ...
+        XmlPullParser.END_TAG -> ...
+    }
+    parser.next()
+}
+```
+
+Т.е. пока не достигнем конца документа смотрим что у нас в текущем элементе:
+
+* START_DOCUMENT – начало документа
+* START_TAG – начало тега
+* TEXT – содержимое элемента
+* END_TAG – конец тега
+* END_DOCUMENT – конец документа
+
+Мы из всего этого многообразия будем использовать только начало и конец тега.
+
+По началу тега мы смотрим в каком теге находимся и, при необходимости, считываем текст или атрибут в локальную переменную. А по концу тега создаём объект **Weather** из накопленных данных и записываем его в массив.
+
+Пример (как обычно не полный, но достаточный для понимания):
+
+>В переменных *topTag* и *subTag* я запоминаю текущую позицию в иерархии XML. В этом документе они в принципе не нужны, но для примера проверок сделал.
+
+```kt
+var cityName = ""
+var topTag = ""
+var subTag = ""
+var dt_txt = ""
+var description: String = ""
+var icon: String = ""
+while (parser.eventType != XmlPullParser.END_DOCUMENT) {
+    when (parser.eventType) {
+        XmlPullParser.START_TAG -> {
+            when (parser.name) {
+                // в качестве начальных тегов нам интересны "location" и "forecast"
+                "location", "forecast" -> topTag = parser.name
+                "name" -> {
+                    // внутри "location" в теге "name" читаем название города
+                    if(topTag=="location") cityName = parser.nextText()
+                }
+                "time" -> {
+                    if (topTag=="forecast") {
+                        // внутри "forecast" нам интересно содержимое "time"
+                        subTag = parser.name
+                        // и сразу считываем СТРОКОВУЮ дату
+                        dt_txt = parser.getAttributeValue(null, "from").toString()
+                    }
+                }
+                "symbol" -> {
+                    if(subTag=="time"){
+                        description = parser.getAttributeValue(null, "name").toString()
+                        icon = parser.getAttributeValue(null, "var").toString()
+                    }
+                }
+                // тут мне как обычно лень стало расписывать остальные теги
+            }
+        }
+        XmlPullParser.END_TAG -> {
+            when (parser.name) {
+                "time" -> {
+                    // по закрытию тега "time" пишем погоду в массив
+                    weatherList.add(
+                        Weather(
+                            0,
+                            0.0,
+                            0,
+                            icon,
+                            description,
+                            0.0,
+                            0,
+                            dt_txt
+                        )
+                    )
+                }
+            }
+        }
+    }
+    parser.next()
+}
+```
+
 # Задание
 
-* вывести в элементы списка остальную информацию о погоде
+* вывести в элементы списка остальную информацию о погоде (формат XML)
 * при обновлени списка и при клике на элемент списка выводить в верхнюю часть детальную информацию о погоде
-
+* вставить алерты на все нештатные ситуации (не получены координаты, нет ответа от сервера...)
+* завернуть всю работу с интернетом в исключительные ситуации (try..catch..) с выводом алертов
 
 # Это интересно
 
