@@ -144,7 +144,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 <!-- 
 ориентация
 регулярка для проверки email
-xml
+операции с датой
 alert с полями ввода (логин, пароль, кнопка регистрация)
 post-запросы с авторизацией
 чат
