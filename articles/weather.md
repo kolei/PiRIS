@@ -87,6 +87,27 @@ private fun checkPermission(){
     }
 }
 
+// этот метод будет вызван, когда пользователь разрешит геолокацию
+// в нём мы снова вызываем метод checkPermission
+override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                                grantResults: IntArray) {
+when (requestCode) {
+    1 -> {
+        if (grantResults.isNotEmpty() && grantResults[0] ==
+            PackageManager.PERMISSION_GRANTED) {
+            if ((ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) === PackageManager.PERMISSION_GRANTED))
+            {
+                checkPermission()
+            }
+        } else {
+            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+        return
+    }
+}
+}
+
+
 // этот метод будет вызван, когда клиент геолокации получит координаты
 private var mLocationCallback: LocationCallback = object : LocationCallback() {
     override fun onLocationResult(locationResult: LocationResult) {
