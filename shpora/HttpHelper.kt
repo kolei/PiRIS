@@ -14,7 +14,6 @@ import javax.net.ssl.HttpsURLConnection
 
 разрешение
 <uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 И атрибут в тег application
 android:usesCleartextTraffic="true"
@@ -24,41 +23,89 @@ object HTTP
 {
     private const val GET : String = "GET"
     private const val POST : String = "POST"
-    /*
-    @Throws(IOException::class)
-    fun requestPOST(r_url: String, postDataParams: JSONObject): String? {
-        val url = URL(r_url)
-        val conn: HttpURLConnection = if(r_url.startsWith("https:", true))
-            url.openConnection() as HttpsURLConnection
-        else
-            url.openConnection() as HttpURLConnection
 
-        conn.readTimeout = 3000
-        conn.connectTimeout = 3000
-        conn.requestMethod = POST
-        conn.doInput = true
-        conn.doOutput = true
-        val os: OutputStream = conn.outputStream
-        val writer = BufferedWriter(OutputStreamWriter(os, "UTF-8"))
-        writer.write(encodeParams(postDataParams))
-        writer.flush()
-        writer.close()
-        os.close()
-        val responseCode: Int = conn.responseCode // To Check for 200
-        if (responseCode == HttpsURLConnection.HTTP_OK) {
-            val `in` = BufferedReader(InputStreamReader(conn.inputStream))
-            val sb = StringBuffer("")
-            var line: String? = ""
-            while (`in`.readLine().also { line = it } != null) {
-                sb.append(line)
-                break
+    /**
+     * Метод для отправки POST-запросов
+     *
+     * Запросы отправляются в отдельном потоке
+     * Автоматически поддерживает http/httpS
+     * Можно задать заголовки запроса
+     * По-умолчанию отправляет данные в формате application/x-www-form-urlencoded
+     * при задании заголовка Content-type: application/json автоматически переключается на это тип
+     *
+     * @param url Полный URL сайта (протокол + домен + путь)
+     * @param postData Даные для отправки
+     * @param headers Ассоциативный массив заголовков запроса
+     * @param callback Лямбда-функция обратного вызова
+     */
+    fun requestPOST(
+        url: String,
+        postData: JSONObject? = null,
+        headers: Map<String, String>?,
+        callback: (result: String?, error: String)->Unit
+    ) {
+        Thread( Runnable {
+            var error = ""
+            var result: String? = null
+            try {
+                val urlURL = URL(url)
+                val conn: HttpURLConnection = if (url.startsWith("https:", true))
+                    urlURL.openConnection() as HttpsURLConnection
+                else
+                    urlURL.openConnection() as HttpURLConnection
+
+                // если задан тип контента application/json, то на выход пишу как есть
+                var contentTypeJson = false
+                if(headers!=null){
+                    for((key, value) in headers){
+                        if(key.lowercase()=="content-type" && value.startsWith("application/json"))
+                            contentTypeJson = true
+                        conn.setRequestProperty(key, value)
+                    }
+                }
+
+                conn.readTimeout = 10000
+                conn.connectTimeout = 10000
+                conn.requestMethod = POST
+                conn.doInput = true
+                conn.doOutput = true
+                val os: OutputStream = conn.outputStream
+
+                if (postData != null) {
+                    val writer = BufferedWriter(OutputStreamWriter(os, "UTF-8"))
+                    var content = ""
+                    content = if(contentTypeJson)
+                        postData.toString()
+                    else
+                        encodeParams(postData)?:""
+                    writer.write(content)
+                    writer.flush()
+                    writer.close()
+                }
+
+                os.close()
+                val responseCode: Int = conn.responseCode // To Check for 200
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    val `in` = BufferedReader(InputStreamReader(conn.inputStream))
+                    val sb = StringBuffer("")
+                    var line: String? = ""
+                    while (`in`.readLine().also { line = it } != null) {
+                        sb.append(line)
+                        break
+                    }
+                    `in`.close()
+                    result = sb.toString()
+                }
+                else {
+                    error = "Response code ${responseCode}"
+                }
             }
-            `in`.close()
-            return sb.toString()
-        }
-        return null
+            catch (e: Exception) {
+                error = e.message.toString()
+            }
+            callback.invoke(result, error)
+        }).start()
     }
-    */
 
     fun getImage(url: String, callback: (result: Bitmap?, error: String)->Unit){
         Thread( Runnable {
@@ -75,7 +122,11 @@ object HTTP
         }).start()
     }
 
-    fun requestGET(r_url: String, callback: (result: String?, error: String)->Unit) {
+    fun requestGET(
+        r_url: String,
+        headers: Map<String, String>?,
+        callback: (result: String?, error: String)->Unit
+    ) {
         Thread( Runnable {
             var error = ""
             var result: String? = null
@@ -86,6 +137,12 @@ object HTTP
                     obj.openConnection() as HttpsURLConnection
                 else
                     obj.openConnection() as HttpURLConnection
+
+                if(headers!=null){
+                    for((key, value) in headers){
+                        con.setRequestProperty(key, value)
+                    }
+                }
 
                 con.requestMethod = GET
                 val responseCode = con.responseCode
