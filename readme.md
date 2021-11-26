@@ -149,7 +149,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 - сохранение данных при повороте (попов вт)
 - локальное хранилище (малинин ср)
 - чтение/запись файлов (галерея) (смирнов чт)
-swype???
+- swype вниз (обновление списка)
 
 чат
 tablayout
