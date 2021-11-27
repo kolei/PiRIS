@@ -796,6 +796,76 @@ else
 
 Имеет смысл и таблицу связей сразу считать в класс приложения (глобальный), а при переходе в продукт составлять локальный список идентификаторов материалов и затем искать по таблице материалов те, которые входят в этот список (`<List>.contains`)
 
+## Spinner (выпадающий список)
+
+Для реализации выпадающего списка (например, отфильтруем продукцию по типу) нужно в разметку добавить элемент **Spinner**
+
+```xml
+<Spinner
+    android:id="@+id/productTypeSpinner"
+    ...
+```
+
+Создать класс **ProductType** (не **data**, а обычный) и переопределить в нём метод *toString*, чтобы в выпадающем списке показывало то что нам нужно
+
+```kt
+class ProductType (val id: Int, val title: String){
+    override fun toString(): String {
+        return title
+    }
+}
+```
+
+В классе основного окна (в том, где вы будете использовать выпадающий список) создайте список для хранения типов продукции, получите указатель на элемент и назначте ему адаптер:
+
+```kt
+val productTypeList = ArrayList<ProductType>()
+...
+productTypeSpinner.adapter = ArrayAdapter(
+    this, 
+    R.layout.producttype_spinner, 
+    productTypeList)
+```
+
+Вторым параметром передаётся **layout** файл, в котором должен быть элемент **TextView** с `id="@android:id/text1"`
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<TextView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    style="?android:attr/spinnerItemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:ellipsize="marquee"
+    android:gravity="center_vertical"
+    android:singleLine="false"
+    android:textSize="20dp" />
+```
+
+Затем получить список типов продукции (http-запрос) и заполнить ими массив (с этим вы уже должны справиться сами) не забыв уведомить адаптер, что данные изменились
+
+```kt
+(productTypeSpinner.adapter as ArrayAdapter<*>).notifyDataSetChanged()
+```
+
+И при выборе элемента списка сделать фильтрацию списка продукции (тоже сделайте сами)
+
+```kt
+productTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+    override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+    ) {
+        // тут реализовать фильтрацию
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
+}
+```
+
 # Задание
 
 * на первый экран добавить заставку (splash-screen) с таймером на пару секунд, только потом показывать диалог для ввода логина/пароля
