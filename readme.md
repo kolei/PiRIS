@@ -142,6 +142,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 6. [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
 
+7. [Wear OS](./articles/wear_os.md)
+
 <!-- 
 кнопки с картинками (нижнее или боковое меню)(фрагменты)
 поиск (фильтрация) - строка поиска и выпадающий список

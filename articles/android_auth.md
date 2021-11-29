@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/android_auth.md">Проект "база". Авторизация на сервере (Basic auth, token). POST-запросы. API.
+<a href="../articles/wear_os.md">Wear OS
 </a></td><tr></table>
 
 # Проект "база". Авторизация на сервере (Basic auth, token). POST-запросы. API.
@@ -871,3 +871,11 @@ productTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedL
 * на первый экран добавить заставку (splash-screen) с таймером на пару секунд, только потом показывать диалог для ввода логина/пароля
 * после получения токена перейти на другое окно (activity), на котором получить и вывести в RecyclerView список продукции (с картинками)
 * на окне со списком продукции сделать кнопку "выход" (logout), после чего вернуться на экран авторизации. У нас после первой авторизации осталось имя, сделайте передачу имени в диалог авторизации, чтобы он был уже заполнен.
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/weather2.md">Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/wear_os.md">Wear OS
+</a></td><tr></table>
