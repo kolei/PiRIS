@@ -144,6 +144,10 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 7. [Wear OS](./articles/wear_os.md)
 
+## Тема 5.1.5. Разработка своего API.
+
+1. [API. PHP-сервер. GET-запрос.](./articles/api_php.md)
+
 <!-- 
 кнопки с картинками (нижнее или боковое меню)(фрагменты)
 поиск (фильтрация) - строка поиска и выпадающий список
