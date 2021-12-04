@@ -324,7 +324,7 @@ class ApiServer
 php -S localhost:8000
 ```
 
-### Паракметры GET-запроса
+### Параметры GET-запроса
 
 Параметры GET-запроса передаются прямо в URL. Отделяются от пути знаком вопроса. Между собой разделяются знаком &. Представляют собой пары `ключ=значение`. Например, так может выглядеть запрос материала по нужному продукту:
 
@@ -338,243 +338,61 @@ PHP автоматически разбирает URL и параметры GET-
 $productId = $_GET['product_id'];
 ```
 
-## Моя реализация на Node.js
+### POST-запросы
 
-```js
-// директива интерпретатору "строгий режим"
-'use strict'
+POST-запросы отличаются тем, что содержат данные в "теле" запроса
 
-const { json } = require('express')
-// импортируем библиотеки
-const   express = require('express')
-const   mysql   = require('mysql')
+Формат данных определяется заголовком **Content-Type**
 
-var users = []
-var chat = []
+* **application/x-www-form-urlencoded** - формат по-умолчанию, представляет собой те же пары **ключ=значение**, что и в GET-запросе (только без знака вопроса). Автоматически распознается PHP и заносится в глобальный массив переменных **$_POST**
 
-//добавляю к консольному выводу дату и время
-function console_log(fmt, ...aparams){
-    fmt = (new Date()).toJSON().substr(0, 19)+' '+fmt
-    console.log(fmt, ...aparams)
-}
+* **application/json** - данные передаются в виде JSON-строки (сериализованы). Автоматически не распознаются, приходится программно читать из потока данных:
 
-// создание экземпляра http-сервера
-var app = express()
+    ```php
+    $rawData = file_get_contents('php://input');
+    $json = json_decode($rawData);
+    ```
 
-// метод .use задает команды, которые будут выполнены до разбора GET/POST команд
+    В переменной $json будет JSON-**объект**. Данные из него извлекаются как из класса -> стрелочным синтаксисом.
 
-// декодирует параметры запроса
-app.use( express.urlencoded() )
-app.use( express.json() )
+    Если кому-то удобнее работать с ассоциативными массивами, то можно в функции **json_decode** добавить второй параметр *true*
 
-app.use('/img', express.static(__dirname +'/products') );
-
-// логгирую все входящие запросы
-app.use((req, res, next)=>{
-    console_log('[express] %s request from %s, body: %s', req.path, req.ip, JSON.stringify(req.body))
-    next()
-})
-
-app.get('/about', (req,res)=>{
-    let ans = {notice: {answer: 'echo about'}}
-    console_log( JSON.stringify(ans) )
-    res.json( ans )
-    res.end()
-})
-
-function mysqlConnect(config){
-    return new Promise((resolve, reject)=>{
-        const connection = mysql.createConnection(config)
-        connection.connect((err)=>{
-            if(err) reject(err)
-            resolve(connection)
-        })
-    })
-}
-
-function getUserByLogin(login){
-    for (let user of users) {
-        if (user.login==login)
-            return user
-    }
-    return null
-}
-
-function getUserByToken(token){
-    for (let user of users) {
-        if (user.token==token)
-            return user
-    }
-    return null
-}
-
-function removeUser(login){
-    for(let id in users){
-        if(users[id].login==login) {
-            users.splice(id, 1)
-            break
-        }
-    }
-}
-
-function getToken(){
-    return Math.ceil( Math.random()*9999999 )+1;
-}
-
-app.get('/chat', (req,res)=>{
-    try {
-        if(req.headers.token==undefined) 
-            throw new Error("В заголовке запроса нет токена")
-        let user = getUserByToken(req.headers.token)
-        if(user == null)
-            throw new Error("Пользователь не авторизован")
-
-        res.json({notice:{messages: chat}});
-    } catch (error) {
-        // при ошибке возвращаем текст ошибки
-        res.json({notice:{answer: error.message}});
-    }
-
-    // метод .end закрывает соединение
-    res.end()
-})
-
-app.post('/chat', (req,res)=>{
-    try {
-        if(req.headers.token==undefined) 
-            throw new Error("В заголовке запроса нет токена")
-
-        if(req.body.message==undefined) 
-            throw new Error("В параметрах нет атрибута message")
-
-        let user = getUserByToken(req.headers.token)
-        if(user == null)
-            throw new Error("Пользователь не авторизован")
-
-        chat.push({
-            user: user.login,
-            message: req.body.message
-        })
-
-        res.json({notice: {answer: "OK"}});
-    } catch (error) {
-        // при ошибке возвращаем текст ошибки
-        res.json({notice:{answer: error.message}});
-    }
-
-    // метод .end закрывает соединение
-    res.end()
-})
-
-// POST запрос "логин"
-app.post('/login', async (req,res)=>{
-    try {
-        // проверяем параметры запроса
-        if(req.body.username==undefined) 
-            throw new Error("В параметрах нет атрибута username")
-        if(req.body.password==undefined) 
-            throw new Error("В параметрах нет атрибута password")
-
-        let user = getUserByLogin(req.body.username)
-        if(user != null)
-            throw new Error("Пользователь уже авторизован, используйте токен или перелогиньтесь")
-
-        // если такого пользователя в базе нет, то выкинет исключение    
-        let connection = await mysqlConnect({
-            host: 'kolei.ru',
-            user: req.body.username,
-            password: req.body.password,
-            database: req.body.username
-        })
-
-        let token = getToken()
-
-        users.push({
-            login: req.body.username,
-            password: req.body.password,
-            token
-        })
-
-        connection.destroy()
-
-        // если все нормально - возвращаем токен
-        res.json({notice: {token}});
-        
-    } catch (error) {
-        // при ошибке возвращаем текст ошибки
-        res.json({notice:{answer: error.message}});
-    }
-
-    // метод .end закрывает соединение
-    res.end()
-})
-
-// POST запрос "выход"
-app.post('/logout', (req,res)=>{
-    try {
-        // проверяем параметры запроса
-        if(req.body.username==undefined) 
-            throw new Error("В параметрах нет атрибута username")
-
-        removeUser(req.body.username)
-        res.json({notice:{answer: 'OK'}});
-    } catch (error) {
-        // при ошибке возвращаем текст ошибки
-        res.json({notice:{answer: error.message}});
-    }
+    ```php
+    $json = json_decode($rawData, true);
+    ```
     
-    res.end()
-})
+## Docker
 
-function query(connection, sql){
-    return new Promise((resolve, reject)=>{
-        connection.query(sql, function(error, result, fields){
-            if(error) reject(error)
-            resolve(result)
-        })
-    })
-}
+Рассказать про докер...
 
-// все остальные геты считаются запросами к базе
-app.get('/*', async (req, res)=>{
-    try {
-        if(req.path.startsWith('/img/')){
-            res.status(404).send(new Error('файл не найден'))
-        } else {
-            if(req.headers.token==undefined) 
-                throw new Error("В заголовке запроса нет токена")
+В каталоге `data` этого репозитория лежит архив `DockerPhp.zip`, в нём настроены контейнеры PHP и NGINX.
 
-            let userInfo = getUserByToken(req.headers.token)
-            if(userInfo==null)
-                throw new Error("Не найден пользователь с указанным токеном")
+PHP проект складывать в подкаталог `www/yotc.kei` - он будет доступен на локальной машине по адресу localhost:8000, если будет более одного проекта, то нужно настроить NGINX:
 
-            let connection = await mysqlConnect({
-                host: 'kolei.ru',
-                user: userInfo.login,
-                password: userInfo.password,
-                database: userInfo.login
-            })
-        
-            try{
-                let data = await query(connection, `SELECT * FROM ${req.path.substr(1)}`)
-                res.json({notice:{data}})
-            } finally {
-                connection.destroy()
-            }
-        }
-    } catch (error) {
-        // при ошибке возвращаем текст ошибки
-        res.json({notice:{answer: error.message}});
-    }
+* в каталоге `hosts` скопировать файл настроек и исправить в нём 2 строки (я их специально вынес в начало конфига)
 
-    // метод .end закрывает соединение
-    res.end()
-})
+    ```
+    server {
+        listen 80;
+        root /var/www/myproject;
+    ```
 
-// запуск сервера на порту 8080
-app.listen(3013, '0.0.0.0', ()=>{
-    console_log('HTTP сервер успешно запущен на порту 3013')
-}).on('error', (err)=>{
-    console_log('ошибка запуска HTTP сервера: %s', err)
-})
-```
+
+    - **listen 80;** - установить другой порт (порты до 1024 считаются зарезервированными, поэтому используйте 8081 и т.д.)
+
+    - **root /var/www/myproject;** - путь к вашему проекту в каталоге `www`
+
+* в файле **docker-compose.yml** в секцию **nginx -> ports** добавьте порт вашего проекта
+
+    ```yml
+    services:
+        nginx:
+            # используем последний стабильный образ nginx
+            image: nginx:latest
+            # маршрутизируем порты
+            ports:
+                - "8000:80"
+                - "8081:8081"
+    ```
+
+Как запустить/остановить контейнеры написано в **read.me** (находится в архиве)
