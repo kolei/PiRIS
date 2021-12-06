@@ -148,6 +148,10 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 1. [API. PHP-сервер. GET-запрос.](./articles/api_php.md)
 
+## Тема 5.1.6. C#, HTTP-запросы, JSON
+
+1. [Получение списка материалов выбранного продукта](./articles/cs_http.md)
+
 <!-- 
 кнопки с картинками (нижнее или боковое меню)(фрагменты)
 поиск (фильтрация) - строка поиска и выпадающий список
