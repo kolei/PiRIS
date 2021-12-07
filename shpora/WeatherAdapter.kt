@@ -1,5 +1,3 @@
-package ru.yotc.myapplication
-
 import android.app.Activity
 import android.content.Context
 import android.util.Log
@@ -13,14 +11,49 @@ import androidx.recyclerview.widget.RecyclerView
 import java.lang.Exception
 import java.util.ArrayList
 
-/**
- * Класс адаптера наследуется от RecyclerView.Adapter с указанием класса,
- * который будет хранить ссылки на виджеты элемента списка, т.е. класса, реализующего ViewHolder.
- * В нашем случае класс объявлен внутри класса адаптера.
- *
- * В параметры основного конструктора передаем список c данными о погоде и указатель на активити главного окна
- * дело в том, что runOnUiThread работает только в контексте активити
- */
+/*
+Класс адаптера наследуется от RecyclerView.Adapter с указанием класса,
+который будет хранить ссылки на виджеты элемента списка, т.е. класса, реализующего ViewHolder.
+В нашем случае класс объявлен внутри класса адаптера.
+
+В параметры основного конструктора передаем список c данными о погоде и указатель на активити главного окна
+дело в том, что runOnUiThread работает только в контексте активити
+
+Использование:
+
+в КЛАССЕ активности объявляем переменные
+private lateinit var someRecyclerView: RecyclerView
+private val someClassList = ArrayList<SomeClass>()
+
+в КОНСТРУКТОРЕ инициализируем:
+
+someRecyclerView = findViewById(R.id.someRecyclerView)
+
+// назначаем менеджер разметки
+someRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+
+// создаем адаптер
+val someClassAdapter = WeatherAdapter(someClassList, this)
+
+// при клике на элемент списка показать подробную информацию (сделайте сами)
+someClassAdapter.setItemClickListener { weather ->
+    Log.d("KEILOG", "Click on Weather item")
+}
+
+someRecyclerView.adapter = weatherAdapter
+
+разбор JSONObject
+// перед заполнением очищаем список
+someClassList.clear()
+
+val json = JSONObject(result)
+val list = json.getJSONArray("list")
+
+// перебираем json массив
+for(i in 0 until list.length()){
+    val item = list.getJSONObject(i)
+    ...
+*/
 class WeatherAdapter(
     private val values: ArrayList<Weather>,
     private val activity: Activity

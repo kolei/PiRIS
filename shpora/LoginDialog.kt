@@ -1,5 +1,3 @@
-package ru.yotc.demoex
-
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -7,6 +5,13 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+
+/*
+Использование:
+LoginDialog { login, password ->
+    // тут реализация 
+}.show(supportFragmentManager, null)
+*/
 
 class LoginDialog(private val callback: (login: String, password: String)->Unit) : DialogFragment() {
 

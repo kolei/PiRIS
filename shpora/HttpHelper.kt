@@ -1,5 +1,3 @@
-package ru.yotc.myapplication
-
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import org.json.JSONObject
@@ -17,6 +15,57 @@ import javax.net.ssl.HttpsURLConnection
 
 И атрибут в тег application
 android:usesCleartextTraffic="true"
+
+Использование:
+
+HTTP.requestGET(
+    "http://s4a.kolei.ru/Product",
+    mapOf(
+        "token" to token
+    )
+){result, error ->
+    runOnUiThread{
+        if(result!=null){
+            resultTextView.text = result
+        }
+        else
+            AlertDialog.Builder(this)
+                .setTitle("Ошибка http-запроса")
+                .setMessage(error)
+                .setPositiveButton("OK", null)
+                .create()
+                .show()
+    }
+}
+
+HTTP.requestPOST(
+    "http://s4a.kolei.ru/login",
+    JSONObject().put("username", username).put("password", password),
+    mapOf(
+        "Content-Type" to "application/json"
+    )
+){result, error ->
+    runOnUiThread{
+        if(result!=null){
+        }
+        else
+            AlertDialog.Builder(this)
+                .setTitle("Ошибка http-запроса")
+                .setMessage(error)
+                .setPositiveButton("OK", null)
+                .create()
+                .show()
+    }
+}
+
+HTTP.getImage("https://openweathermap.org/img/w/${icoName}.png") { bitmap, error ->
+    runOnUiThread {
+        if (bitmap != null) {
+            var imageView = findViewById<ImageView>(R.id.ico)
+            imageView.setImageBitmap(bitmap)
+        }
+    }
+}
 */
 
 object HTTP
