@@ -146,6 +146,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 8. [Разбор задания предыдущего чемпионата](./articles/wsrf6_1.md)
 
+9. [Использование регулярных выражений для разбора данных в любом формате](./articles/regex.md)
+
 ## Тема 5.1.5. Разработка своего API.
 
 1. [API. PHP-сервер. GET-запрос.](./articles/api_php.md)

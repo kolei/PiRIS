@@ -22,11 +22,11 @@ intent.getStringExtra("city_name")
 // запуск
 startActivityForResult( 
     Intent(this, CityListActivity::class.java), 
-    1
+    1 // идентификатор окна
 )
 
 // получение результата
-// здесь requestCode = 1 (ответы от всех запущенных activity приходят в одно место)
+// здесь requestCode = <идентификатор окна> (ответы от всех запущенных activity приходят в одно место)
 // resultCode задается при ответе
 // data необязательные данные из newIntent
 @SuppressLint("MissingSuperCall")
