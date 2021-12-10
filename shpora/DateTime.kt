@@ -19,3 +19,9 @@ tempDate = LocalDateTime.parse(
     "2021-11-16T10:12:13Z".substring(0,19), 
     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
 )
+
+// текущее дата/время
+LocalDateTime.now()
+
+// преобразование даты в строку нужного формата
+DateTimeFormatter.ofPattern("dd.MM.yyyyy").format(date)
