@@ -22,7 +22,8 @@ HTTP.requestGET(
     "http://s4a.kolei.ru/Product",
     mapOf(
         "token" to token
-    )
+    ),
+    "UTF-8"
 ){result, error ->
     runOnUiThread{
         if(result!=null){
@@ -43,7 +44,8 @@ HTTP.requestPOST(
     JSONObject().put("username", username).put("password", password),
     mapOf(
         "Content-Type" to "application/json"
-    )
+    ),
+    "UTF-8"
 ){result, error ->
     runOnUiThread{
         if(result!=null){
@@ -73,6 +75,21 @@ object HTTP
     private const val GET : String = "GET"
     private const val POST : String = "POST"
 
+    private fun getCharSet(url: String): String{
+        val obj = URL(url)
+        var con: HttpURLConnection = if(url.startsWith("https:", true))
+            obj.openConnection() as HttpsURLConnection
+        else
+            obj.openConnection() as HttpURLConnection
+
+        con.requestMethod = "HEAD"
+        val contentType = con.contentType
+        return if(contentType.contains("Windows-1251", true))
+            "Windows-1251"
+        else
+            "UTF-8"
+    }
+
     /**
      * Метод для отправки POST-запросов
      *
@@ -97,6 +114,8 @@ object HTTP
             var error = ""
             var result: String? = null
             try {
+                val charset = getCharSet(url)
+
                 val urlURL = URL(url)
                 val conn: HttpURLConnection = if (url.startsWith("https:", true))
                     urlURL.openConnection() as HttpsURLConnection
@@ -135,7 +154,7 @@ object HTTP
                 os.close()
                 val responseCode: Int = conn.responseCode // To Check for 200
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
-                    val `in` = BufferedReader(InputStreamReader(conn.inputStream))
+                    val `in` = BufferedReader(InputStreamReader(conn.inputStream, charset))
                     val sb = StringBuffer("")
                     var line: String? = ""
                     while (`in`.readLine().also { line = it } != null) {
@@ -180,6 +199,8 @@ object HTTP
             var error = ""
             var result: String? = null
             try {
+                val charset = getCharSet(r_url)
+
                 val obj = URL(r_url)
 
                 val con: HttpURLConnection = if(r_url.startsWith("https:", true))
@@ -198,7 +219,7 @@ object HTTP
 
                 result = if (responseCode == HttpURLConnection.HTTP_OK) { // connection ok
                     val `in` =
-                        BufferedReader(InputStreamReader(con.inputStream))
+                        BufferedReader(InputStreamReader(con.inputStream, charset))
                     var inputLine: String?
                     val response = StringBuffer()
                     while (`in`.readLine().also { inputLine = it } != null) {
