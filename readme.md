@@ -159,6 +159,10 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 1. [Сессия 1. Создание БД. Импорт данных. Окно авторизации](./articles/wsr_1.md)
 
 
+## Документация
+
+1. [Руководство пользователя](./articles/user_manual.md)
+
 <!-- 
 1. [Получение списка материалов выбранного продукта](./articles/cs_http.md)
 
