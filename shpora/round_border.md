@@ -11,5 +11,9 @@
     <solid
         android:color="#00FF00">
     </solid>
+    <!-- рамка -->
+    <stroke 
+        android:width="5px" 
+        android:color="#ffffff" />
 </shape>
 ```
