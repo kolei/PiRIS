@@ -22,9 +22,8 @@ HTTP.requestGET(
     "http://s4a.kolei.ru/Product",
     mapOf(
         "token" to token
-    ),
-    "UTF-8"
-){result, error ->
+    )
+){result, error, code ->
     runOnUiThread{
         if(result!=null){
             resultTextView.text = result
@@ -44,9 +43,8 @@ HTTP.requestPOST(
     JSONObject().put("username", username).put("password", password),
     mapOf(
         "Content-Type" to "application/json"
-    ),
-    "UTF-8"
-){result, error ->
+    )
+){result, error, code ->
     runOnUiThread{
         if(result!=null){
         }
@@ -108,11 +106,12 @@ object HTTP
         url: String,
         postData: JSONObject? = null,
         headers: Map<String, String>?,
-        callback: (result: String?, error: String)->Unit
+        callback: (result: String?, error: String, code: Int)->Unit
     ) {
         Thread( Runnable {
             var error = ""
             var result: String? = null
+            var code: Int = -1
             try {
                 val charset = getCharSet(url)
 
@@ -152,8 +151,8 @@ object HTTP
                 }
 
                 os.close()
-                val responseCode: Int = conn.responseCode // To Check for 200
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                code = conn.responseCode // To Check for 200
+                if (code == HttpsURLConnection.HTTP_OK) {
                     val `in` = BufferedReader(InputStreamReader(conn.inputStream, charset))
                     val sb = StringBuffer("")
                     var line: String? = ""
@@ -165,13 +164,13 @@ object HTTP
                     result = sb.toString()
                 }
                 else {
-                    error = "Response code ${responseCode}"
+                    error = "Response code ${code}"
                 }
             }
             catch (e: Exception) {
                 error = e.message.toString()
             }
-            callback.invoke(result, error)
+            callback.invoke(result, error, code)
         }).start()
     }
 
@@ -193,11 +192,12 @@ object HTTP
     fun requestGET(
         r_url: String,
         headers: Map<String, String>?,
-        callback: (result: String?, error: String)->Unit
+        callback: (result: String?, error: String, code: Int)->Unit
     ) {
         Thread( Runnable {
             var error = ""
             var result: String? = null
+            var code: Int = -1
             try {
                 val charset = getCharSet(r_url)
 
@@ -215,9 +215,9 @@ object HTTP
                 }
 
                 con.requestMethod = GET
-                val responseCode = con.responseCode
+                code = con.responseCode
 
-                result = if (responseCode == HttpURLConnection.HTTP_OK) { // connection ok
+                result = if (code == HttpURLConnection.HTTP_OK) { // connection ok
                     val `in` =
                         BufferedReader(InputStreamReader(con.inputStream, charset))
                     var inputLine: String?
@@ -235,7 +235,7 @@ object HTTP
                 error = e.message.toString()
             }
 
-            callback.invoke(result, error)
+            callback.invoke(result, error, code)
         }).start()
     }
 
