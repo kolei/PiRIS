@@ -82,7 +82,7 @@ object HTTP
 
         con.requestMethod = "HEAD"
         val contentType = con.contentType
-        return if(contentType.contains("Windows-1251", true))
+        return if(contentType!=null && contentType.contains("Windows-1251", true))
             "Windows-1251"
         else
             "UTF-8"
