@@ -44,3 +44,29 @@ newIntent.putExtra("cityName", cityName)
 setResult(RESULT_OK, newIntent)
 finish()
 ```
+
+Таймер обратного отсчёта и переход на другое activity
+
+```kt
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    object : CountDownTimer(1000,1000){
+        override fun onTick(millisUntilFinished: Long) {
+            // заставляем пялиться на нашу заставку как минимум 3 секунды
+        }
+
+        override fun onFinish(){
+            switchToSecond()
+        }
+    }.start()
+}
+
+fun switchToSecond(){
+    runOnUiThread {
+        startActivity(
+            Intent(this, SecondActivity::class.java)
+        )
+    }
+}
+```
