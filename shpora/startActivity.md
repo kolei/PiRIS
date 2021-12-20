@@ -51,7 +51,7 @@ finish()
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    object : CountDownTimer(1000,1000){
+    object : CountDownTimer(3000,1000){
         override fun onTick(millisUntilFinished: Long) {
             // заставляем пялиться на нашу заставку как минимум 3 секунды
         }
