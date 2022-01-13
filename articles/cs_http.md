@@ -166,6 +166,8 @@ public IEnumerable<MaterialTC> GetMaterials(int ProductId) {
 
 В пространстве имён **System.Web.Script.Serialization** есть класс **JavaScriptSerializer**, который выглядит попроще чем классическая реализация:
 
+>В пакет разработки C# не входит библиотека **System.Web.Extensions** (в которой и находится **System.Web.Script.Serialization**). Нужно в "Обозревателе решений" добавить в "Ссылки" библиотеку *Сборки -> Платформа -> System.Web.Extensions*
+
 ```cs
 // целевые классы нам по прежнему нужны, но уже без всяких аннотаций
 internal class MaterialTC
