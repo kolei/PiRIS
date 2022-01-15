@@ -1,4 +1,4 @@
-# Создание библиотеки классов по индивидуальному заданию. Разработка Unit-тестов для библиотеки
+# Создание проекта по индивидуальному заданию. Разработка Unit-тестов для проекта.
 
 1. Разработать консольный проект по индивидуальному заданию (задание получить у преподавателя). 
 2. Разработать 10 unit-тестов для проекта.
@@ -9,9 +9,9 @@
 
 30%:
 
-[2^N](https://acmp.ru/index.asp?main=task&id_task=40)
-[Быстрый поезд](https://acmp.ru/index.asp?main=task&id_task=89)
-[Гипотеза Гольдбаха](https://acmp.ru/index.asp?main=task&id_task=323)
+[2^N](https://acmp.ru/index.asp?main=task&id_task=40) малинин
+[Быстрый поезд](https://acmp.ru/index.asp?main=task&id_task=89) попов
+[Гипотеза Гольдбаха](https://acmp.ru/index.asp?main=task&id_task=323) кириллов
 [Грибной дождь](https://acmp.ru/index.asp?main=task&id_task=699)
 [Деление-2](https://acmp.ru/index.asp?main=task&id_task=842)
 [Ежеминутные автобусы](https://acmp.ru/index.asp?main=task&id_task=313)
@@ -21,7 +21,7 @@
 
 40%:
 
-[A div B](https://acmp.ru/index.asp?main=task&id_task=145)
+[A div B](https://acmp.ru/index.asp?main=task&id_task=145) кропотова
 [Алгоритм Евклида](https://acmp.ru/index.asp?main=task&id_task=527)
 [Взвешивания](https://acmp.ru/index.asp?main=task&id_task=911)
 [Деление](https://acmp.ru/index.asp?main=task&id_task=704)
@@ -31,9 +31,9 @@
 
 50%:
 
-[ePig](https://acmp.ru/index.asp?main=task&id_task=991)
-[SMS - 2](https://acmp.ru/index.asp?main=task&id_task=625)
-[Test-The-Best](https://acmp.ru/index.asp?main=task&id_task=640)
+[ePig](https://acmp.ru/index.asp?main=task&id_task=991) смирнов
+[SMS - 2](https://acmp.ru/index.asp?main=task&id_task=625) игимбаев
+[Test-The-Best](https://acmp.ru/index.asp?main=task&id_task=640) евсеев
 [Атлеты](https://acmp.ru/index.asp?main=task&id_task=307)
 
 -->
