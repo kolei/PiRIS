@@ -196,7 +196,71 @@ var answer = serializer.Deserialize<Answer>("тут ваша JSON-строка")
 // и ВСЁ
 ```
 
-## POST запросы с JSON
+## Удаление записей
+
+Для удаления данных в REST API используется http-метод DELETE. (Но никто не запрещает использовать и другие методы)
+
+Запрос в REST клиенте выглядит примерно так, идентификатор удаляемой записи передаём параметрами:
+
+```
+DELETE {{url}}/Product?id=131
+                      ^^^^^^^  
+Authorization: Basic esmirnov 111103
+```
+
+1. Сначала надо доработать наш PHP-класс:
+
+    В конструкторе добавляем обработку метода DELETE:
+
+    ```php
+    switch($_SERVER['REQUEST_METHOD'])
+    {
+        case 'DELETE':
+            $this->processDelete($_SERVER['PATH_INFO']);
+            break;
+        ...
+    ```
+
+    При реализации метода идентификатор удаляемой записи достаём из глобальной переменной **$_GET**
+
+    ```php
+    private function processDelete($path)
+    {
+        switch($path)
+        {
+            case '/Product':
+                $this->auth();
+
+                // print_r($_GET);
+                $id = $_GET['id'] ?: 0;
+
+                // методы, которые не подразумевают ответа, выполняются командой execute
+                if($id)
+                    $this->db->query("DELETE FROM Product WHERE id=$id")
+                        ->execute();
+                $this->response['status'] = 0;
+                break;
+            default:
+                header("HTTP/1.1 404 Not Found");
+        }
+    }
+    ```
+
+2. Теперь в C# осталось реализовать метод удаления выбранной записи
+
+    Строку запроса, надеюсь, сформируете сами.
+
+    Для вызова http-метода DELETE используется метод DeleteAsync:
+
+    ```cs
+    var basic = Convert.ToBase64String(
+                ASCIIEncoding.ASCII.GetBytes("esmirnov:111103"));
+    var client = new HttpClient();
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basic);
+    client.DeleteAsync($"http://localhost:8080/Product?id={id}").Result;
+    ```
+
+<!-- ## POST запросы с JSON
 
 Возможно понадобится что-то послать в АПИ, разберём как это делается:
 
@@ -217,4 +281,4 @@ var client = new HttpClient();
 var result = client.PostAsync("http://localhost:8080/echo", json).Result;
 
 Console.WriteLine(result.Content.ReadAsStringAsync().Result);
-```
+``` -->
