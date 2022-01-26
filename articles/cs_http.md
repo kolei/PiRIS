@@ -260,25 +260,55 @@ Authorization: Basic esmirnov 111103
     client.DeleteAsync($"http://localhost:8080/Product?id={id}").Result;
     ```
 
-<!-- ## POST запросы с JSON
+## POST запросы с JSON (Добавление записей в модель в терминологии REST API)
 
-Возможно понадобится что-то послать в АПИ, разберём как это делается:
+1. В проекте C# нарисуйте форму добавления продажи (в окне продукции)
 
-```cs
-// сначала запихиваем объект в JSON-строку. 
+2. В **DataProvider** добавьте метод *AddProductSale*, который на входе получает экземпляр класса **ProductSale** и реализуйте отправку POST-запроса в локальный PHP-сервер, который добавит эту продажу в соответствующую таблицу
 
-// тут можно завести отдельный класс, а можно создать анонимный объект
-var obj = new {username="qq", password="ww"};
+    ```cs
+    // сначала запихиваем объект в JSON-строку. 
+    var jsonString = serializer.Serialize(NewProductSale);
 
-// и тем же сериализатором превращаем в JSON-строку
-var jsonString = serializer.Serialize(obj);
+    // создаём контент для запроса
+    var json = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-// создаём контент для запроса
-var json = new StringContent(jsonString, Encoding.UTF8, "application/json");
+    // и вызываем POST-запрос
+    var client = new HttpClient();
+    // не забываем добавить авторизацию
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basic);
+    var result = client.PostAsync("http://localhost:8080/ProductSale", json).Result;
 
-// и вызываем POST-запрос
-var client = new HttpClient();
-var result = client.PostAsync("http://localhost:8080/echo", json).Result;
+    // Console.WriteLine(result.Content.ReadAsStringAsync().Result);
+    ```
 
-Console.WriteLine(result.Content.ReadAsStringAsync().Result);
-``` -->
+3. Обработка POST-запроса с типом *application/json*
+
+    В PHP есть глобальная переменная **$_POST** в которую автоматически парсятся данные POST запроса, но только если тип запроса *application/x-www-form-urlencoded*.
+
+    Тип JSON появился сравнительно недавно, поэтому PHP автоматически его не парсит. Приходится писать разбор вручную
+
+    ```php
+    private function processPost($path)
+    {
+        // входной поток данных (содержимое запроса, content) считывается в строку
+        $rawData = file_get_contents('php://input');
+        // и преобразуется в объект 
+        $json = json_decode($rawData);
+        switch($path)
+        {
+            case '/ProductSale':
+                $this->auth();
+
+                // тут пишем запрос вставки данных в таблицу 
+                // к полям объекта JSON можно обращаться так: $json->Title, ...
+
+                $this->response['status'] = 0;
+
+                break;
+
+            default:
+                header("HTTP/1.1 404 Not Found");
+        }
+    }
+    ```

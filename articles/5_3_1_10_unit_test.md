@@ -1,3 +1,11 @@
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/null.md">
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/fake_unit_test.md">Fake data. Тестирование методов получающих внешние данные из удалённых источников.
+</a></td><tr></table>
+
 # Создание UNIT-тестов
 
 ## Немного теории
@@ -304,3 +312,11 @@ static public void Done()
     ```
 
     Тут используется атрибут **ExpectedException**. Он означает, что НОРМАЛЬНЫМ завершением этого теста будет исключение указанного типа.
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/null.md">
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/fake_unit_test.md">Fake data. Тестирование методов получающих внешние данные из удалённых источников.
+</a></td><tr></table>
