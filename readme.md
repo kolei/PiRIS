@@ -107,7 +107,9 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 - UPDATE, DELETE 
 -->
 
-5. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
+5. [Представления (View)](./articles/sql_view.md)
+
+6. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 
 ### Контрольные вопросы
 

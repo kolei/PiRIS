@@ -657,5 +657,5 @@ INSERT INTO Goods VALUES (NULL, 'Table', 2);
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/sql_import.md">Создание базы данных. Импорт данных.
+<a href="../articles/sql_view.md">Представления (View)
 </a></td><tr></table>
