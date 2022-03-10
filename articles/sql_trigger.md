@@ -100,7 +100,9 @@ sale_item
 before insert
 on sales
 for each row
- 	update warehouse set quantity=quantity - NEW.quantity where id=NEW.item_id; 
+ 	update warehouse 
+        set quantity=quantity - NEW.quantity 
+        where id=NEW.item_id; 
 ```
 
 ```sql
@@ -111,7 +113,8 @@ before update
 on warehouse 
 for EACH row begin
 	if NEW.quantity<0 THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'На складе недостаточно товара';
+		SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'На складе недостаточно товара';
 	END if;
 end;
 $$
