@@ -111,6 +111,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 6. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 
+7. [Хранимые процедуры. Триггеры.](./articles/sql_trigger.md)
+
 ### Контрольные вопросы
 
 * Что такое **домен**?
