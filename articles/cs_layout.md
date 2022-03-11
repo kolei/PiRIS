@@ -163,6 +163,66 @@ public string TypeAndName {
 
 ![](../img/01067.png)
 
+# Вывод данных "плиткой"
+
+Такое задание было на одном из прошлых соревнований WorldSkills, вполне вероятно что появится и на демо-экзамене.
+
+Компоненты **ListBox** и **ListView** по умолчанию инкапсулируют все элементы списка в специальную панель **VirtualizingStackPanel**, которая располагает все элементы по вертикали. Но с помощью свойства **ItemsPanel** можно переопределить панель элементов внутри списка. 
+
+Мы будем использовать уже знакомую вам **WrapPanel**:
+
+```xml
+<ListView.ItemsPanel>
+    <ItemsPanelTemplate>
+        <WrapPanel 
+            HorizontalAlignment="Center" />
+    </ItemsPanelTemplate>
+</ListView.ItemsPanel>
+```
+
+>Атрибут *HorizontalAlignment* используем, чтобы "плитки" центрировались.
+
+![](../img/01072.png)
+
+Как видим, элементы списка отображаются горизонтальным списком, но нет переноса. Для включения переноса элементов нужно в **ListView** отключить горизонтальный скролл, добавив атрибут `ScrollViewer.HorizontalScrollBarVisibility="Disabled"`:
+
+![](../img/01073.png)
+
+Свойство *ItemContainerStyle* уже не нужно и его можно убрать.
+
+Размеры наших элементов по-прежнему зависят от содержимого - тут надо править шаблон **ItemTemplate**.
+
+Итоговая разметка для вывода "плиткой" должна выглядеть примерно так:
+
+```xml
+<ListView
+    ItemsSource="{Binding ProductList}"
+    x:Name="ListView"
+    ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+>
+    <ListView.ItemsPanel>
+        <ItemsPanelTemplate>
+            <WrapPanel 
+                HorizontalAlignment="Center" />
+        </ItemsPanelTemplate>
+    </ListView.ItemsPanel>
+
+    <!--ListView.ItemContainerStyle>
+        <Style 
+            TargetType="ListViewItem">
+            <Setter 
+                Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        </Style>
+    </-->
+    
+    
+    <ListView.ItemTemplate>
+        ...
+    </ListView.ItemTemplate>
+</ListView>    
+```
+
 <table style="width: 100%;"><tr><td style="width: 40%;">
 <a href="../articles/cs_mysql_connection2.md">Создание подключения к БД MySQL. Получение данных с сервера.
 </a></td><td style="width: 20%;">

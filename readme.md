@@ -67,8 +67,6 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 # МДК. 05.01 Проектирование и дизайн информационных систем
 
-<!-- 56+92=148, 34+72=106 -->
-
 ## Тема 5.1.1. Основы проектирования информационных систем
 
 <!-- https://sites.google.com/site/anisimovkhv/learning/pris/lecture -->
@@ -124,11 +122,15 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection2.md)
 
-2. [Вывод данных согласно макету (ListView, Image).](./articles/cs_layout.md)
+2. [Вывод данных согласно макету (ListView, Image). Вывод данных плиткой.](./articles/cs_layout.md)
+
+<!-- сюда же добавить разметку "плиткой" -->
 
 3. [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination.md)
 
-4. [Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.](./articles/cs_coloring.md)
+<!-- datepicker -->
+
+4. [Подсветка элементов по условию. Дополнительные выборки. Массовая смена цены продукции.](./articles/cs_coloring.md)
 
 5. [Создание, изменение продукции](./articles/cs_edit_product.md)
 
@@ -179,6 +181,8 @@ kerio
 ## Тема 5.1.5. Разработка своего API.
 
 1. [API. PHP-сервер. GET-запрос.](./articles/api_php.md)
+
+<!-- переделать на asp.net -->
 
 ## Тема 5.1.6. C#, разбор задания.
 
@@ -246,12 +250,6 @@ windows server 2019
 vmware vSphere
 
  -->
-
-## Продвинутый SQL
-
-1. Представления (View)
-2. Триггеры (на примере продажи продукции)
-3. Транзакции
 
 ## Документация
 
