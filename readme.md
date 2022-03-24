@@ -81,6 +81,15 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 4. [Спецификация вариантов использования (прецедентов)](articles/5_1_1_10_uml_uc_spec.md)
 
+5. [НЕ ДОПИСАНО! Модель проектирования (диаграммы классов, диаграммы деятельности)](articles/uml_mp_dc_dd.md)
+
+<!-- диаграммы последовательностей,  -->
+
+<!-- диаграммы взаимодействия,  -->
+
+<!-- диаграммы состояний,  -->
+
+
 ### Контрольные вопросы
 
 * назовите основные элементы диаграммы прецедентов
@@ -90,6 +99,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 ## Тема 5.1.2. Проектирование баз данных
 
 ### Лекции
+
+<!-- диаграмма сущностей и связей, нормализация, словарь данных -->
 
 1. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
 
@@ -645,3 +656,27 @@ ERD,
     10. Лабораторная работа «Тестирование установки»
 
  -->
+
+<!-- 
+-- создание базы и пользователя для MSSQL
+DECLARE @userName AS VARCHAR(50) = 'test'
+DECLARE @password AS VARCHAR(50) = 'qzesc'
+-- создаю базу
+DECLARE @createDB AS VARCHAR(50) = 'CREATE DATABASE {userName}'
+SET @createDB = REPLACE(@createDB, '{userName}', @userName)
+EXECUTE (@createDB)
+-- создаю логин
+DECLARE @createLogin AS VARCHAR(150) = 'CREATE LOGIN {userName} WITH PASSWORD=''{password}'', CHECK_POLICY = OFF'
+SET @createLogin = REPLACE(@createLogin, '{userName}', @userName)
+SET @createLogin = REPLACE(@createLogin, '{password}', @password)
+EXECUTE (@createLogin)
+-- создаю пользователя
+DECLARE @createUser AS VARCHAR(MAX) = '
+USE {userName}
+CREATE USER {userName} FOR LOGIN {userName};
+EXEC sp_addrolemember ''db_owner'', ''{userName}'';
+Grant Execute on Schema :: dbo TO [{userName}];
+'
+SET @createUser = REPLACE(@createUser, '{userName}', @userName)
+EXECUTE (@createUser)
+-->
