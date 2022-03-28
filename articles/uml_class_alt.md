@@ -72,8 +72,9 @@
 В следующей таблице приведены примеры указания спецификации атрибутов и соответствующий им код программы, автоматически генерируемый Case-средством для языка Java.
 
 Спецификация атрибута в UML | Генерируемый код для языка Java
-+ name : String	| public String name;
-+ pi : double = 3.1415 {final, static} | public final static double pi = 3.1415;
+---|---
+`+` name : String	| public String name;
+`+` pi : double = 3.1415 {final, static} | public final static double pi = 3.1415;
 – coordinateXY : int[][] = {{1, 1}, {2, 4}, {3, 9}} | private int[][] coordinateXY = {{1, 1}, {2, 4},{3, 9}};
 `#` visible : boolean = true | protected boolean visible = true;
 – connect : ConnectDB = null; | private ConnectDB connect = null;
