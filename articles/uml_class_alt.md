@@ -140,6 +140,7 @@
 В следующей таблице приведены примеры указания спецификации методов и соответствующий им код программы, автоматически генерируемый Case-средством для языка Java.
 
 Спецификация метода в UML | Генерируемый код для языка Java
+---|---
 "constructor" + TextFieldInt(value : int, length : int, alligment : int, fontField : Font) | public TextFieldInt(int value, int length, int alligment, Font fontField) { }
 `+ saveData()` | public void saveData() {return;}
 `+ isVisible() : boolean` | public boolean isVisible() {return false;}
