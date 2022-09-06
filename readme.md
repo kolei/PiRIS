@@ -79,7 +79,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
     
 1. [Анализ предметной области. Основные понятия системного и структурного анализа.](articles/5_1_1_4_analiz.md)
 
-1. [UML](./articles/uml.md)
+<!-- 1. [UML](./articles/uml.md) -->
 
 1. [Диаграмма вариантов использования (прецедентов, use case)](articles/5_1_1_10_uml_use_case.md)
 
