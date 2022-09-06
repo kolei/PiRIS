@@ -79,19 +79,19 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
     
 1. [Анализ предметной области. Основные понятия системного и структурного анализа.](articles/5_1_1_4_analiz.md)
 
-<!-- 1. [UML](./articles/uml.md) -->
+1. [UML](./articles/uml.md)
 
 1. [Диаграмма вариантов использования (прецедентов, use case)](articles/5_1_1_10_uml_use_case.md)
 
-2. [Спецификация вариантов использования (прецедентов)](articles/5_1_1_10_uml_uc_spec.md)
+1. [Спецификация вариантов использования (прецедентов)](articles/5_1_1_10_uml_uc_spec.md)
 
-3. [Диаграмма состояний](./articles/uml_state.md)
+1. [Диаграмма состояний](./articles/uml_state.md)
 
-4. [Прототипы экранов и окон пользовательского интерфейса (wireframe)](./articles/wireframe.md)
+1. [Прототипы экранов и окон пользовательского интерфейса (wireframe)](./articles/wireframe.md)
 
 <!-- 4. [ДИАГРАММЫ КЛАССОВ АНАЛИЗА] дальше используются обозначения из этой диаграммы -->
 
-5. [Диаграммы взаимодействия (последовательности и коммуникации)](./articles/uml_sequence.md)
+1. [Диаграммы взаимодействия (последовательности и коммуникации)](./articles/uml_sequence.md)
 
 <!-- 5. [Диаграмма деятельности](./articles/uml_activity.md) недописана  -->
 
@@ -99,7 +99,6 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 1. [Диаграмма классов](./articles/uml_class_alt.md)
 
 1. [НЕ ДОПИСАНО! Модель проектирования (диаграммы классов, диаграммы деятельности)](articles/uml_mp_dc_dd.md)
-
 
 ### Контрольные вопросы
 
