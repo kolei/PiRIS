@@ -371,24 +371,26 @@ ERD,
 
 1. [Основы языка Kotlin](./articles/kotlin.md)
 
-2. [Первый проект в Android Studio](./articles/android_studio.md)
+1. [Первый проект в Android Studio](./articles/android_studio.md)
 <!-- TODO расписать LinearLayout и TableLayout -->
 
-3. [Стили и темы. Ресурсы. Фигуры. Обработчики событий.](./articles/themes.md)
+1. [Стили и темы. Ресурсы. Фигуры. Обработчики событий.](./articles/themes.md)
 
-4. [Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.](./articles/weather.md)
+1. [Смена ориентации](./articles/layout_orientation.md)
 
-5. [Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.](./articles/weather2.md)
+1. [Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.](./articles/weather.md)
 
-6. [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
+1. [Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.](./articles/weather2.md)
 
-7. [Wear OS](./articles/wear_os.md)
+1. [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
 
-8. [Разбор задания предыдущего чемпионата](./articles/wsrf6_1.md)
+1. [Wear OS](./articles/wear_os.md)
 
-9. [Использование регулярных выражений для разбора данных в любом формате](./articles/regex.md)
+1. [Разбор задания предыдущего чемпионата](./articles/wsrf6_1.md)
 
-10. [ViewPager, Fragments, Tabs](./articles/pager.md)
+1. [Использование регулярных выражений для разбора данных в любом формате](./articles/regex.md)
+
+1. [ViewPager, Fragments, Tabs](./articles/pager.md)
 
 <!-- 
 

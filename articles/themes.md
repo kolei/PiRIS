@@ -3,10 +3,10 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/weather.md">Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
+<a href="../articles/layout_orientation.md">Ориентация экрана.
 </a></td><tr></table>
 
-`&lt;` `&gt;`
+<!-- `&lt;` `&gt;` -->
 
 # Стили и темы
 
@@ -391,6 +391,10 @@ setContentView(R.layout.activity_main)
 
 # Обработка событий (клик по кнопке)
 
+Существует несколько способов задать обработчики событий:
+
+1. Атрибут **onClick**
+
 Для кнопок (тег **Button**) можно задать обработчик клика, для этого в разметке добавьте атрибут *android:onClick* и задайте имя функции обработчика:
 
 ```xml
@@ -400,6 +404,8 @@ setContentView(R.layout.activity_main)
 ```
 
 Чтобы не писать вручную эту функцию можно нажать на её названии клавиши `Alt+Enter` и выбрать действие "Create onOperationClick(view) in MainActivity"
+
+>Если мы вручную добавляли новую *activity*, то нужно в корневой элемент добавить ссылку на класс, который будет работать с этой *activity*: `tools:context=".MainActivity"`
 
 Один и тот же обработчик можно назначить нескольким кнопкам (в калькуляторе можно сделать всего два обработчика: один для числовых кнопок, а второй для функциональных)
 
@@ -416,6 +422,20 @@ fun onOperatorClick(view: View) {
 ```
 
 Либо в разметке добавить кнопкам атрибут *android:tag* и в коде анализировать его содержимое (ему приведение типов не нужно, т.к. он объявлен в классе **View**)
+
+2. Программное добавление обработчика в классе:
+
+Сначала надо получить экземпляр элемента (для этого используется функция **findViewById**), затем назначить ему событие:
+
+```kt
+val btn_one = findViewById<Button>(R.id.btn_one)
+if (btn_one != null) {
+    btn_one.setOnClickListener {
+        textView.text="hello"
+    }
+}
+```
+
 
 # Дополнение
 
@@ -436,5 +456,5 @@ fun onOperatorClick(view: View) {
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/weather.md">Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
+<a href="../articles/layout_orientation.md">Ориентация экрана.
 </a></td><tr></table>
