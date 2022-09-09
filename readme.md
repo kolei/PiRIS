@@ -376,7 +376,7 @@ ERD,
 
 1. [Стили и темы. Ресурсы. Фигуры. Обработчики событий.](./articles/themes.md)
 
-1. [Смена ориентации](./articles/layout_orientation.md)
+1. [Смена ориентации, жизненный цикл activity, сохранение данных](./articles/layout_orientation.md)
 
 1. [Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.](./articles/weather.md)
 
