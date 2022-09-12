@@ -477,9 +477,9 @@ tablayout
 10. Лабораторная работа «Тестирование установки»
 
 
-## [Учебная практика](articles/praktika_I.md)
+# [Учебная практика](articles/praktika_I.md)
 
-## [Курсовой проект](articles/kp2.md)
+# [Курсовой проект](articles/kp2.md)
 
 <!-- ПООП
 

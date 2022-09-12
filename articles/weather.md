@@ -8,7 +8,7 @@
 
 # Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
 
-На примере "Калькулятора" мы познакомились с интерфейсом *Android Studio*, более-менее разобрались со структурой проекта андроид.
+На примере проекта *Калькулятор* мы познакомились с интерфейсом **Android Studio**, более-менее разобрались со структурой проекта андроид.
 
 На примере проекта "Погода" мы научимся:
 
@@ -19,7 +19,7 @@
 * выбор города из списка и получение погоды для выбранного города (во второй части)
 * получение погоды за несколько дней и вывод списка погодных данных (во второй части)
 
-Создайте новый проект
+**Создайте новый проект**
 
 >Если ругается на несовместимость версии, то попробуйте откатить версии зависимостей:
 >
@@ -91,20 +91,20 @@ private fun checkPermission(){
 // в нём мы снова вызываем метод checkPermission
 override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                                 grantResults: IntArray) {
-when (requestCode) {
-    1 -> {
-        if (grantResults.isNotEmpty() && grantResults[0] ==
-            PackageManager.PERMISSION_GRANTED) {
-            if ((ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) === PackageManager.PERMISSION_GRANTED))
-            {
-                checkPermission()
+    when (requestCode) {
+        1 -> {
+            if (grantResults.isNotEmpty() && grantResults[0] ==
+                PackageManager.PERMISSION_GRANTED) {
+                if ((ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) === PackageManager.PERMISSION_GRANTED))
+                {
+                    checkPermission()
+                }
+            } else {
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
+            return
         }
-        return
     }
-}
 }
 
 
@@ -140,13 +140,15 @@ fun onGetCoordinates(lat: Double, lon: Double){
 
 ## Получение информации о погоде
 
+[Раздел из ПМ 05.01 про HTTP](api_php.md)
+
 Для получения информации о погоде воспользуемся открытым АПИ [openweathermap](https://openweathermap.org/api)
 
-В АПИ есть несколько вариантов: текущая погода, почасовая, на несколько дней, на месяц...
+В АПИ есть несколько вариантов: текущая погода, почасовая, на несколько дней, на месяц... Но для бесплатного использования подходят не все.
 
 Для начала получим данные о [текущей](https://openweathermap.org/current) погоде по координатам (By geographic coordinates)
 
-Базовый формат выглядит так:
+Формат запроса:
 
 ```
 api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
@@ -164,24 +166,24 @@ api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
 
 В итоге получается такой URL:
 
-```
-https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${token}&lang=ru
+```kt
+val url = "https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${token}&lang=ru"
 ```
 
 Проверить правильность запроса и посмотреть на результат можно запустив этот URL в **Postman**-е (он будет на демо-экзамене). Но лично мне больше нравится плагин **REST Client** для **VSCode**
 
-Можно описать переменные и запрос в отдельном файле (api.http) и выполнять запросы прямо из **VSCode**
+Можно описать переменные и запрос в отдельном файле (например, `api.http`) и выполнять запросы прямо из **VSCode**
 
 ```
 @lat=56.638372
 @lon=47.892991
 @token=d4c9eea0d00fb43230b479793d6aa78f
 
-# Запрос текущей погоды
+### Запрос текущей погоды
 GET https://api.openweathermap.org/data/2.5/weather?lat={{lat}}&lon={{lon}}&units=metric&appid={{token}}&lang=ru
 ```
 
-В ответ на этот запрос должно прийти что-то подобное
+В ответ на этот запрос должно прийти что-то подобное:
 
 ```json
 {
@@ -232,80 +234,90 @@ GET https://api.openweathermap.org/data/2.5/weather?lat={{lat}}&lon={{lon}}&unit
 }
 ```
 
-Для http-запросов в Андроиде есть встроенный клиент. Он сильно устарел и вообще монстрообразный, в реальной разработке обычно используют библиотеки типа **okhttp**. Но т.к. на демо-экзамене не будет доступа в интернет, то придется использовать то что есть.
+В **Android**-е есть встроенные функции работы с **http**-запросами, но стандартный код для сетевых запросов сложен, излишен и в реальном мире почти не используется. Используются библиотеки. Самые популярные: [OkHttp](https://square.github.io/okhttp/) и Retrofit.
 
-Я нашел и адаптировал для вас синглтон (объект), для запросов. Лежит он в [каталоге](../shpora/HttpHelper.kt) `shpora` этого репозитория (тут я текст не привожу, т.к. он ещё не до конца отлажен). Его же я положу и в публичный репозиторий админа на демо-экзамене.
+Рассмотрим работу к **OkHttp**
 
-Создайте у себя в проекте аналогичный файл, **обратите вснимание** на комментарии - в манифест надо добавить разрешения для работы с интернетом.
+>[Примеры синхронных и асинхронных запросов на котлине](https://square.github.io/okhttp/recipes/)
+
+Перед использованием не забудьте добавить в манифест разрешение на работу с интернетом
+
+```
+<uses-permission android:name="android.permission.INTERNET" />
+```
+
+И, если на сайте нет сертификата, атрибут в тег **application**:
+
+```
+android:usesCleartextTraffic="true"
+```
+
+Ещё в зависимости проекта нужно добавить билиотеку (в файл `build.gradle(:app)` в раздел *dependencies*):
+
+```
+implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+```
+
+>Токен объявите константой в свойствах класса
+>```kt
+>private val appid = "d4c9eea0d00fb43230b479793d6aa78f"
+>```
 
 Итак, в методе *onGetCoordinates* вместо вывода координат на экран вставьте http-запрос:
 
->Токен объявите переменной в начале класса
->```kt
->private val token = "d4c9eea0d00fb43230b479793d6aa78f"
->```
-
+>Неизвестные методы **Android Studio** показывает красным цветом. Чтобы добавить пакет, в котором описан такой метод, нужно поместить курсор на этот метод и, либо через контекстное меню, либо нажатием **Alt+Enter** добавить пакет в импортируемые (если вариантов импорта несколько, то смотрите по контексту - в нашем случае в названии пакета должно быть что-то про **okhttp**)
 
 ```kt
-val url = "https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${token}&lang=RU"
-HTTP.requestGET(url) {result, error ->
-    if(result != null) {
-        val json = JSONObject(result)
-        val wheather = json.getJSONArray("weather")
-        val icoName = wheather.getJSONObject(0).getString("icon")
+// в классе объявите свойство client
+private val client = OkHttpClient()
+...
 
-        runOnUiThread {
-            textView.text = json.getString("name")
+fun onGetCoordinates(lat: Double, lon: Double){
+    ...
+
+    // сформируйте запрос
+    val request = Request.Builder()
+        .url("https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${appid}&lang=ru&units=metric")
+        .build()
+
+    // и выполните его
+    client.newCall(request).enqueue(object : Callback {
+        // метод будет вызван при ошибке
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
         }
-    }
+
+        // при успешном запросе
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) 
+                    throw IOException("Unexpected code $response")
+
+                // for ((name, value) in response.headers) {
+                //     Log.d("weather","$name: $value")
+                // }
+                // Log.d("weather", response.body!!.string())
+
+                val json = JSONObject(response.body!!.string())
+                val wheather = json.getJSONArray("weather")
+                val icoName = wheather.getJSONObject(0).getString("icon")
+
+                runOnUiThread {
+                    textView.text = json.getString("name")
+                }
+            }
+        }
+    })
 }
 ```
 
 Что здесь происходит?
 
-**Во-первых**, андроид не разрешает запускать http-запросы из основного потока. Их нужно заворачивать в потоки или корутины. Я заворачитваю запрос в поток, т.к. для поддержки корутин нужно добавлять библиотеку, вам дополнительно с потоками разбираться не нужно. 
+**Во-первых**, андроид не разрешает запускать http(s)-запросы из основного потока. Их нужно запускать асинхронно. В **OkHttp** это делает метод **enqueue**.
 
-```kt
-fun requestGET(
-    r_url: String, 
-    callback: (result: String?, error: String)->Unit
-){
-    Thread( Runnable {
-        var error = ""
-        var result: String? = null
-        try {
-            ...
-        }
-        catch (e: Exception){
-            error = e.message.toString()
-        }
+В параметрах метода указывается *callback*-функция в виде лямбда-выражения, в котором должны быть реализованы методы для успешного и неуспешного запросов (тут нужно учитывать, что успех или не успех относятся к транспортному уровню, смог **OkHttp** получить ответ сервера или нет). 
 
-        callback.invoke(result, error)
-    }).start()
-}
-```
-
-Функция принимает на вход URL, с которого нужно получить данные и callback-функцию в виде лямбда-выражения, которая возвращает текст ответа типа **String?** (нуллабельная строка, т.е. при ошибке вернет **null**) и текст ошибки. 
-
-Но в коде главного окна вызов этой функции выглядит иначе - один параметр и какой-то блок кода за функцией
-
-```kt
-HTTP.requestGET(url) {result, error ->
-    //
-}
-```
-
-Это фича котлина. Если лямбда выражение объявлено последним параметром функции, то его можно вынести за скобки. В принципе более привычный аналог выглядит так
-
-```kt
-HTTP.requestGET(url, {result, error ->
-    //
-})
-```
-
-Но вы должны знать о такой фиче, т.к. она достаточно часто используется.
-
-После разбора принятых данных их обычно выводят на экран. Тут надо учитывать что наша функция обратного вызова всё ещё находится в потоке, а к визуальным элементам можно обращаться только из основного потока. Для работы с визуальными элементами заворачиваем кусок кода в конструкцию:
+После разбора принятых данных их обычно выводят на экран. Тут надо учитывать что функция обратного вызова всё ещё находится в потоке, а к визуальным элементам можно обращаться только из основного потока. Для работы с визуальными элементами заворачиваем кусок кода в конструкцию:
 
 ```kt
 runOnUiThread {
@@ -313,16 +325,16 @@ runOnUiThread {
 }
 ```
 
-Тут я вывел на экран название города (разбор JSON будет ниже)
+Тут я вывел на экран только название города (разбор JSON будет ниже)
 
 ## Разбор JSON
 
-Мы получили результат в виде строки, теперь нужно преобразовать её в JSON-объект и достать нужные нам данные
+Мы получили результат в виде JSON-строки, теперь нужно преобразовать её в JSON-объект и достать нужные нам данные
 
 Для преобразования строки в JSON-объект используется конструктор JSONObject
 
 ```kt
-val json = JSONObject(result)
+val json = JSONObject(someJsonString)
 ```
 
 Теперь в переменной json у нас экземпляр JSON-объекта
@@ -330,24 +342,24 @@ val json = JSONObject(result)
 Для получения данных из JSON-объекта есть get методы
 
 * **getJSONArray** - получить массив
-* **getJSONObject** - получение объекта (по индексу из из массива или по имени из объекта)
+* **getJSONObject** - получение объекта (по индексу из массива или по имени из объекта)
 * **getString** - получить строку
 
 Также есть **getInt**, **getDouble**..., доступные методы будут видны в контекстном меню.
 
-Из полученного объекта (листинг был выше) нам нужны:
+Из полученного объекта (листинг был выше) нам нужны (эти данные вы будете выводить на экран по итогам этой лекции):
 
-* название иконки погоды: weather[0].icon
-* описание погоды: weather[0].description
-* температура: main.temp
-* влажность: main.humidity
-* скорость (wind.speed) и направление (wind.deg) ветра
-* название населенного пункта: name
+* название иконки погоды: **weather[0].icon**
+* описание погоды: **weather[0].description**
+* температура: **main.temp**
+* влажность: **main.humidity**
+* скорость (**wind.speed**) и направление (**wind.deg**) ветра
+* название населенного пункта: **name**
 
 Приведу несколько примеров
 
 ```kt
-val json = JSONObject(result)
+val json = JSONObject(response.body!!.string())
 
 // получение массива
 val wheather = json.getJSONArray("weather")
@@ -361,16 +373,14 @@ val temp = json.getJSONObject("main").getDouble("temp")
 
 ## Отображение иконки
 
-В разметку главного окна добавьте элемент **ImageView**
+В разметку окна добавьте элемент **ImageView**
 
 ```xml
 <ImageView
     android:id="@+id/ico"
     android:layout_width="100dp"
     android:layout_height="100dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    />
+/>
 ```
 
 Для программного отображения изображения нужно вызвать метод **setImageBitmap(Bitmap)**
@@ -379,19 +389,44 @@ val temp = json.getJSONObject("main").getDouble("temp")
 
 В JSON-ответе название иконки погоды находится в массиве погоды. Я его доставал в примере выше (переменная icoName)
 
-Урл иконки выглядит так
+Урл иконки выглядит так (описано в АПИ):
 
-```
-https://openweathermap.org/img/w/${icoName}.png
-```
-
-И в моей библиотеке есть отдельный метод для загрузки картинок
-
-```
-fun getImage(url: String, callback: (result: Bitmap?, error: String)->Unit)
+```kt
+val icoUrl = "https://openweathermap.org/img/w/${icoName}.png"
 ```
 
-Первый параметр URL изображения, второй лямбда выражение для функции обратного вызова, которое возвращает Bitmap или ошибку
+Для загрузки картинок напишем отдельный метод:
+
+```
+fun loadImage(icoUrl: String, callback: (result: Bitmap?)->Unit) {
+    val request = Request.Builder()
+        .url(icoUrl)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) 
+                    throw IOException("Unexpected code $response")
+
+                // тело запроса считваем как поток байт и передаем его в построитель изображений (BitmapFactory)
+                val bitmap = BitmapFactory
+                    .decodeStream(
+                        response.body!!.byteStream()
+                    )
+                    
+                callback.invoke(bitmap)
+            }
+        }
+    })
+}
+```
+
+Первый параметр URL изображения, второй - лямбда выражение для функции обратного вызова, которое возвращает Bitmap
 
 Вызов этого метода можно вставить в предыдущий callback
 
@@ -401,12 +436,9 @@ runOnUiThread {
     textView.text = json.getString("name")
 }
 
-HTTP.getImage("https://openweathermap.org/img/w/${icoName}.png") { bitmap, error ->
-    if (bitmap != null) {
-        var imageView = findViewById<ImageView>(R.id.ico)
-        runOnUiThread {
-            imageView.setImageBitmap(bitmap)
-        }
+loadImage("https://openweathermap.org/img/w/${icoName}.png") {
+    runOnUiThread {
+        ico.setImageBitmap(it)
     }
 }
 ```
