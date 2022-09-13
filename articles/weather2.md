@@ -12,7 +12,7 @@
 
 * [SplashScreen](#splashscreen)
 * [Выбор города](#выбор-города)
-* [Веделение лямбда-выражения в отдельную переменную](#выделение-лямбда-выражения-в-отдельную-переменную)
+* [Выделение лямбда-выражения в отдельную переменную](#выделение-лямбда-выражения-в-отдельную-переменную)
 * [Получение и разбор массива данных. Вывод списка на экран.](#получение-и-разбор-массива-данных-Вывод-списка-на-экран)
 * [Доработка SplashScrin-а](#Доработка-SplashScreen-а)
 * [Вывод сообщений](#Вывод-сообщений)
@@ -150,53 +150,99 @@
         val name = data.getStringExtra("cityName")
 
         // тут запускаем http-запрос по имени города
+        getWeather(
+            "https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${appid}&lang=ru&units=metric", 
+            callback)
     }
     ```
 
     >Метод *onActivityResult* гугл объявил устаревшим (deprecated), и в IDE он помечается как ошибка - надо в контекстном меню "More action..." выбрать "Supress: add...". Перед методом будет добавлена аннотация `@SuppressLint("MissingSuperCall")`.
 
+>OpenWeather поддерживает [*геокодирование*](https://openweathermap.org/current), т.е. может найти координаты (и, соответственно, погоду по ним) по названию города:
+>```
+>https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+>```
+>где, *city_name* название города
+
 ## Выделение лямбда-выражения в отдельную переменную
 
-Для обработки результатов мы пользовались такой конструкцией - лямбда выражение передавали сразу в метод *requestGET*. 
+Для обработки результатов мы пользовались такой конструкцией - результаты запроса обрабатывли в месте получения. 
 
 ```kt
-HTTP.requestGET(url) {result, error ->
-    if(result != null) {
-        val json = JSONObject(result)
-        val wheather = json.getJSONArray("weather")
-        val icoName = wheather.getJSONObject(0).getString("icon")
-        val temp = json.getJSONObject("main").getDouble("temp")
-
-        runOnUiThread {
-            textView.text = json.getString("name")
-        }
-        ...
+client.newCall(request).enqueue(object : Callback {
+    override fun onFailure(call: Call, e: IOException) {
+        e.printStackTrace()
     }
+
+    override fun onResponse(call: Call, response: Response) {
+        response.use {
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+            val json = JSONObject(response.body!!.string())
+            val wheather = json.getJSONArray("weather")
+            val icoName = wheather.getJSONObject(0).getString("icon")
+
+            loadImage(icoName) {
+                runOnUiThread {
+                    ico.setImageBitmap(it)
+                }
+            }
+
+            runOnUiThread {
+                textView.text = json.getString("name")
+            }
+        }
+    }
+})
+```
+
+Но теперь тот же код будет использоваться для получения погоды по городу. Поэтому имеет смысл вынести код запроса в отдельный метод, обработку результата оформить отдельной лямбда-функцией:
+
+```kt
+// отдельный метод для запроса погоды
+fun getWeather(url: String, callback: (result: String?)->Unit) {
+    val request = Request.Builder()
+        .url(url)
+        .build()
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                callback.invoke(response.body!!.string())
+            }
+        }
+    })
 }
 ```
 
-Но теперь тот же код будет использоваться для получения погоды по городу. Поэтому имеет смысл вынести код в отдельную переменную и использовать её в обоих вызовах:
-
 ```kt
 // callback - свойство класса, объявляется в теле класса
-private val callback: (result: String?, error: String) -> Unit = {result, error ->
-    if(result != null) {
-        val json = JSONObject(result)
-        val wheather = json.getJSONArray("weather")
-        val icoName = wheather.getJSONObject(0).getString("icon")
-        val temp = json.getJSONObject("main").getDouble("temp")
+private val callback: (result: String?) -> Unit = {
+    val json = JSONObject(it)
+    val wheather = json.getJSONArray("weather")
+    val icoName = wheather.getJSONObject(0).getString("icon")
 
+    loadImage(icoName) {bmp ->
         runOnUiThread {
-            textView.text = json.getString("name")
+            ico.setImageBitmap(bmp)
         }
-        ...
+    }
+
+    runOnUiThread {
+        textView.text = json.getString("name")
     }
 }
 
 ...
 
 // при запросе погоды используем переменную, объявленную выше
-HTTP.requestGET(url, callback) 
+getWeather(
+    "https://api.openweathermap.org/data/2.5/weather?lat=56.638372&lon=47.892991&appid=${appid}&lang=ru&units=metric", 
+    callback)
 ```
 
 ## Получение и разбор массива данных. Вывод списка на экран.
@@ -457,13 +503,11 @@ AlertDialog.Builder(this)
 **Во-первых**, создадим сам объект парсера:
 
 ```kt
-HTTP.requestGET(url) {result, error ->
-    if(result != null) {
-        val factory = XmlPullParserFactory.newInstance()
-        factory.isNamespaceAware = true
-        val parser = factory.newPullParser()
-        parser.setInput(StringReader(result))
-        ...
+val factory = XmlPullParserFactory.newInstance()
+factory.isNamespaceAware = true
+val parser = factory.newPullParser()
+parser.setInput(StringReader(result))
+...
 ```
 
 А дальше идёт тупой перебор тегов в цикле:
