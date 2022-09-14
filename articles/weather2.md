@@ -295,7 +295,7 @@ GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&app
 
     ```kt
     val url = "https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${token}&lang=ru&units=metric"
-    HTTP.requestGET(url) {result, error ->
+    getWeather(url) {result ->
         if(result != null) {
             // перед заполнением очищаем список
             weatherList.clear()
@@ -328,8 +328,6 @@ GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&app
                 dailyInfoRecyclerView.adapter?.notifyDataSetChanged()
             }
         }
-        else
-            Log.d("KEILOG", error)
     }
     ```
 
@@ -351,10 +349,15 @@ private lateinit var dailyInfoRecyclerView: RecyclerView
 dailyInfoRecyclerView = findViewById(R.id.dailyInfoRecyclerView)
 
 // назначаем менеджер разметки
-dailyInfoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+dailyInfoRecyclerView.layoutManager = LinearLayoutManager(
+    this, 
+    RecyclerView.HORIZONTAL, 
+    false)
 
 // создаем адаптер
-val weatherAdapter = WeatherAdapter(weatherList, this)
+val weatherAdapter = WeatherAdapter(
+    weatherList, 
+    this)
 
 // при клике на элемент списка показать подробную информацию (сделайте сами)
 weatherAdapter.setItemClickListener { weather ->
