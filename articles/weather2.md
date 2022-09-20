@@ -465,6 +465,65 @@ AlertDialog.Builder(this)
     .show()
 ```
 
+## Пример с обработкой ошибок
+
+```kt
+fun httpGet(
+    url: String, 
+    callback: (response: Response?, error: Exception?)->Unit
+){
+    val request = Request.Builder()
+        .url(url)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            callback.invoke(null, Exception(e.message!!))
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                callback.invoke(response, null)
+            }
+        }
+    })
+}
+```
+
+Оба варианта ответа (ошибка связи или что-то реально получено) возвращают результат в функции обратного вызова. Разбор ответа на вызывающей стороне:
+
+```kt
+httpGet("https://api.openweathermap.org/data/2.5/weather?lat=56.638372&lon=47.892991&appid=${appid}&lang=ru&units=metric") {response, error ->
+    try {
+        if (error != null) throw error
+        if (!response!!.isSuccessful) throw java.lang.Exception(response.message)
+
+        val json = JSONObject(response.body!!.string())
+        val wheather = json.getJSONArray("weather")
+        val icoName = wheather.getJSONObject(0).getString("icon")
+
+        loadImage(icoName) {bmp ->
+            runOnUiThread {
+                ico.setImageBitmap(bmp)
+            }
+        }
+
+        runOnUiThread {
+            textView.text = json.getString("name")
+        }
+    } catch (e: Exception) {
+        runOnUiThread {
+            AlertDialog.Builder(this)
+                .setTitle("Ошибка")
+                .setMessage(e.message)
+                .setPositiveButton("OK", null)
+                .create()
+                .show()
+        }
+    }
+}
+```
+
 ## Разбор XML
 
 Маловероятно, мо может встретиться XML-формат в данных. Разберёмся с ним на примере погоды. В URL добавьте параметр `&mode=xml`.
