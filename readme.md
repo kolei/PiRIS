@@ -371,7 +371,6 @@ ERD,
 1. [Основы языка Kotlin](./articles/kotlin.md)
 
 1. [Первый проект в Android Studio](./articles/android_studio.md)
-<!-- TODO расписать LinearLayout и TableLayout -->
 
 1. [Стили и темы. Ресурсы. Фигуры. Обработчики событий.](./articles/themes.md)
 
