@@ -16,6 +16,7 @@
 * [Получение и разбор массива данных. Вывод списка на экран.](#получение-и-разбор-массива-данных-Вывод-списка-на-экран)
 * [Доработка SplashScrin-а](#Доработка-SplashScreen-а)
 * [Вывод сообщений](#Вывод-сообщений)
+* [Пример GET-запроса с обработкой ошибок](#пример-с-обработкой-ошибок)
 * [Разбор XML](#Разбор-XML)
 
 ## SplashScreen
@@ -493,7 +494,8 @@ fun httpGet(
 Оба варианта ответа (ошибка связи или что-то реально получено) возвращают результат в функции обратного вызова. Разбор ответа на вызывающей стороне:
 
 ```kt
-httpGet("https://api.openweathermap.org/data/2.5/weather?lat=56.638372&lon=47.892991&appid=${appid}&lang=ru&units=metric") {response, error ->
+httpGet("https://api.openweathermap.org/data/2.5/weather?lat=56.638372&lon=47.892991&appid=${appid}&lang=ru&units=metric") 
+{response, error ->
     try {
         if (error != null) throw error
         if (!response!!.isSuccessful) throw java.lang.Exception(response.message)
