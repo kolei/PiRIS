@@ -157,7 +157,7 @@
         val name = data.getStringExtra("cityName")
 
         // тут запускаем http-запрос по имени города
-        getWeather(
+        httpGet(
             "https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${appid}&lang=ru&units=metric", 
             callback)
     }
@@ -173,83 +173,82 @@
 
 ## Выделение лямбда-выражения в отдельную переменную
 
-Для обработки результатов мы пользовались такой конструкцией - результаты запроса обрабатывли в месте получения. 
+Для обработки результатов мы результаты запроса обрабатывли в месте получения. 
+
+Но теперь тот же код будет использоваться для получения погоды по городу. Поэтому имеет смысл обработку результата оформить отдельной лямбда-функцией:
 
 ```kt
-client.newCall(request).enqueue(object : Callback {
-    override fun onFailure(call: Call, e: IOException) {
-        e.printStackTrace()
-    }
+// weatherCallback - свойство класса, объявляется в теле класса
+private val weatherCallback: (response: Response?, error: Exception?)->Unit = {
+    response, error ->
+        try {
+            // если в запросе получено исключение, то "выбрасываем" его
+            if (error != null) throw error
 
-    override fun onResponse(call: Call, response: Response) {
-        response.use {
-            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            // если ответ получен, но код не 200, то тоже "выбрасываем" исключение
+            if (!response!!.isSuccessful) throw Exception(response.message)
+
+            // начинаем обработку ответа    
 
             val json = JSONObject(response.body!!.string())
             val wheather = json.getJSONArray("weather")
             val icoName = wheather.getJSONObject(0).getString("icon")
 
-            loadImage(icoName) {
-                runOnUiThread {
-                    ico.setImageBitmap(it)
-                }
-            }
-
+            // обращение к UI должно быть в контексте UiThread
             runOnUiThread {
                 textView.text = json.getString("name")
             }
-        }
-    }
-})
-```
 
-Но теперь тот же код будет использоваться для получения погоды по городу. Поэтому имеет смысл вынести код запроса в отдельный метод, обработку результата оформить отдельной лямбда-функцией:
+            httpGet("https://openweathermap.org/img/w/${icoName}.png")
+            {response, error ->
+                try {
+                    // если в запросе получено исключение, то "выбрасываем" его
+                    if (error != null) throw error
 
-```kt
-// отдельный метод для запроса погоды
-fun getWeather(url: String, callback: (result: String?)->Unit) {
-    val request = Request.Builder()
-        .url(url)
-        .build()
-    client.newCall(request).enqueue(object : Callback {
-        override fun onFailure(call: Call, e: IOException) {
-            e.printStackTrace()
-        }
+                    // если ответ получен, но код не 200, то тоже "выбрасываем" исключение
+                    if (!response!!.isSuccessful) throw Exception(response.message)
 
-        override fun onResponse(call: Call, response: Response) {
-            response.use {
-                if (!response.isSuccessful) throw IOException("Unexpected code $response")
-                callback.invoke(response.body!!.string())
+                    runOnUiThread {
+                        ico.setImageBitmap(
+                            BitmapFactory
+                                .decodeStream(
+                                    response.body!!.byteStream()
+                                )
+                        )
+                    }
+
+                } catch (e: Exception) {
+                    // любую ошибку показываем на экране
+                    runOnUiThread {
+                        AlertDialog.Builder(this)
+                            .setTitle("Ошибка")
+                            .setMessage(e.message)
+                            .setPositiveButton("OK", null)
+                            .create()
+                            .show()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // любую ошибку показываем на экране
+            runOnUiThread {
+                AlertDialog.Builder(this)
+                    .setTitle("Ошибка")
+                    .setMessage(e.message)
+                    .setPositiveButton("OK", null)
+                    .create()
+                    .show()
             }
         }
-    })
-}
-```
-
-```kt
-// callback - свойство класса, объявляется в теле класса
-private val callback: (result: String?) -> Unit = {
-    val json = JSONObject(it)
-    val wheather = json.getJSONArray("weather")
-    val icoName = wheather.getJSONObject(0).getString("icon")
-
-    loadImage(icoName) {bmp ->
-        runOnUiThread {
-            ico.setImageBitmap(bmp)
-        }
-    }
-
-    runOnUiThread {
-        textView.text = json.getString("name")
     }
 }
 
 ...
 
 // при запросе погоды используем переменную, объявленную выше
-getWeather(
+httpGet(
     "https://api.openweathermap.org/data/2.5/weather?lat=56.638372&lon=47.892991&appid=${appid}&lang=ru&units=metric", 
-    callback)
+    weatherCallback)
 ```
 
 ## Получение и разбор массива данных. Вывод списка на экран.
@@ -302,12 +301,18 @@ GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&app
 
     ```kt
     val url = "https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${token}&lang=ru&units=metric"
-    getWeather(url) {result ->
-        if(result != null) {
-            // перед заполнением очищаем список
+    httpGet(url)
+    {response, error ->
+        try {
+            // если в запросе получено исключение, то "выбрасываем" его
+            if (error != null) throw error
+
+            // если ответ получен, но код не 200, то тоже "выбрасываем" исключение
+            if (!response!!.isSuccessful) throw Exception(response.message)            
+            
             weatherList.clear()
 
-            val json = JSONObject(result)
+            val json = JSONObject(response.body!!.string())
             val list = json.getJSONArray("list")
 
             // перебираем json массив
@@ -333,6 +338,16 @@ GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&app
             runOnUiThread {
                 // уведомляем визуальный элемент, что данные изменились
                 dailyInfoRecyclerView.adapter?.notifyDataSetChanged()
+            }
+        } catch (e: Exception) {
+            // любую ошибку показываем на экране
+            runOnUiThread {
+                AlertDialog.Builder(this)
+                    .setTitle("Ошибка")
+                    .setMessage(e.message)
+                    .setPositiveButton("OK", null)
+                    .create()
+                    .show()
             }
         }
     }
@@ -450,81 +465,6 @@ dailyInfoRecyclerView.adapter = weatherAdapter
     ```
 
     Не забудьте при получении данных установить `ready=true`. Хотя ничего страшного не произойдёт, если забудете - просто будут смотреть на заставку чуть подольше.
-
-## Вывод сообщений
-
->В шпоры положил
-
-В принципе тут простой телескопический конструктор
-
-```kt
-AlertDialog.Builder(this)
-    .setTitle("Заголовок")
-    .setMessage("Текст сообщения")
-    .setPositiveButton("OK", null)
-    .create()
-    .show()
-```
-
-## Пример с обработкой ошибок
-
-```kt
-fun httpGet(
-    url: String, 
-    callback: (response: Response?, error: Exception?)->Unit
-){
-    val request = Request.Builder()
-        .url(url)
-        .build()
-
-    client.newCall(request).enqueue(object : Callback {
-        override fun onFailure(call: Call, e: IOException) {
-            callback.invoke(null, Exception(e.message!!))
-        }
-
-        override fun onResponse(call: Call, response: Response) {
-            response.use {
-                callback.invoke(response, null)
-            }
-        }
-    })
-}
-```
-
-Оба варианта ответа (ошибка связи или что-то реально получено) возвращают результат в функции обратного вызова. Разбор ответа на вызывающей стороне:
-
-```kt
-httpGet("https://api.openweathermap.org/data/2.5/weather?lat=56.638372&lon=47.892991&appid=${appid}&lang=ru&units=metric") 
-{response, error ->
-    try {
-        if (error != null) throw error
-        if (!response!!.isSuccessful) throw java.lang.Exception(response.message)
-
-        val json = JSONObject(response.body!!.string())
-        val wheather = json.getJSONArray("weather")
-        val icoName = wheather.getJSONObject(0).getString("icon")
-
-        loadImage(icoName) {bmp ->
-            runOnUiThread {
-                ico.setImageBitmap(bmp)
-            }
-        }
-
-        runOnUiThread {
-            textView.text = json.getString("name")
-        }
-    } catch (e: Exception) {
-        runOnUiThread {
-            AlertDialog.Builder(this)
-                .setTitle("Ошибка")
-                .setMessage(e.message)
-                .setPositiveButton("OK", null)
-                .create()
-                .show()
-        }
-    }
-}
-```
 
 ## Разбор XML
 

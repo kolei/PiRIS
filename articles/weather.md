@@ -267,47 +267,75 @@ implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 
 >Неизвестные методы **Android Studio** показывает красным цветом. Чтобы добавить пакет, в котором описан такой метод, нужно поместить курсор на этот метод и, либо через контекстное меню, либо нажатием **Alt+Enter** добавить пакет в импортируемые (если вариантов импорта несколько, то смотрите по контексту - в нашем случае в названии пакета должно быть что-то про **okhttp**)
 
+В примерах из [OkHttp](https://square.github.io/okhttp/) нет обработки исключительных ситуаций, я написал метод, который принимает на вход строку **url** или готовый **Request** и возвращает callback с ответом или исключением (если связи физически нет):
+
 ```kt
 // в классе объявите свойство client
 private val client = OkHttpClient()
-...
 
-fun onGetCoordinates(lat: Double, lon: Double){
-    ...
-
-    // сформируйте запрос
-    val request = Request.Builder()
-        .url("https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${appid}&lang=ru&units=metric")
-        .build()
-
-    // и выполните его
+fun httpGet(
+    url: Any, // тип Any - тут может быть строка для GET запроса, или готовый Request
+    callback: (response: Response?, error: Exception?)->Unit
+) {
+    var request: Request = when (url) {
+        is String -> Request.Builder()
+            .url(url)
+            .build()
+        is Request -> url as Request
+        else -> {
+            callback.invoke(null, Exception("Не верный тип параметра \"url\""))
+            return
+        }
+    }
     client.newCall(request).enqueue(object : Callback {
-        // метод будет вызван при ошибке
         override fun onFailure(call: Call, e: IOException) {
-            e.printStackTrace()
+            callback.invoke(null, Exception(e.message!!))
         }
 
-        // при успешном запросе
         override fun onResponse(call: Call, response: Response) {
             response.use {
-                if (!response.isSuccessful) 
-                    throw IOException("Unexpected code $response")
-
-                // for ((name, value) in response.headers) {
-                //     Log.d("weather","$name: $value")
-                // }
-                // Log.d("weather", response.body!!.string())
-
-                val json = JSONObject(response.body!!.string())
-                val wheather = json.getJSONArray("weather")
-                val icoName = wheather.getJSONObject(0).getString("icon")
-
-                runOnUiThread {
-                    textView.text = json.getString("name")
-                }
+                callback.invoke(response, null)
             }
         }
     })
+}
+```
+
+Как выглядит вызов этого метода:
+
+```kt
+fun onGetCoordinates(lat: Double, lon: Double){
+    ...
+
+    httpGet("https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${appid}&lang=ru&units=metric")
+    {response, error ->
+        try {
+            // если в запросе получено исключение, то "выбрасываем" его
+            if (error != null) throw error
+
+            // если ответ получен, но код не 200, то тоже "выбрасываем" исключение
+            if (!response!!.isSuccessful) throw Exception(response.message)
+
+            // начинаем обработку ответа    
+
+            val json = JSONObject(response.body!!.string())
+
+            // обращение к UI должно быть в контексте UiThread
+            runOnUiThread {
+                textView.text = json.getString("name")
+            }
+        } catch (e: Exception) {
+            // любую ошибку показываем на экране
+            runOnUiThread {
+                AlertDialog.Builder(this)
+                    .setTitle("Ошибка")
+                    .setMessage(e.message)
+                    .setPositiveButton("OK", null)
+                    .create()
+                    .show()
+            }
+        }
+    }
 }
 ```
 
@@ -395,40 +423,9 @@ val temp = json.getJSONObject("main").getDouble("temp")
 val icoUrl = "https://openweathermap.org/img/w/${icoName}.png"
 ```
 
-Для загрузки картинок напишем отдельный метод:
+Для загрузки картинок воспользуемся тем же методом **httpGet**:
 
-```
-fun loadImage(icoUrl: String, callback: (result: Bitmap?)->Unit) {
-    val request = Request.Builder()
-        .url(icoUrl)
-        .build()
-
-    client.newCall(request).enqueue(object : Callback {
-        override fun onFailure(call: Call, e: IOException) {
-            e.printStackTrace()
-        }
-
-        override fun onResponse(call: Call, response: Response) {
-            response.use {
-                if (!response.isSuccessful) 
-                    throw IOException("Unexpected code $response")
-
-                // тело запроса считваем как поток байт и передаем его в построитель изображений (BitmapFactory)
-                val bitmap = BitmapFactory
-                    .decodeStream(
-                        response.body!!.byteStream()
-                    )
-                    
-                callback.invoke(bitmap)
-            }
-        }
-    })
-}
-```
-
-Первый параметр URL изображения, второй - лямбда выражение для функции обратного вызова, которое возвращает Bitmap
-
-Вызов этого метода можно вставить в предыдущий callback
+>Вызов этого метода нужно вставить в предыдущий callback
 
 ```kt
 ...
@@ -436,9 +433,34 @@ runOnUiThread {
     textView.text = json.getString("name")
 }
 
-loadImage("https://openweathermap.org/img/w/${icoName}.png") {
-    runOnUiThread {
-        ico.setImageBitmap(it)
+httpGet("https://openweathermap.org/img/w/${icoName}.png")
+{response, error ->
+    try {
+        // если в запросе получено исключение, то "выбрасываем" его
+        if (error != null) throw error
+
+        // если ответ получен, но код не 200, то тоже "выбрасываем" исключение
+        if (!response!!.isSuccessful) throw Exception(response.message)
+
+        runOnUiThread {
+            ico.setImageBitmap(
+                BitmapFactory
+                    .decodeStream(
+                        response.body!!.byteStream()
+                    )
+            )
+        }
+
+    } catch (e: Exception) {
+        // любую ошибку показываем на экране
+        runOnUiThread {
+            AlertDialog.Builder(this)
+                .setTitle("Ошибка")
+                .setMessage(e.message)
+                .setPositiveButton("OK", null)
+                .create()
+                .show()
+        }
     }
 }
 ```
