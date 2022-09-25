@@ -47,7 +47,7 @@ Http.call("урл строка"){ response, error ->
 */
 
 /*
-Использование для POST-запросов, или для запросов с заголовками
+Использование для POST-запросов
 
 val json = JSONObject()
 json.put("username", userName)
@@ -62,7 +62,9 @@ Http.call(
 */
 
 /*
-Использование для запросов с заголовками
+Использование для запросов с заголовками 
+(обратите внимение, позиционного параметра data нет, 
+поэтому используем именованный параметр headers)
 Http.call(
     Http.buildRequest(
         "http://s4a.kolei.ru/Product",
@@ -74,13 +76,16 @@ Http.call(
 object Http {
     private val client = OkHttpClient()
 
-    fun buildRequest(url: String, data: String? = null, method: String = "GET", headers: Map<String, String>? = null): Request {
-        val json = "application/json; charset=utf-8".toMediaTypeOrNull()
+    fun buildRequest(
+        url: String, 
+        data: String? = null, 
+        headers: Map<String, String>? = null): Request 
+    {
         val request = Request.Builder().url(url)
-        if (data != null)
+        if (data != null) {
+            val json = "application/json; charset=utf-8".toMediaTypeOrNull()
             request.post(data.toRequestBody(json))
-        else
-            request.get()
+        }
 
         if(headers!=null){
             for((key, value) in headers){
