@@ -1,257 +1,116 @@
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import org.json.JSONObject
-import java.io.*
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLEncoder
-import javax.net.ssl.HttpsURLConnection
+// тут не забыть установить свой пакет
+package ru.yotc.baza
+
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import okio.IOException
 
 /*
-Перед использованием не забудьте добавить в манифест
-
-разрешение
+В манифест добавьте разрешение на работу с интернетом
 <uses-permission android:name="android.permission.INTERNET" />
 
-И атрибут в тег application
+И, если на сайте нет сертификата, атрибут в тег **application**:
 android:usesCleartextTraffic="true"
 
-Использование:
+В зависимости проекта добавить билиотеку:
+implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+*/
 
-HTTP.requestGET(
-    "http://s4a.kolei.ru/Product",
-    mapOf(
-        "token" to token
-    )
-){result, error, code ->
-    runOnUiThread{
-        if(result!=null){
-            resultTextView.text = result
-        }
-        else
+/*
+Использование для GET-запросов:
+Http.call("урл строка"){ response, error ->
+    try {
+        // если в запросе получено исключение, то "выбрасываем" его
+        if (error != null) throw error
+
+        // если ответ получен, но код не 200, то тоже "выбрасываем" исключение
+        if (!response!!.isSuccessful) throw Exception(response.message)
+
+        // тут обработка результата:
+        // тело ответа как строка: response.body!!.string()
+        // тело ответа как изображение: BitmapFactory.decodeStream(response.body!!.byteStream())
+
+    } catch (e: Exception) {
+        // любую ошибку показываем на экране
+        runOnUiThread {
             AlertDialog.Builder(this)
-                .setTitle("Ошибка http-запроса")
-                .setMessage(error)
+                .setTitle("Ошибка")
+                .setMessage(e.message)
                 .setPositiveButton("OK", null)
                 .create()
                 .show()
-    }
-}
-
-HTTP.requestPOST(
-    "http://s4a.kolei.ru/login",
-    JSONObject().put("username", username).put("password", password),
-    mapOf(
-        "Content-Type" to "application/json"
-    )
-){result, error, code ->
-    runOnUiThread{
-        if(result!=null){
-        }
-        else
-            AlertDialog.Builder(this)
-                .setTitle("Ошибка http-запроса")
-                .setMessage(error)
-                .setPositiveButton("OK", null)
-                .create()
-                .show()
-    }
-}
-
-HTTP.getImage("https://openweathermap.org/img/w/${icoName}.png") { bitmap, error ->
-    runOnUiThread {
-        if (bitmap != null) {
-            var imageView = findViewById<ImageView>(R.id.ico)
-            imageView.setImageBitmap(bitmap)
+            }
         }
     }
 }
 */
 
-object HTTP
-{
-    private const val GET : String = "GET"
-    private const val POST : String = "POST"
+/*
+Использование для POST-запросов, или для запросов с заголовками
 
-    private fun getCharSet(url: String): String{
-        val obj = URL(url)
-        var con: HttpURLConnection = if(url.startsWith("https:", true))
-            obj.openConnection() as HttpsURLConnection
+val json = JSONObject()
+json.put("username", userName)
+json.put("password", password)
+
+Http.call(
+    Http.buildRequest(
+        "http://s4a.kolei.ru/login",
+        json.toString()
+    )
+) { response, error -> ... }
+*/
+
+/*
+Использование для запросов с заголовками
+Http.call(
+    Http.buildRequest(
+        "http://s4a.kolei.ru/Product",
+        headers = mapOf("token" to token)
+    )
+) { response, error -> ... }
+*/
+
+object Http {
+    private val client = OkHttpClient()
+
+    fun buildRequest(url: String, data: String? = null, method: String = "GET", headers: Map<String, String>? = null): Request {
+        val json = "application/json; charset=utf-8".toMediaTypeOrNull()
+        val request = Request.Builder().url(url)
+        if (data != null)
+            request.post(data.toRequestBody(json))
         else
-            obj.openConnection() as HttpURLConnection
+            request.get()
 
-        con.requestMethod = "HEAD"
-        val contentType = con.contentType
-        return if(contentType!=null && contentType.contains("Windows-1251", true))
-            "Windows-1251"
-        else
-            "UTF-8"
-    }
-
-    /**
-     * Метод для отправки POST-запросов
-     *
-     * Запросы отправляются в отдельном потоке
-     * Автоматически поддерживает http/httpS
-     * Можно задать заголовки запроса
-     * По-умолчанию отправляет данные в формате application/x-www-form-urlencoded
-     * при задании заголовка Content-type: application/json автоматически переключается на это тип
-     *
-     * @param url Полный URL сайта (протокол + домен + путь)
-     * @param postData Даные для отправки
-     * @param headers Ассоциативный массив заголовков запроса
-     * @param callback Лямбда-функция обратного вызова
-     */
-    fun requestPOST(
-        url: String,
-        postData: JSONObject? = null,
-        headers: Map<String, String>?,
-        callback: (result: String?, error: String, code: Int)->Unit
-    ) {
-        Thread( Runnable {
-            var error = ""
-            var result: String? = null
-            var code: Int = -1
-            try {
-                val charset = getCharSet(url)
-
-                val urlURL = URL(url)
-                val conn: HttpURLConnection = if (url.startsWith("https:", true))
-                    urlURL.openConnection() as HttpsURLConnection
-                else
-                    urlURL.openConnection() as HttpURLConnection
-
-                // если задан тип контента application/json, то на выход пишу как есть
-                var contentTypeJson = false
-                if(headers!=null){
-                    for((key, value) in headers){
-                        if(key.lowercase()=="content-type" && value.startsWith("application/json"))
-                            contentTypeJson = true
-                        conn.setRequestProperty(key, value)
-                    }
-                }
-
-                conn.readTimeout = 10000
-                conn.connectTimeout = 10000
-                conn.requestMethod = POST
-                conn.doInput = true
-                conn.doOutput = true
-                val os: OutputStream = conn.outputStream
-
-                if (postData != null) {
-                    val writer = BufferedWriter(OutputStreamWriter(os, "UTF-8"))
-                    var content = ""
-                    content = if(contentTypeJson)
-                        postData.toString()
-                    else
-                        encodeParams(postData)?:""
-                    writer.write(content)
-                    writer.flush()
-                    writer.close()
-                }
-
-                os.close()
-                code = conn.responseCode // To Check for 200
-                if (code == HttpsURLConnection.HTTP_OK) {
-                    val `in` = BufferedReader(InputStreamReader(conn.inputStream, charset))
-                    val sb = StringBuffer("")
-                    var line: String? = ""
-                    while (`in`.readLine().also { line = it } != null) {
-                        sb.append(line)
-                        break
-                    }
-                    `in`.close()
-                    result = sb.toString()
-                }
-                else {
-                    error = "Response code ${code}"
-                }
+        if(headers!=null){
+            for((key, value) in headers){
+                request.addHeader(key, value)
             }
-            catch (e: Exception) {
-                error = e.message.toString()
-            }
-            callback.invoke(result, error, code)
-        }).start()
-    }
-
-    fun getImage(url: String, callback: (result: Bitmap?, error: String)->Unit){
-        Thread( Runnable {
-            var image: Bitmap? = null
-            var error = ""
-            try {
-                val `in` = URL(url).openStream()
-                image = BitmapFactory.decodeStream(`in`)
-            }
-            catch (e: Exception) {
-                error = e.message.toString()
-            }
-            callback.invoke(image, error)
-        }).start()
-    }
-
-    fun requestGET(
-        r_url: String,
-        headers: Map<String, String>?,
-        callback: (result: String?, error: String, code: Int)->Unit
-    ) {
-        Thread( Runnable {
-            var error = ""
-            var result: String? = null
-            var code: Int = -1
-            try {
-                val charset = getCharSet(r_url)
-
-                val obj = URL(r_url)
-
-                val con: HttpURLConnection = if(r_url.startsWith("https:", true))
-                    obj.openConnection() as HttpsURLConnection
-                else
-                    obj.openConnection() as HttpURLConnection
-
-                if(headers!=null){
-                    for((key, value) in headers){
-                        con.setRequestProperty(key, value)
-                    }
-                }
-
-                con.requestMethod = GET
-                code = con.responseCode
-
-                result = if (code == HttpURLConnection.HTTP_OK) { // connection ok
-                    val `in` =
-                        BufferedReader(InputStreamReader(con.inputStream, charset))
-                    var inputLine: String?
-                    val response = StringBuffer()
-                    while (`in`.readLine().also { inputLine = it } != null) {
-                        response.append(inputLine)
-                    }
-                    `in`.close()
-                    response.toString()
-                } else {
-                    null
-                }
-            }
-            catch (e: Exception){
-                error = e.message.toString()
-            }
-
-            callback.invoke(result, error, code)
-        }).start()
-    }
-
-    @Throws(IOException::class)
-    private fun encodeParams(params: JSONObject): String? {
-        val result = StringBuilder()
-        var first = true
-        val itr = params.keys()
-        while (itr.hasNext()) {
-            val key = itr.next()
-            val value = params[key]
-            if (first) first = false else result.append("&")
-            result.append(URLEncoder.encode(key, "UTF-8"))
-            result.append("=")
-            result.append(URLEncoder.encode(value.toString(), "UTF-8"))
         }
-        return result.toString()
+        return request.build()
+    }
+
+    fun call(url: Any, callback: (response: Response?, error: Exception?)->Unit) {
+        var request: Request = when (url) {
+            is String -> Request.Builder()
+                .url(url)
+                .build()
+            is Request -> url as Request
+            else -> {
+                callback.invoke(null, Exception("Не верный тип параметра \"url\""))
+                return
+            }
+        }
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback.invoke(null, Exception(e.message!!))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    callback.invoke(response, null)
+                }
+            }
+        })
     }
 }

@@ -159,7 +159,7 @@
     }
     ```
 
-5. Для запроса данных из базы нужно послать **GET** запрос с названием таблицы. В заголовке запроса передать токен полученный при авторизации (я сначала сделал передачу токена в заголовке, а только потом увидел, что надо было передавать в теле запроса).
+5. Для запроса данных из базы нужно послать **GET** запрос с названием таблицы. В заголовке запроса передать токен полученный при авторизации.
 
     ```
     GET {{url}}/Product
@@ -594,113 +594,169 @@ if(re.containsMatchIn("kolei@ya.ru")){
 
 ## HTTP-запросы, методы, форматы, заголовки.
 
->Класс [**HTTP**](../shpora/HttpHelper.kt) в шпаргалке я обновил.
-
-Итак, мы получили от формы авторизации логин и пароль.
-
-Напишем нормальную функцию обратного вызова (выделим её в отдельную переменную)
-
-Теперь вызов диалога авторизации будет выглядеть так:
+В шпаргалке лежит доработанный класс [**HTTP**](../shpora/HttpHelper.kt).
 
 ```kt
-LoginDialog(onLoginResponce)
-    .show(supportFragmentManager, null)
-```
+object Http {
+    private val client = OkHttpClient()
 
-Ниже реализация лямбда функции *onLoginResponce*:
+    fun buildRequest(url: String, data: String? = null, method: String = "GET", headers: Map<String, String>? = null): Request {
+        val json = "application/json; charset=utf-8".toMediaTypeOrNull()
+        val request = Request.Builder().url(url)
+        if (data != null)
+            request.post(data.toRequestBody(json))
+        else
+            request.get()
 
-```kt
-val onLoginResponce: (login: String, password: String)->Unit = { login, password ->
-    // первым делом сохраняем имя пользователя, 
-    // чтобы при необходимости можно было разлогиниться
-    username = login
+        if(headers!=null){
+            for((key, value) in headers){
+                request.addHeader(key, value)
+            }
+        }
 
-    // затем формируем JSON объект с нужными полями
-    val json = JSONObject()
-    json.put("username", login)
-    json.put("password", password)
+//            .addHeader("Authorization", "Bearer ${_token}")
+        return request.build()
+    }
 
-    // и вызываем POST-запрос /login
-    // в параметрах не забываем указать заголовок Content-Type
-    HTTP.requestPOST(
-        "http://s4a.kolei.ru/login",
-        json,
-        mapOf(
-            "Content-Type" to "application/json"
-        )
-    ){result, error ->
-        if(result!=null){
-            try {
-                // анализируем ответ
-                val jsonResp = JSONObject(result)
+    fun call(url: Any, callback: (response: Response?, error: Exception?)->Unit) {
+        var request: Request = when (url) {
+            is String -> Request.Builder()
+                .url(url)
+                .build()
+            is Request -> url as Request
+            else -> {
+                callback.invoke(null, Exception("Не верный тип параметра \"url\""))
+                return
+            }
+        }
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback.invoke(null, Exception(e.message!!))
+            }
 
-                // если нет объекта notice
-                if(!jsonResp.has("notice"))
-                    throw Exception("Не верный формат ответа, ожидался объект notice")
-
-                // есть какая-то ошибка
-                if(jsonResp.getJSONObject("notice").has("answer"))
-                    throw Exception(jsonResp.getJSONObject("notice").getString("answer"))
-
-                // есть токен!!!
-                if(jsonResp.getJSONObject("notice").has("token")) {
-                    token = jsonResp.getJSONObject("notice").getString("token")
-                    runOnUiThread {
-                        // тут можно переходить на следующее окно
-                        Toast.makeText(this, "Success get token: $token", Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-                else
-                    throw Exception("Не верный формат ответа, ожидался объект token")
-            } catch (e: Exception){
-                runOnUiThread {
-                    AlertDialog.Builder(this)
-                        .setTitle("Ошибка")
-                        .setMessage(e.message)
-                        .setPositiveButton("OK", null)
-                        .create()
-                        .show()
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    callback.invoke(response, null)
                 }
             }
-        } else
-            runOnUiThread {
-                AlertDialog.Builder(this)
-                    .setTitle("Ошибка http-запроса")
-                    .setMessage(error)
-                    .setPositiveButton("OK", null)
-                    .create()
-                    .show()
-            }
+        })
     }
 }
 ```
 
-Если мы уже авторизованы и получили в ответ соответсвующую ошибку, то нужно предусмотреть на форме кнопку "Выход" (Logout) и реализовать обработчик:
+Разберём что тут понаписано:
 
 ```kt
-// тут я не делал отдельный json объект для параметров
-// можно создавать его на ходу
-HTTP.requestPOST(
-    "http://s4a.kolei.ru/logout",
-    JSONObject().put("username", username),
-    mapOf(
-        "Content-Type" to "application/json"
-    )
-){result, error ->
-    // при выходе не забываем стереть существующий токен
-    token = ""
+object Http {...}
+```
 
-    // каких-то осмысленных действий дальше не предполагается
-    // разве что снова вызвать форму авторизации
-    runOnUiThread {
-        if(result!=null) {
-            Toast.makeText(this, "Logout success!", Toast.LENGTH_LONG).show()
+>Ключевое слово **object** одновременно объявляет класс и создаёт его экземпляр (*singleton*).
+
+```kt
+fun call(
+    url: Any, 
+    callback: (response: Response?, error: Exception?)->Unit) 
+{
+    var request: Request = when (url) {
+        is String -> Request.Builder()
+            .url(url)
+            .build()
+        is Request -> url as Request
+        else -> {
+            callback.invoke(
+                null, 
+                Exception("Не верный тип параметра \"url\""))
+            return
         }
-        else {
+    }
+    ...
+```
+
+**call** - основной метод этого класса, он, собственно, и запускает запрос. Я сделал его универсальным: на входе ему можно передать либо просто строку URL, либо подготовленный объект **Request** (он нам понадобится, чтобы посылать запросы с методом POST, данными и заголовками)
+
+```kt
+fun buildRequest(url: String, data: String? = null, headers: Map<String, String>? = null): Request {
+    val json = "application/json; charset=utf-8".toMediaTypeOrNull()
+    val request = Request.Builder().url(url)
+    if (data != null)
+        request.post(data.toRequestBody(json))
+    else
+        request.get()
+
+    if(headers!=null){
+        for((key, value) in headers){
+            request.addHeader(key, value)
+        }
+    }
+    return request.build()
+}
+```
+
+**buildRequest** - вспомогательный метод, который облегчает построение объекта Request.
+
+>Этот метод заточен на посылку GET или POST запросов с типом данных JSON (заголовок `Content-Type: application/json` добавляется автоматически). Если понадобится послать другой метод (PUT, PATCH, DELETE) или данные другого типа, то можно сформировать объект **Request** самим и передать его в метод **call**
+
+Дальше по ходу лекции мы разберёмся с различными примерами использования этого метода (но они есть и в комментариях в начале файла)
+
+Итак, мы получили от формы авторизации логин и пароль.
+
+По клику на кнопке "Авторизоваться" пытаемся получить токен авторизации
+
+```kt
+// первым делом сохраняем имя пользователя, 
+// чтобы при необходимости можно было разлогиниться
+username = login
+
+// затем формируем JSON объект с нужными полями
+val json = JSONObject()
+json.put("username", login)
+json.put("password", password)
+
+// и вызываем POST-запрос /login
+Http.call(
+    Http.buildRequest(
+        "http://s4a.kolei.ru/login",
+        json.toString()
+    )
+) { response, error ->
+    try {
+        // если в запросе получено исключение, то "выбрасываем" его
+        if (error != null) throw error
+
+        // если ответ получен, но код не 200, то тоже "выбрасываем" исключение
+        if (!response!!.isSuccessful) throw Exception(response.message)
+
+
+        // анализируем ответ
+        val jsonResp = JSONObject(response.body!!.string())
+
+        // если нет объекта notice
+        if(!jsonResp.has("notice"))
+            throw Exception("Не верный формат ответа, ожидался объект notice")
+
+        // есть какая-то ошибка
+        if(jsonResp.getJSONObject("notice").has("answer"))
+            throw Exception(jsonResp.getJSONObject("notice").getString("answer"))
+
+        // есть токен!!!
+        if(jsonResp.getJSONObject("notice").has("token")) {
+            // сохраняем токен в свойстве класса
+            token = jsonResp.getJSONObject("notice").getString("token")
+
+            runOnUiThread {
+                // тут можно переходить на следующее окно
+                Toast.makeText(this, "Success get token: $token", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+        else
+            throw Exception("Не верный формат ответа, ожидался объект token")
+    } catch (e: Exception) {
+        // любую ошибку показываем на экране
+        runOnUiThread {
             AlertDialog.Builder(this)
-                .setTitle("Ошибка http-запроса")
-                .setMessage(error)
+                .setTitle("Ошибка")
+                .setMessage(e.message)
                 .setPositiveButton("OK", null)
                 .create()
                 .show()
@@ -709,31 +765,43 @@ HTTP.requestPOST(
 }
 ```
 
+Если мы уже авторизованы и получили в ответ соответсвующую ошибку, то нужно предусмотреть на форме кнопку "Выход" (Logout) и реализовать обработчик (для краткости я убрал проверку результата в начале и обработку исключения в конце - добавьте сами):
+
+```kt
+// тут для примера я формирую JSON-строку 
+// без использования класса JSONObject
+Http.call(Http.buildRequest(
+    "http://s4a.kolei.ru/logout", 
+    """{"username":"${userName}"}"""))
+{response, error ->
+    try {
+        ...
+
+        // при выходе не забываем стереть существующий токен
+        token = ""
+
+        // каких-то осмысленных действий дальше не предполагается
+        // разве что снова вызвать форму авторизации
+        runOnUiThread {
+            Toast.makeText(this, "Logout success!", Toast.LENGTH_LONG).show()
+        }
+
+        ...
+```
+
 Ну и последний на сегодня запрос - запрос списка продукции (его нужно вызывать уже из другого **activity**, передав ему токен):
 
 ```kt
-if(token.isNotEmpty()){
-    HTTP.requestGET(
+Http.call(
+    Http.buildRequest(
         "http://s4a.kolei.ru/Product",
-        mapOf(
-            "token" to token
-        )
-    ){result, error ->
-        runOnUiThread{
-            if(result!=null){
-                resultTextView.text = result
-            }
-            else
-                resultTextView.text = "ошибка: $error"
-        }
-    }
-}
-else
-    Toast.makeText(this, "Не найден токен, нужно залогиниться", Toast.LENGTH_LONG)
-        .show()
+        headers = mapOf("token" to token)
+    )
+) { response, error ->
+    ...
 ```
 
-Как видите, в параметры GET-запроса я добавил заголовки, чтобы можно было добавить токен. Дальнейшая реализация уже с вас.
+Как видите, в параметры метода **buildRequest** я добавил заголовки, чтобы можно было добавить токен. Дальнейшая реализация уже с вас.
 
 
 ## Сохранение данных при работе приложения
@@ -759,7 +827,7 @@ else
     }
     ```
 
-2. В манифесте в тег **application** добавьте атрибут *android:name=".MyApp"*, где *.MyApp* это имя созданного нами ранее класса
+2. В манифесте в тег **application** добавьте атрибут `android:name=".MyApp"`, где `.MyApp` это имя созданного нами ранее класса
 
 3. В классах, где нам нужны глобальные переменные создаем переменную, которая будет хранить указатель на **MyApp**
 
@@ -850,6 +918,8 @@ productTypeSpinner.adapter = ArrayAdapter(
 ```
 
 И при выборе элемента списка сделать фильтрацию списка продукции (тоже сделайте сами)
+
+<!-- TODO вроде нигде не расписано как делать фильтрацию - написать -->
 
 ```kt
 productTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
