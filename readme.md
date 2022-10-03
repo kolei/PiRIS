@@ -141,6 +141,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 1. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 
+1. [Импорт данных (вариант 22).](./articles/sql_import_22.md)
+
 1. [Представления (View)](./articles/sql_view.md)
 
 1. [Хранимые процедуры. Триггеры.](./articles/sql_trigger.md)
