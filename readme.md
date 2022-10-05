@@ -222,7 +222,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ## Тема 5.1.4. C# и MySQL.
 
-1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection2.md)
+1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection3.md)
 
 1. [Вывод данных согласно макету (ListView, Image). Вывод данных плиткой.](./articles/cs_layout.md)<!-- сюда же добавить разметку "плиткой" -->
 
