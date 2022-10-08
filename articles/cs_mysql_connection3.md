@@ -134,12 +134,14 @@ Scaffold-DbContext "server=kolei.ru;database=esmirnov;uid=esmirnov;password=1111
     public partial class MainWindow : Window
     {
         public IEnumerable<Product> ProductList { get; set; }
-        public esmirnovContext dbContext = new esmirnovContext();
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            ProductList = dbContext.Products.ToList();
+            using (var context = new esmirnovContext())
+            {
+                ProductList = context.Products.ToList();
+            }
         }
     }
     ```

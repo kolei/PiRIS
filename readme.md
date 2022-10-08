@@ -224,7 +224,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection3.md)
 
-1. [Вывод данных согласно макету (ListView, Image). Вывод данных плиткой.](./articles/cs_layout.md)<!-- сюда же добавить разметку "плиткой" -->
+1. [Вывод данных согласно макету (ListView, Image). Вывод данных плиткой.](./articles/cs_layout2.md)<!-- сюда же добавить разметку "плиткой" -->
 
 1. [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination.md)<!-- datepicker -->
 
@@ -288,6 +288,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Принципы навигации внутри и между андроид-приложениями](./articles/navigation.md)
 
 1. [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
+
+1. [Android Navigation. Знакомство с BottomNavigationView.](./articles/android_bottom_navigation.md)
 
 1. [Wear OS](./articles/wear_os.md)
 
