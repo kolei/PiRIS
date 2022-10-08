@@ -57,7 +57,7 @@
 
 В *целевой платформе* укажите **.NET 5.0** (для VSC 19 это последняя версия, для VSC 22 уже есть .NET 6)
 
-В контекстном меню *зависимости* выберите "Управление пакетами NuGet" и установите пакеты "Microsoft.EntityFrameworkCore.Tools" и "Pomelo.EntityFrameworkCore.MySql"
+В контекстном меню *зависимости* выберите "Управление пакетами NuGet" и установите пакеты "Microsoft.EntityFrameworkCore", "Microsoft.EntityFrameworkCore.Tools" и "Pomelo.EntityFrameworkCore.MySql"
 
 ![](../img/cs002.png)
 
