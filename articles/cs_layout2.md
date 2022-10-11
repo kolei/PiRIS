@@ -1,5 +1,5 @@
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_mysql_connection2.md">Создание подключения к БД MySQL. Получение данных с сервера.
+<a href="../articles/cs_mysql_connection3.md">Создание подключения к БД MySQL. Получение данных с сервера.
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
@@ -331,7 +331,7 @@ foreach (var item in ProductMaterials)
 ```
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_mysql_connection2.md">Создание подключения к БД MySQL. Получение данных с сервера.
+<a href="../articles/cs_mysql_connection3.md">Создание подключения к БД MySQL. Получение данных с сервера.
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
