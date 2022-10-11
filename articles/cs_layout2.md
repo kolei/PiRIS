@@ -149,13 +149,26 @@ namespace WpfApp3.Models
 
 Артикул выводится как есть
 
+Строка материалов должна формироваться динамически по таблице связей **ProductMaterial**, про неё раскажу ниже.
+
+**В третьей** колонке выводим **сумму материалов**, т.е. опять динамически формируем по таблице связей.
+
+```cs
+<TextBlock 
+    Grid.Column="2"
+    Text="{Binding MaterialSum}"/>
+```
+
 Если мы сейчас попробуем запустить наше приложение, то получим исключение (что-то с **NULL**). Дело в том, что по-умолчанию в модель загружаются данные только текущей таблицы (Product), а виртуальное свойство **ProductType** остаётся не заполненным. Для того, чтобы считать связанные данные, нужно при чтении данных использовать метод **Include**:
+
+>Количество включений не ограничено, но всё сразу лучше не загружать - WPF достаточно "умный", чтобы вычислять нужные свойства только при отображении, поэтому строку материалов и сумму можно считать отдельно
 
 ```cs
 using (var context = new esmirnovContext())
 {
     ProductList = context.Products
         .Include(product => product.ProductType)
+        .Include(product => product.ProductMaterials)
         .ToList();
 }
 ```
@@ -188,6 +201,74 @@ using (var context = new esmirnovContext())
 Теперь окно должно выглядеть как положено:
 
 ![](../img/cs006.png)
+
+## Расчёт материалов
+
+Материалы (название и цену) мы можем взять из таблицы **Material**, которая связана с продуктами (**Product**) отношением *многие-ко-многим* через таблицу **ProductMaterial**. Массив этих связей мы в продукты уже включили, осталось выбрать материалы: 
+
+```cs
+private string? _materialString = null;
+private double _materialSum = 0;
+
+public string MaterialString
+{
+    get
+    {
+        if (_materialString == null)
+        {
+            using (var context = new ksmirnovContext())
+            {
+                _materialString = "";
+                foreach (var item in ProductMaterials)
+                {
+                    var material = context.Materials
+                        .Where(m => m.Id == item.MaterialId).First();
+                    _materialString += material?.Title + ", ";
+                    _materialSum += Convert.ToDouble(material?.Cost ?? 0) * (item.Count ?? 0);
+                }
+            }
+        }
+        return _materialString;
+    }
+}
+
+public double MaterialSum
+{
+    get {
+        return _materialSum;
+    }
+}
+```
+
+Что тут происходит?
+
+**Во-первых**, чтобы каждый раз не пересчитывать данные мы их кешируем:
+
+```cs
+private string? _materialString = null;
+```
+
+Если материалы продукта вычисляются в первый раз (значение равно **null**), то происходит реальное чтение из базы, иначе возвращаем ранее вычисленное значение.
+
+**Во-вторых**, перебираем список материалов и формируем строку и сумму материалов
+
+```cs
+// перебираем массив материалов продукта
+foreach (var item in ProductMaterials)
+{
+    // ищем материал по его Id
+    var material = context.Materials
+        .Where(m => m.Id == item.MaterialId).First();
+    // формируем строку
+    _materialString += material?.Title + ", ";
+    // и цену, учитывая количество материалов
+    _materialSum += Convert.ToDouble(material?.Cost ?? 0) * (item.Count ?? 0);
+}
+```
+
+Теперь отображается всё что требуется по заданию, причём мы не написали ни одного запроса к БД, всё за нас сделал ORM фреймворк.
+
+![](../img/cs007.png)
 
 # Вывод данных "плиткой"
 

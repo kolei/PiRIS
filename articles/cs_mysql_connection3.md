@@ -79,6 +79,37 @@ Scaffold-DbContext "server=kolei.ru;database=esmirnov;uid=esmirnov;password=1111
 
 >Если вы хотите реконструировать не всю базу, а отдельные таблицы, то можно добавить параметр `-Tables`
 
+Например, рассмотрим таблицу **Product**:
+
+```cs
+public partial class Product
+{
+    public Product()
+    {
+        ProductMaterials = new HashSet<ProductMaterial>();
+    }
+
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public int? ProductTypeId { get; set; }
+    public string ArticleNumber { get; set; }
+    public string Description { get; set; }
+    public string Image { get; set; }
+    public int? ProductionPersonCount { get; set; }
+    public int? ProductionWorkshopNumber { get; set; }
+    public decimal MinCostForAgent { get; set; }
+
+    public virtual ProductType ProductType { get; set; }
+    public virtual ICollection<ProductMaterial> ProductMaterials { get; set; }
+}
+```
+
+1. Для всех полей таблицы созданы свойства класса (*Id*, *Title*...), причём необязательные поля имеют "нуллабельные" типы (**int? ProductTypeId**).
+2. Для связей сделаны виртуальные свойства или коллекции (в зависимости от направленности связи). 
+
+    * **virtual ProductType ProductType** - тип продукции (ссылка на словарь), отношение один (тип продукта) ко многим (продуктам)
+    * **virtual ICollection<ProductMaterial> ProductMaterials** - материалы продукта - коллекция (список) материалов, используемых в этом продукте. Отношение один (продукт) ко многим (материалам продукта) 
+
 # Получение данных с сервера.
 
 Для демонстрации работы используем прошлогоднюю [заготовку](https://github.com/kolei/OAP/blob/master/articles/wpf_template.md) - вывод в DBGrid
