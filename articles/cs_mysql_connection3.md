@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_layout.md">Вывод данных согласно макету (ListView, Image).
+<a href="../articles/cs_layout2.md">Вывод данных согласно макету (ListView, Image).
 </a></td><tr></table>
 
 * [Создание подключения к БД MySQL](#создание-подключения-к-бд-mysql)
