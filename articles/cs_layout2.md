@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_pagination.md">Пагинация, сортировка, фильтрация, поиск
+<a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск
 </a></td><tr></table>
 
 # Вывод данных согласно макету (ListView, Image).
@@ -335,5 +335,5 @@ foreach (var item in ProductMaterials)
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_pagination.md">Пагинация, сортировка, фильтрация, поиск
+<a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск
 </a></td><tr></table>
