@@ -1,5 +1,5 @@
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_pagination.md">Пагинация, сортировка, фильтрация, поиск
+<a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
@@ -124,7 +124,7 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
 
 ## Отображение кнопки "Изменить стоимость на ..."
 
-Сначала просто добавляем эту кнопку в разметку
+Сначала просто добавляем эту кнопку в разметку (можно в панель управления, можно в левую панель)
 
 ```xml
 <Button
@@ -196,7 +196,7 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
 
 2. Создаем и показываем модальное окно
 
-    Во-первых, вспоминаем, что мы должны соблюдать файловую структуру проекта, т.е. все однотипные объекты распихивать по соответствующим папкам. 
+    >Вспоминаем, что мы должны соблюдать файловую структуру проекта, т.е. все однотипные объекты распихивать по соответствующим папкам. 
     
     Создадим папку `Windows` и в неё добавим окно (WPF)
 
@@ -244,7 +244,7 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
     }
     ```
 
-    Во-первых, в конструктор добавляем параметр (средняя цена). Во-вторых, записываем эту цену в текстовое поле.
+    **Во-первых**, в конструктор добавляем параметр (средняя цена). **Во-вторых**, записываем эту цену в текстовое поле.
 
 3. По условиям задачи мы должны вычислить среднюю цену для выделенных элементов списка (я на вскидку не нашёл как преобразовать **IList** в **IEnumerable**, поэтому тупо перебираем список выбранных элементов, считаем сумму и, заодно, собираем список идентификаторов)
 
@@ -260,7 +260,7 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
 
         // создаём окно, передавая ему среднюю цену    
         var NewWindow = new EnterMinCostForAgentWindow(
-            AvgSum / ProductListView.SelectedItems.Count);
+            Sum / ProductListView.SelectedItems.Count);
 
         // показываем МОДАЛЬНОЕ окно    
         NewWindow.ShowDialog();
@@ -291,64 +291,37 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
 
 5. Запись новой цены в БД и обновление списка.
 
-    * редактируем пункт 3, добавляя анализ результата
+Редактируем пункт 3, добавляя анализ результата модального окна
 
-        ```cs
-        if((bool)NewWindow.ShowDialog())
+```cs
+if ((bool)NewWindow.ShowDialog())
+{
+    using (var context = new ksmirnovContext())
+    {
+        // выбираем выделенные продукты из БД
+        var query = context.Products.Where(
+            p => idList.Contains(p.Id));
+
+        // меняем им стоимость
+        foreach (var product in query)
         {
-            // вся работа с БД у нас в DataProvider-e, 
-            // передаем список идентификаторов и новую цену
-            Globals.DataProvider.SetAverageCostForAgent(idList, NewWindow.Result);
-            // для перерисовки списка продукции просто перечитываем его
-            ProductList = Globals.DataProvider.GetProducts();
+            product.MinCostForAgent = NewWindow.Result;
         }
-        ```
 
-    * Описываем метод *SetAverageCostForAgent* в интерфейсе **IDataProvider**:
+        // сохраняем данные
+        context.SaveChanges();
 
-        ```cs
-        void SetAverageCostForAgent(List<int> ProductIds, decimal NewCost);
-        ```
+        // перечитываем список продукции
+        ProductList = context.Products
+            .Include(product => product.ProductType)
+            .Include(product => product.ProductMaterials)
+            .ToList();
+    }
+}
+```
 
-    * И реализуем его в **MySQLDataProvider**-e:
-
-        ```cs
-        public void SetAverageCostForAgent(List<int> ProductIds, decimal NewCost)
-        {
-            try
-            {
-                Connection.Open();
-                try
-                {
-                    // вместо значений записываем шаблоны
-                    string Query = @"UPDATE 
-                        Product 
-                    SET MinCostForAgent=@MinCostForAgent 
-                    WHERE ID=@ID";
-
-                    // перебираем список идентификаторов
-                    foreach (int item in ProductIds)
-                    {
-                        MySqlCommand Command = new MySqlCommand(Query, Connection);
-                        // заменяем шаблоны параметрами
-                        Command.Parameters.AddWithValue("@MinCostForAgent", NewCost);
-                        Command.Parameters.AddWithValue("@ID", item);
-                        // и выполняем запрос
-                        Command.ExecuteNonQuery();
-                    }
-                }
-                finally
-                {
-                    Connection.Close();
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-        ```
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_pagination.md">Пагинация, сортировка, фильтрация, поиск
+<a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">

@@ -8,6 +8,8 @@
 
 Продолжаем реализовывать макет
 
+>Нужно вспомнить материалы прошлогодних лекций про [INotifyPropertyChanged](https://github.com/kolei/OAP/blob/master/articles/wpf_filtering.md)
+
 * [Пагинация](#пагинация)
 * [Сортировка](#сортировка)
 * [Фильтрация](#фильтрация)
@@ -66,7 +68,13 @@ public IEnumerable<Product> productList {
 
 ## Динамический вывод номеров страниц 
 
-В принципе можно руками в разметке нарисовать эти элементы, и может даже эксперты не обратят на это внимания. Но рассмотрим всё-таки правильный вариант.
+В принципе можно руками в разметке нарисовать эти элементы, и может даже эксперты не обратят на это внимания. Но рассмотрим всё-таки ~~правильный вариант~~. 
+
+Этот вариант рабочий, но проще сделать по [другому](#пагинация-версия-2)
+
+<details>
+
+<summary>Вариант пагинатора с программным созданием элементов</summary>
 
 1. В разметку страницы под **ListView** добавьте **пустой** именованный **StackPanel** (горизонтальный с выравниванием по правому краю)
 
@@ -136,6 +144,7 @@ public IEnumerable<Product> productList {
         }   
     }
     ```
+</details>
 
 # Сортировка
 
@@ -403,6 +412,68 @@ public IEnumerable<Product> ProductList {
     }
 }
 ```
+
+# Пагинация (версия 2)
+
+Пагинацию можно сделать проще:
+
+1. В вёрстке использовать горизонтальный **ListView** (есть в прошлой версии про вёрстку плиткой)
+
+    Вместо `<StackPanel Name="Paginator"...`
+
+    ```xml
+    <ListView
+        ItemsSource="{Binding PageList}"
+        Grid.Column="1"
+        Grid.Row="2">
+
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel 
+                    HorizontalAlignment="Right" />
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <TextBlock 
+                    Margin="5"
+                    Text="{Binding label}" 
+                    PreviewMouseDown="TextBlock_PreviewMouseDown"/>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+    ```
+
+2. В проект добавить класс **PageItem**
+
+    ```cs
+    public class PageItem
+    {
+        public string label { get; set; }
+    }
+    ```
+
+3. В классе окна объявить переменную **PageList** и в геттере списка продукции заполнять её, а не генерировать динамически содержимое для пагинатора
+
+    ```cs
+    public List<PageItem> PageList { get; set; } = new List<PageItem>();
+
+    ...
+
+    // в геттере
+    PageList.Clear();
+    PageList.Add(new PageItem { label = "<" });
+    for (int i = 1; i <= (Result.Count() / 20) + 1; i++){
+        PageList.Add(new PageItem { label = i.ToString() });
+    }
+    PageList.Add(new PageItem { label = ">" });
+
+    // не забываем уведомить визуальный интерфейс о том, что список страниц изменился
+    Invalidate("PageList");
+    ```
+
+---
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
 <a href="../articles/cs_layout2.md">Вывод данных согласно макету (ListView, Image)
