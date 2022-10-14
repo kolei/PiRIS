@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_coloring.md">Подсветка элементов по условию. Дополнительные выборки.
+<a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.
 </a></td><tr></table>
 
 Продолжаем реализовывать макет
@@ -409,5 +409,5 @@ public IEnumerable<Product> ProductList {
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_coloring.md">Подсветка элементов по условию. Дополнительные выборки.
+<a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.
 </a></td><tr></table>
