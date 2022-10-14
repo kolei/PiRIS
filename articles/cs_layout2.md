@@ -6,6 +6,12 @@
 <a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск
 </a></td><tr></table>
 
+Колока 1 | Колонка 2
+---------|----------
+&nbsp;   | Панель элементов управления `<WrapPanel Grid.Column="1"`
+&nbsp;   | Список продукции `<ListView Grid.Column="1" Grid.Row="1"`
+&nbsp;   | Пагинатор `<ListView Grid.Column="1" Grid.Row="2"`
+
 # Вывод данных согласно макету (ListView, Image).
 
 >Старый вариант с SQL-запросами находится [тут](./cs_layout.md)

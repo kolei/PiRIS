@@ -445,7 +445,7 @@ public IEnumerable<Product> ProductList {
     </ListView>
     ```
 
-2. В проект добавить класс **PageItem**
+1. В проект добавить класс **PageItem**
 
     ```cs
     public class PageItem
@@ -454,7 +454,7 @@ public IEnumerable<Product> ProductList {
     }
     ```
 
-3. В классе окна объявить переменную **PageList** и в геттере списка продукции заполнять её, а не генерировать динамически содержимое для пагинатора
+1. В классе окна объявить переменную **PageList** и в геттере списка продукции заполнять её, а не генерировать динамически содержимое для пагинатора
 
     ```cs
     public List<PageItem> PageList { get; set; } = new List<PageItem>();
@@ -473,6 +473,43 @@ public IEnumerable<Product> ProductList {
     Invalidate("PageList");
     ```
 
+1. Метод **Invalidate** с указанием изменившегося элемента
+
+    ```cs
+    private void Invalidate(string ComponentName = "ProductList") 
+    {
+        if (PropertyChanged != null)
+            PropertyChanged(
+                this, 
+                new PropertyChangedEventArgs(ComponentName));
+    }
+    ```
+
+1. Реализация обработчика клика по кнопкам пагинатора:
+
+    ```cs
+    private void TextBlock_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        switch ((sender as TextBlock).Text)
+        {
+            case "<":
+                // переход на предыдущую страницу с проверкой счётчика
+                if (currentPage > 0) currentPage--;
+                return;
+            case ">":
+                // переход на следующую страницу с проверкой счётчика
+                if (currentPage < _ProductList.Count() / PAGE_LEN) currentPage++;
+                return;
+            default:
+                // в остальных элементах просто номер странцы
+                // учитываем, что надо обрезать пробелы (Trim)
+                // и то, что номера страниц начинаются с 0
+                currentPage = Convert.ToInt32(
+                    (sender as TextBlock).Text) - 1;
+                return;
+        }
+    }
+    ```
 ---
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
