@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_edit_product.md">Создание, изменение продукции
+<a href="../articles/cs_edit_product2.md">Создание, изменение продукции
 </a></td><tr></table>
 
 # Подсветка элементов по условию. Дополнительные выборки.
@@ -325,5 +325,5 @@ if ((bool)NewWindow.ShowDialog())
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/cs_edit_product.md">Создание, изменение продукции
+<a href="../articles/cs_edit_product2.md">Создание, изменение продукции
 </a></td><tr></table>
