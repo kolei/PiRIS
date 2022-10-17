@@ -235,30 +235,37 @@
             // вся работа с БД должна быть завернута в исключения
             try
             {
-                // сюда добавлять проверки
-
-                /*  ПОКА НЕ РАБОТАЕТ !!!
+                Product product = null;
                 if (CurrentProduct.Id != 0)
-                {
-                    context.Products.Update(CurrentProduct);
-                }
+                    product = context.Products.Find(CurrentProduct.Id);
                 else
-                {
-                    CurrentProduct.ProductTypeId = CurrentProduct.ProductType.Id;
-                    context.Products.Add(CurrentProduct);
-                }
-                */
+                    product = new Product();
 
-                if (context.SaveChanges() > 0)
+                if (product != null)
                 {
-                    DialogResult = true;
+                    // сюда добавлять проверки
+
+                    product.Title = CurrentProduct.Title;
+                    product.ArticleNumber = CurrentProduct.ArticleNumber;
+                    product.ProductTypeId = CurrentProduct.ProductType.Id;
+                    product.MinCostForAgent = 100;
+
+                    if (product.Id==0)
+                        context.Products.Add(product);
+                    else
+                        context.Products.Update(product);
+
+                    if (context.SaveChanges() > 0)
+                    {
+                        DialogResult = true;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.Message);
             }
-        }
+        }        
     }
     ```
 
