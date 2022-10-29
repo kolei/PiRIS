@@ -45,7 +45,7 @@ setResult(RESULT_OK, newIntent)
 finish()
 ```
 
-Таймер обратного отсчёта и переход на другое activity
+## Таймер обратного отсчёта и переход на другое activity
 
 ```kt
 override fun onCreate(savedInstanceState: Bundle?) {

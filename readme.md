@@ -309,6 +309,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [ViewPager, Fragments, Tabs](./articles/pager.md)
 
+1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
+
 <!-- 
 
 TODO
