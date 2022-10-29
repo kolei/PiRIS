@@ -240,6 +240,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Создание, изменение продукции](./articles/cs_edit_product2.md)
 
+1. [Вывод списка материалов продукта. CRUD материалов продукта](./articles/cs_product_material.md)
+
 ## Тема 5.1.5. Разработка своего API.
 
 1. [API. PHP-сервер. GET-запрос.](./articles/api_php.md)
