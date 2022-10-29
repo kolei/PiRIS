@@ -150,3 +150,6 @@ private void DeleteMaterialTextBlock_MouseDown(object sender, MouseButtonEventAr
 }
 ```
 
+Составной первичный ключ в таблице **ProductMaterial**
+
+![](../img/cs009.png)
