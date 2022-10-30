@@ -1,0 +1,28 @@
+@url=http://cinema.kolei.ru
+
+### Регистрация
+POST {{url}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "kolei@yandex.ru",
+  "password": "123456",
+  "firstName": "Евгений",
+  "lastName": "Колесников"
+}
+
+### Аутентификация
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "kolei@yandex.ru",
+  "password": "123456"
+}
+
+### Получение списка фильмов
+GET {{url}}/movies?filter=new
+Authorization: Bearer 1
+
+### Получение картинки
+GET {{url}}/up/images/duna.webp
