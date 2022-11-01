@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  title: Попытка написать своё АПИ в Swagger
+  version: 0.0.1
+  description: |
+    API для мобильного приложения "WS-Cinema".
+
+    Перечень ошибок неполный, возможно получение от сервера незадокументированных ошибок.
+    
+    Для передачи токена необходимо использовать Header: **Authorization: Bearer {token}**
+    
+    Требования к email: email должен соответствовать паттерну **name@domenname.ru**, где имя и домен второго уровня могут состоять только из маленьких букв и цифр, домен верхнего уровня - только из маленьких букв. Длина домена верхнего уровня - не более 3х символов.
+    
+    **BASE URL**: http://cinema.kolei.ru
+    
+    **BASE URL** Для видео: http://cinema.kolei.ru/up/video/
+    
+    **BASE URL** Для изображений и аватаров: http://cinema.kolei.ru/up/images/
+
+servers:
+  - url: http://cinema.kolei.ru
+
+tags:
+  - name: auth
+    description: Регистрация и авторизация (получение токена)
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Регистрация
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email пользователя. Email должен соответствовать паттерну "name@domenname.ru", где имя и домен второго уровня могут состоять только из маленьких букв и цифр, домен верхнего уровня - только из маленьких букв. Длина домена верхнего уровня - не более 3х символов.
+                  example: kolei@yandex.ru
+                password:
+                  type: string
+                  description: Пароль
+                  example: qwerty
+                firstName:
+                  type: string
+                  description: Имя пользователя
+                  example: Евгений
+                lastName:
+                  type: string
+                  description: Фамилия пользователя
+                  example: Колесников
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+      responses:
+        '200':
+          description: Успешная регистрация
+        '400':
+          description: Проблемы при регистрации
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Аутентификация в системе
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email пользователя. Email должен соответствовать паттерну "name@domenname.ru", где имя и домен второго уровня могут состоять только из маленьких букв и цифр, домен верхнего уровня - только из маленьких букв. Длина домена верхнего уровня - не более 3х символов.
+                  example: kolei@yandex.ru
+                password:
+                  type: string
+                  description: Пароль
+                  example: qwerty
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Успешная аутентификация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: integer
+                    description: Токен доступа к серверу
+                    example: 123456
+        '400':
+          description: Проблема аутентификации                    

@@ -3,8 +3,6 @@
 const express = require('express')
 var cors = require('cors')
 
-
-
 //добавляю к консольному выводу дату и время
 function console_log(fmt, ...aparams){
   fmt = (new Date()).toJSON().substr(0, 19)+' '+fmt
@@ -21,10 +19,11 @@ app.use( express.urlencoded() )
 app.use( express.json() )
 
 app.use('/up/images', express.static(__dirname +'/images') )
+app.use('/swagger', express.static(__dirname +'/swagger') )
 
 // логгирую все входящие запросы
 app.use((req, res, next)=>{
-  console_log('[express] %s request from %s, body: %s', req.path, req.ip, JSON.stringify(req.body))
+  console_log('[express] %s %s request from %s, body: %s', req.method, req.path, req.ip, JSON.stringify(req.body))
   next()
 })
 
