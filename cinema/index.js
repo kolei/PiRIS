@@ -1,6 +1,9 @@
 'use strict'
 
 const express = require('express')
+var cors = require('cors')
+
+
 
 //добавляю к консольному выводу дату и время
 function console_log(fmt, ...aparams){
@@ -47,7 +50,8 @@ function findUserByToken(token) {
   return null
 }
 
-app.post('/auth/register', (req,res)=>{
+app.options('/auth/register', cors())
+app.post('/auth/register', cors(), (req,res)=>{
   try {
     // if(req.headers.token==undefined) 
     //   throw new Error("В заголовке запроса нет токена")
@@ -86,7 +90,8 @@ app.post('/auth/register', (req,res)=>{
   res.end()
 })
 
-app.post('/auth/login', (req,res)=>{
+app.options('/auth/login', cors())
+app.post('/auth/login', cors(), (req,res)=>{
   try {
     if(req.body.email==undefined) 
       throw new Error('Not found "email" param')
@@ -108,7 +113,8 @@ app.post('/auth/login', (req,res)=>{
   res.end()
 })
 
-app.get('/movies', (req,res)=>{
+app.options('/movies', cors())
+app.get('/movies', cors(), (req,res)=>{
   try {
     if (typeof req.query.filter == 'undefined')
       throw new Error('Filter is required parameter')
