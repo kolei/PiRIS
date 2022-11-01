@@ -19,7 +19,7 @@ app.use( express.urlencoded() )
 app.use( express.json() )
 
 app.use('/up/images', express.static(__dirname +'/images') )
-app.use('/swagger', express.static(__dirname +'/swagger') )
+app.use('/swagger', cors(), express.static(__dirname +'/swagger') )
 
 // логгирую все входящие запросы
 app.use((req, res, next)=>{
