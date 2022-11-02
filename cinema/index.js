@@ -18,7 +18,7 @@ const app = express()
 app.use( express.urlencoded() )
 app.use( express.json() )
 
-app.use('/up/images', express.static(__dirname +'/images') )
+app.use('/up/images', cors(), express.static(__dirname +'/images') )
 app.use('/swagger', cors(), express.static(__dirname +'/swagger') )
 
 // логгирую все входящие запросы
@@ -52,9 +52,6 @@ function findUserByToken(token) {
 app.options('/auth/register', cors())
 app.post('/auth/register', cors(), (req,res)=>{
   try {
-    // if(req.headers.token==undefined) 
-    //   throw new Error("В заголовке запроса нет токена")
-
     if(req.body.email==undefined) 
       throw new Error('Not found "email" param')
 
@@ -72,14 +69,21 @@ app.post('/auth/register', cors(), (req,res)=>{
       throw new Error('Param "email" don`t match template')
 
     let user = findUserByEmail(req.body.email)
-    if (user == null)
+    if (user == null) {
+      let user = null
+      let token = null
+      do {
+        token = Math.ceil(Math.random() * 999998)
+        user = findUserByToken(token)
+      } while (user != null);
       registeredUsers.push({
         email: req.body.email,
         password: req.body.password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        token: registeredUsers.length + 1
+        token: token
       })
+    }
 
     res.status(201)
   } catch (error) {
@@ -112,41 +116,44 @@ app.post('/auth/login', cors(), (req,res)=>{
   res.end()
 })
 
+function checkAuth(req){
+  if(req.headers.authorization==undefined) 
+    throw new Error('No Authorization header')
+
+  let parts = req.headers.authorization.split(' ')
+  if (parts.length == 2) {
+    if (parts[0] == 'Bearer') {
+      let user = findUserByToken(parts[1])
+      if (user == null)
+        throw new Error('User not found')
+    } else
+      throw new Error('Unsupported Authorization method')
+  } else
+    throw new Error('Bad Authorization content')
+}
+
 app.options('/movies', cors())
 app.get('/movies', cors(), (req,res)=>{
   try {
     if (typeof req.query.filter == 'undefined')
       throw new Error('Filter is required parameter')
 
-    if(req.headers.authorization==undefined) 
-      throw new Error('No Authorization header')
+    checkAuth(req)
 
-    let parts = req.headers.authorization.split(' ')
-    if (parts.length == 2) {
-      if (parts[0] == 'Bearer') {
-        let user = findUserByToken(parts[1])
-        if (user == null)
-          throw new Error('User not found')
-        else {
-          let filtered = movies
-            .filter(m => m.filters.includes(req.query.filter))
-          let mapped = filtered.map(m => {
-            return {
-              movieId: m.movieId, 
-              name: m.name,
-              description: m.description,
-              age: m.age, 
-              images: m.images, 
-              poster: m.poster, 
-              tags: m.tags
-            }
-          })
-          res.json(mapped)
-        }
-      } else
-        throw new Error('Unsupported Authorization method')
-    } else
-      throw new Error('Bad Authorization content')
+    let filtered = movies
+      .filter(m => m.filters.includes(req.query.filter))
+    let mapped = filtered.map(m => {
+      return {
+        movieId: m.movieId, 
+        name: m.name,
+        description: m.description,
+        age: m.age, 
+        images: m.images, 
+        poster: m.poster, 
+        tags: m.tags
+      }
+    })
+    res.json(mapped)
   } catch (error) {
     res.statusMessage = error.message
     res.status(400)

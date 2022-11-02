@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Попытка написать своё АПИ в Swagger
+  title: АПИ для демо-экзамена по компетенции Разработка мобильных приложений
   version: 0.0.1
   description: |
     API для мобильного приложения "WS-Cinema".
@@ -23,6 +23,8 @@ servers:
 tags:
   - name: auth
     description: Регистрация и авторизация (получение токена)
+  - name: movie
+    description: Информация о киноновинках
 
 paths:
   /auth/register:
@@ -69,7 +71,6 @@ paths:
       tags:
         - auth
       summary: Аутентификация в системе
-
       requestBody:
         required: true
         content:
@@ -100,5 +101,81 @@ paths:
                     type: integer
                     description: Токен доступа к серверу
                     example: 123456
+#          links:
+#            GetAuthToken:
+#              parameters:
+#                token: '$response.body#/token'
         '400':
-          description: Проблема аутентификации                    
+          description: Проблема аутентификации
+  /movies:
+    get:
+      tags:
+        - movie
+      summary: Получить список фильмов
+      description: Список фильмов для отображения на главном экране
+      parameters:
+        - name: filter
+          in: query
+          description: Фильтр для запроса
+          required: true
+          schema:
+            type: string
+            default: new
+            enum: [new, inTrend, forMe]
+      responses:
+        '200':
+          description: Массив фильмов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfMovies'
+        '400':
+          description: Проблемы при запросе
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    ArrayOfMovies:
+      type: array
+      items:
+        type: object
+        properties:
+          movieId:
+            type: string
+            example: 1
+          name:
+            type: string
+            example: Название фильма
+          description:
+            type: string
+            example: Описание фильма
+          age:
+            type: string
+            enum: ['0','6','12','16','18']
+            description: Возрастные ограничения
+          images:
+            type: array
+            items: 
+              type: string
+          poster:
+            type: string
+            example: poster.png
+            description: Название картинки постера
+          tags:
+            $ref: '#/components/schemas/ArrayOfTags'
+        required:
+          - movieId
+    ArrayOfTags:
+      type: array
+      items:
+        type: object
+        properties:
+          idTags:
+            type: string
+            example: 13
+          tagName:
+            type: string
+            example: Комедия
+
