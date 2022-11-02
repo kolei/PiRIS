@@ -146,7 +146,7 @@ app.get('/movies', cors(), (req,res)=>{
     if (typeof req.query.filter == 'undefined')
       throw new Error('Filter is required parameter')
 
-    checkAuth(req)
+    // checkAuth(req)
 
     let filtered = movies
       .filter(m => m.filters.includes(req.query.filter))

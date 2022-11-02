@@ -25,6 +25,8 @@ tags:
     description: Регистрация и авторизация (получение токена)
   - name: movie
     description: Информация о киноновинках
+  - name: up
+    description: Ресурсы
 
 paths:
   /auth/register:
@@ -128,16 +130,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfMovies'
+                $ref: '#/components/schemas/Movie'
         '400':
           description: Проблемы при запросе
+  /up/images/{imageName}:
+    get:
+      tags:
+        - up
+      summary: Получение картинки
+      parameters:
+        - in: path
+          name: imageName
+          schema:
+            type: string
+          required: true
+          description: Название картинки (с расширением), полученное при запросе списка фильмов
+      responses:
+        '200':
+          description: Файл картинки в произвольном формате
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Картинка не найдена на сервере
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
   schemas:
-    ArrayOfMovies:
+    Movie:
       type: array
       items:
         type: object
@@ -164,10 +188,10 @@ components:
             example: poster.png
             description: Название картинки постера
           tags:
-            $ref: '#/components/schemas/ArrayOfTags'
+            $ref: '#/components/schemas/Tag'
         required:
           - movieId
-    ArrayOfTags:
+    Tag:
       type: array
       items:
         type: object
