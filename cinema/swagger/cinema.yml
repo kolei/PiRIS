@@ -27,6 +27,8 @@ tags:
     description: Информация о киноновинках
   - name: up
     description: Ресурсы
+  - name: user
+    description: Информация о пользователе
 
 paths:
   /auth/register:
@@ -133,6 +135,134 @@ paths:
                 $ref: '#/components/schemas/Movie'
         '400':
           description: Проблемы при запросе
+  /user:
+    get:
+      tags: 
+        - user
+      summary: Получить информацию о пользователе
+      description: Необходимо передать header параметр авторизации типа Bearer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Данные пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Неавторизированный доступ
+  /user/avatar:
+    post:
+      tags:
+        - user
+      security:
+        - BearerAuth: []
+      summary: Загрузка фотографии
+      description: Данный запрос принимает только изображения формата .jpg/.jpeg. Пустые изображения и невалидные изображения не разрешены
+      requestBody:
+        required: true
+        content: 
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  format: string
+                file:
+                  type: string
+                  format: binary
+            encoding:
+              file:
+                contentType: image/jpg, image/jpeg
+      responses:
+        '200':
+          description: Данные пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Неавторизированный доступ
+  /user/chats:
+    get:
+      tags:
+        - user
+      security:
+        - BearerAuth: []
+      summary: Список чатов, в которых учавствует данный пользователь
+      description: Необходимо передать header параметр авторизации типа Bearer
+      responses:
+        '200':
+          description: Массив информации о чатах пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        '401':
+          description: Неавторизованный доступ
+  /chats/{chatId}/messages:
+    get:
+      tags:
+        - user
+      security:
+        - BearerAuth: []
+      summary: Список сообщений чата
+      description: Необходимо передать header параметр авторизации типа Bearer
+      parameters:
+        - in: path
+          name: chatId
+          schema:
+            type: integer
+          required: true
+          description: Id чата
+      responses:
+        '200':
+          description: Массив сообщений чата
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '401':
+          description: Неавторизированный доступ
+    post:
+      tags:
+        - user
+      security:
+        - BearerAuth: []
+      summary: Отправить сообщение в чат
+      description: Необходимо передать header параметр авторизации типа Bearer
+      parameters:
+        - in: path
+          name: chatId
+          schema:
+            type: integer
+          required: true
+          description: Id чата
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: Текст сообщения
+      responses:
+        '200':
+          description: Сообщение чата
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Проблемы при сохранении
+        '401':
+          description: Неавторизированный доступ
   /up/images/{imageName}:
     get:
       tags:
@@ -147,9 +277,9 @@ paths:
           description: Название картинки (с расширением), полученное при запросе списка фильмов
       responses:
         '200':
-          description: Файл картинки в произвольном формате
+          description: Файл картинки в формате .jpg
           content:
-            image/png:
+            image/jpg:
               schema:
                 type: string
                 format: binary
@@ -202,4 +332,63 @@ components:
           tagName:
             type: string
             example: Комедия
-
+    User:
+      type: array
+      items:
+        type: object
+        properties:
+          userId:
+            type: string
+            example: 27
+          firstName:
+            type: string
+            example: Евгений
+          lastName:  
+            type: string
+            example: Колесников
+          email:
+            type: string
+            example: kolei@yandex.ru
+          avatar:
+            type: string
+            example: ekolesnikov.jpg
+            description: Название файла
+    Chat:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Название чата
+            example: Дюна
+          chatId: 
+            type: string
+            example: 1
+    Message:
+      type: object
+      properties:
+        chatId:
+          type: string
+          example: 1
+        messageId: 
+          type: string
+          example: 1
+        creationDateTime:
+          type: string
+          format: date
+          example: 2022-11-07 10:30
+          description: Дата и время добавления сообщения в формате YYYY-MM-DD hh:mm
+        firstName:
+          type: string
+          example: Евгений
+        lastName:
+          type: string
+          example: Колесников
+        avatar:
+          type: string
+          example: somename.jpg
+        text:
+          type: string
+          example: А мне не понравился последний сезон. Позор создателям.
+        

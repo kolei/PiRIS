@@ -1,7 +1,10 @@
 'use strict'
 
 const express = require('express')
+const fileUpload = require('express-fileupload')
 var cors = require('cors')
+const md5 = require('md5')
+const fs = require('fs')
 
 //добавляю к консольному выводу дату и время
 function console_log(fmt, ...aparams){
@@ -17,6 +20,7 @@ const app = express()
 // декодирует параметры запроса
 app.use( express.urlencoded() )
 app.use( express.json() )
+app.use(fileUpload())
 
 app.use('/up/images', cors(), express.static(__dirname +'/images') )
 app.use('/swagger', cors(), express.static(__dirname +'/swagger') )
@@ -40,6 +44,14 @@ const movies = [
   {movieId: 9, name: 'Шрамы Парижа', age: '18', images: [], poster: 'scars.webp', tags: [], filters: ['new','inTrend','forMe'], description: 'В ноябре 2015 года Париж пережил самые страшные теракты в своей истории. Жертвами тщательно спланированных актов насилия стали почти 400 человек. Но на этом преступники не собирались останавливаться. Чтобы предотвратить будущие угрозы, двум агентам придется провести одно из самых крупных расследований в истории Старого Света и помешать преступникам нанести новый удар. Теперь в опасности не только Франция, но и вся Европа.'},
   {movieId: 10, name: 'Паранормальные явления. Дом призраков', age: '16', images: [], poster: 'Paranormal.webp', tags: [], filters: ['new','inTrend','forMe'], description: 'Когда-то Шон был популярным видеоблогером, сделавшим имя на экстремальных роликах, в которых он бросал вызов собственным страхам, но однажды вляпался в скандал и потерял всех спонсоров. Записав видео с извинениями и снова получив финансирование, парень возвращается с новым леденящим душу проектом. Шон собирается провести ночной стрим из дома с привидениями, где более 100 лет назад повесилась одинокая женщина, а после неоднократно фиксировалась паранормальная активность.'}
 ]
+
+const chats = [
+  {chatId: '1', name: 'Всё о дюне'},
+  {chatId: '2', name: 'Кто такой зелёный рыцарь?'},
+  {chatId: '3', name: 'Петр первый: великий император или разрушитель руси'}
+]
+
+const chatMessages = []
 
 function findUserByEmail(email) {
   for (let i = 0; i < registeredUsers.length; i++) {
@@ -89,7 +101,8 @@ app.post('/auth/register', cors(), (req,res)=>{
         password: req.body.password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        token: token
+        token: token,
+        avatar: ''
       })
     }
 
@@ -134,6 +147,7 @@ function checkAuth(req){
       let user = findUserByToken(parts[1])
       if (user == null)
         throw new Error('User not found')
+      return user
     } else
       throw new Error('Unsupported Authorization method')
   } else
@@ -162,6 +176,134 @@ app.get('/movies', cors(), (req,res)=>{
       }
     })
     res.json(mapped)
+  } catch (error) {
+    res.statusMessage = error.message
+    res.status(400)
+  }
+  res.end()
+})
+
+function userModel (user) {
+  const fileName = md5(user.email)+'.jpg'
+  const userObj = {
+    userId: user.token,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    avatar: user.avatar
+  }
+  if (fs.existsSync(__dirname + '/images/'+ fileName)) 
+    userObj.avatar = fileName
+
+  return [userObj]
+}
+
+app.options('/user', cors())
+app.get('/user', cors(), (req,res)=>{
+  try {
+    let user = checkAuth(req)
+    res.json(userModel(user))
+  } catch (error) {
+    res.statusMessage = error.message
+    res.status(401)
+  }
+  res.end()
+})
+
+app.options('/user/chats', cors())
+app.get('/user/chats', cors(), (req,res)=>{
+  try {
+    checkAuth(req)
+    res.json(chats)
+  } catch (error) {
+    res.statusMessage = error.message
+    res.status(401)
+  }
+  res.end()
+})
+
+function getChatMessage(message, user) {
+  return {
+    chatId: message.chatId,
+    messageId: message.messageId,
+    creationDateTime: message.creationDateTime,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    avatar: user.avatar,
+    text: message.text
+  }
+}
+
+app.options('/chats/:chatId/messages', cors())
+app.get('/chats/:chatId/messages', cors(), (req,res)=>{
+  try {
+    checkAuth(req)
+    let messages = []
+    // console_log('try get chat messages for chatId: %s', req.params.chatId)
+    for (let i = 0; i < chatMessages.length; i++) {
+      if(chatMessages[i].chatId == req.params.chatId) {
+        let user = findUserByToken(chatMessages[i].userId)
+        if(user != null) {
+          let chatMessage = getChatMessage(chatMessages[i], user)
+          messages.push(chatMessage)
+        }
+      }
+    }
+    res.json(messages)
+  } catch (error) {
+    res.statusMessage = error.message
+    res.status(401)
+  }
+  res.end()
+})
+
+function dateToMysql(xDate) {
+  return xDate.getFullYear().toString(10)
+      + '-' + (xDate.getMonth()+1).toString(10).padStart(2,'0')
+      + '-' + xDate.getDate().toString(10).padStart(2,'0')
+      + ' ' + xDate.getHours().toString(10).padStart(2,'0')
+      + ':' + xDate.getMinutes().toString(10).padStart(2,'0')  
+}
+
+app.post('/chats/:chatId/messages', cors(), (req,res)=>{
+  try {
+    let user = checkAuth(req)
+    let newMessage = {
+      chatId: req.params.chatId,
+      messageId: chatMessages.length + 1,
+      creationDateTime: dateToMysql(new Date()),
+      userId: user.token,
+      text: req.body.text
+    }
+    chatMessages.push(newMessage)
+    res.json(getChatMessage(newMessage, user))
+  } catch (error) {
+    res.statusMessage = error.message
+    res.status(401)
+  }
+  res.end()
+})
+
+app.options('/user/avatar', cors())
+app.post('/user/avatar', cors(), (req, res) => {
+  try {
+    // console.log(req.files)
+
+    if(req.body.token==undefined) 
+      throw new Error('Not found "token" param in body')
+
+    const user = findUserByToken(req.body.token)
+    if(!user) throw new Error('User not found')
+
+    const { file } = req.files
+    if (!file) throw new Error('No file in request')
+
+    const fileName = md5(user.email)+'.jpg'
+
+    // console_log('try save avatar: %s', fileName)
+
+    file.mv(__dirname + '/images/' + fileName)
+    res.json(userModel(user))
   } catch (error) {
     res.statusMessage = error.message
     res.status(400)
