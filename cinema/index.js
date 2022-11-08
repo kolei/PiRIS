@@ -46,9 +46,9 @@ const movies = [
 ]
 
 const chats = [
-  {chatId: '1', name: 'Всё о дюне'},
-  {chatId: '2', name: 'Кто такой зелёный рыцарь?'},
-  {chatId: '3', name: 'Петр первый: великий император или разрушитель руси'}
+  {chatId: '1', movieId: 1, name: 'Всё о дюне'},
+  {chatId: '2', movieId: 2, name: 'Кто такой зелёный рыцарь?'},
+  {chatId: '3', movieId: 4, name: 'Петр первый: великий император или разрушитель руси'}
 ]
 
 const chatMessages = []
@@ -234,6 +234,71 @@ function getChatMessage(message, user) {
   }
 }
 
+app.options('/chats/:movieId', cors())
+
+/**
+ * Список чатов фильма (неавторизованный доступ)
+ */
+app.get('/chats/:movieId', cors(), (req,res)=>{
+  try {
+    let result = []
+    for (let i = 0; i < chats.length; i++) {
+      if (chats[i].movieId == req.params.movieId) {
+        result.push(chats[i])
+      }
+    }
+    res.json(result)
+  } catch (error) {
+    res.statusMessage = error.message
+    res.status(401)
+  }
+  res.end()
+})
+
+function findMovieById (movieId) {
+  for (let i = 0; i < movies.length; i++) {
+    if(movies[i].movieId == movieId)
+      return movies[i]
+  }
+  return null
+}
+
+/**
+ * Создание чата для фильма
+ */
+app.post('/chats/:movieId', cors(), (req,res)=>{
+  try {
+    // только авторизованный может добавить чат
+    checkAuth(req)
+
+    const chatName = req.body.name.trim()
+    if (chatName == '') 
+      throw new Error('Empty chat name')
+
+    const movie = findMovieById(req.params.movieId)
+    if(movie == null)
+      throw new Error('Movie Id not found')  
+
+    let chat = null
+    let maxChatId = 0
+    for (let i = 0; i < chats.length; i++) {
+      maxChatId = Math.max(maxChatId, chats[i].chatId)
+      if(chats[i].name == chatName && chats[i].movieId == req.params.movieId) {
+        chat = chats[i]
+      }
+    }
+    if (chat == null) {
+      chat = {chatId: (maxChatId+1).toString(), movieId: req.params.movieId, chatName}
+      chats.push(chat)
+    }
+    res.json(chat)
+  } catch (error) {
+    res.statusMessage = error.message
+    res.status(400)
+  }
+  res.end()
+})
+
 app.options('/chats/:chatId/messages', cors())
 app.get('/chats/:chatId/messages', cors(), (req,res)=>{
   try {
@@ -268,6 +333,10 @@ function dateToMysql(xDate) {
 app.post('/chats/:chatId/messages', cors(), (req,res)=>{
   try {
     let user = checkAuth(req)
+
+    if (req.body.text.trim() == '') 
+      throw new Error('Empty text')
+
     let newMessage = {
       chatId: req.params.chatId,
       messageId: chatMessages.length + 1,

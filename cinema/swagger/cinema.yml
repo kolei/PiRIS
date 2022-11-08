@@ -191,7 +191,7 @@ paths:
         - user
       security:
         - BearerAuth: []
-      summary: Список чатов, в которых учавствует данный пользователь
+      summary: Список чатов
       description: Необходимо передать header параметр авторизации типа Bearer
       responses:
         '200':
@@ -199,7 +199,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Chat'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
         '401':
           description: Неавторизованный доступ
   /chats/{chatId}/messages:
@@ -263,6 +265,63 @@ paths:
           description: Проблемы при сохранении
         '401':
           description: Неавторизированный доступ
+  /chats/{movieId}:
+    get:
+      tags:
+        - user
+      summary: Список чатов фильма
+      description: Необходимо передать header параметр авторизации типа Bearer
+      parameters:
+        - in: path
+          name: movieId
+          schema:
+            type: integer
+          required: true
+          description: Id фильма
+      responses:
+        '200':
+          description: Массив чатов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+        '400':
+          description: Фильм не найден
+    post:
+      tags:
+        - user
+      security:
+        - BearerAuth: []
+      summary: Создать чат (для фильма)
+      description: Необходимо передать header параметр авторизации типа Bearer
+      parameters:
+        - in: path
+          name: movieId
+          schema:
+            type: integer
+          required: true
+          description: Id фильма
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Название чата
+      responses:
+        '200':
+          description: Информация о созданном чате
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        '401':
+          description: Неавторизованный доступ
   /up/images/{imageName}:
     get:
       tags:
@@ -354,17 +413,19 @@ components:
             example: ekolesnikov.jpg
             description: Название файла
     Chat:
-      type: array
-      items:
-        type: object
-        properties:
-          name:
-            type: string
-            description: Название чата
-            example: Дюна
-          chatId: 
-            type: string
-            example: 1
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название чата
+          example: Дюна
+        chatId: 
+          type: string
+          example: 1
+        movieId:
+          type: string
+          example: 1
+          description: Id фильма
     Message:
       type: object
       properties:
