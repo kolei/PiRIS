@@ -828,25 +828,35 @@ Activity используйте эту же самую
 
 ### Упорядочивание (сортировка) списка
 
-Для того, чтобы массив объектов (экземпляров какого-либо класса) можно было сортировать, класс должен реализовывать интерфейс **Comparable** и переопределить метод *compareTo*:
+>Для того, чтобы массив объектов (экземпляров какого-либо класса) можно было сортировать **по сложному условию**, класс должен реализовывать интерфейс **Comparable** и переопределить метод *compareTo*:
+>
+>```kt
+>data class ChatMessage(
+>    val chatId: String,
+>    val messageId: String,
+>    val creationDateTime: LocalDateTime
+>    // тут остальные поля
+>    ): Comparable<ChatMessage>
+>{
+>    override fun compareTo(other: ChatMessage): Int {
+>        return if(other.creationDateTime > this.creationDateTime) 1 else -1
+>    }
+>}
+>
+>...
+>
+>// после заполнения списка сообщений просто вызвать метод sort()
+>chatMessageList.sort()
+>```
+
+Для сравнения простых свойств есть вариант проще:
 
 ```kt
-data class ChatMessage(
-    val chatId: String,
-    val messageId: String,
-    val creationDateTime: LocalDateTime
-    // тут остальные поля
-    ): Comparable<ChatMessage>
-{
-    override fun compareTo(other: ChatMessage): Int {
-        return if(other.creationDateTime > this.creationDateTime) 1 else -1
-    }
-}
+chatMessageList.sortBy(
+    item -> item.creationDateTime)
 
-...
-
-// после заполнения списка сообщений просто вызвать метод sort()
-chatMessageList.sort()
+chatMessageList.sortByDescending(
+    item -> item.creationDateTime)
 ```
 
 ### Вывод даты перед группой сообщений
