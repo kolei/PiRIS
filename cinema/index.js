@@ -288,7 +288,11 @@ app.post('/chats/:movieId', cors(), (req,res)=>{
       }
     }
     if (chat == null) {
-      chat = {chatId: (maxChatId+1).toString(), movieId: req.params.movieId, chatName}
+      chat = {
+        chatId: (maxChatId+1).toString(), 
+        movieId: req.params.movieId, 
+        name: chatName
+      }
       chats.push(chat)
     }
     res.json(chat)
