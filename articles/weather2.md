@@ -286,7 +286,7 @@ data class Weather (
 
 С моим бесплатным аккаунтом на **openweathermap** кроме текущих данных можно запросить только список за 5 дней:
 
-```
+```txt
 ### Запрос погоды за 5 дней https://openweathermap.org/forecast5
 GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&appid={{token}}&lang=ru&units=metric
 ```

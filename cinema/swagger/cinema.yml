@@ -344,6 +344,8 @@ paths:
                 format: binary
         '404':
           description: Картинка не найдена на сервере
+security:
+  - BearerAuth: []
 components:
   securitySchemes:
     BearerAuth:

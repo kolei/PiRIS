@@ -291,41 +291,34 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.](./articles/weather.md)
 
+1. TODO сюда вставить лекцию про Intent
+
 1. [Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.](./articles/weather2.md)
 
 1. [Фрагменты](./articles/fragments.md)
 
 1. [Принципы навигации внутри и между андроид-приложениями](./articles/navigation.md)
 
-1. [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
+1. [ViewPager, Fragments, Tabs](./articles/pager.md)
 
 1. [Android Navigation. Знакомство с BottomNavigationView.](./articles/android_bottom_navigation.md)
 
+1. TODO по итогам курсов сюда сделать каршеринг [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
+
 1. [Wear OS](./articles/wear_os.md)
 
-1. [Разбор задания предыдущего чемпионата](./articles/wsrf6_1.md)
-
-1. [Использование регулярных выражений для разбора данных в любом формате](./articles/regex.md)
-
-1. [ViewPager, Fragments, Tabs](./articles/pager.md)
+<!-- 1. [Использование регулярных выражений для разбора данных в любом формате](./articles/regex.md) -->
 
 1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
+
 
 <!-- 
 
 TODO
 
 BottomNavigation + frames
-figma
-api (swagger)
-http (получать контент при ошибке)
-структурировать по экранам
 темы DayNight
-хранение состояния (preferences)
 ViewPager
-multipart/form-data - загрузка картинок на сервер
-источник фото - камера/галерея
-swype to delete
 swype вниз (обновление списка)
 tablayout
 
@@ -333,14 +326,7 @@ tablayout
 поиск (фильтрация) - строка поиска и выпадающий список
 операции с датой
 
-- сохранение данных при повороте (попов вт)
-- локальное хранилище (малинин ср)
-- чтение/запись файлов (галерея) (смирнов чт)
 - swype вниз (обновление списка) (бастраков)
-
-чат
-tablayout
-часы
 
 -->
 

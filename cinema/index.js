@@ -223,13 +223,14 @@ app.get('/user/chats', cors(), (req,res)=>{
 })
 
 function getChatMessage(message, user) {
+  const fileName = md5(user.email)+'.jpg'
   return {
     chatId: message.chatId,
     messageId: message.messageId,
     creationDateTime: message.creationDateTime,
     firstName: user.firstName,
     lastName: user.lastName,
-    avatar: user.avatar,
+    avatar: fileName,
     text: message.text
   }
 }
@@ -303,6 +304,9 @@ app.post('/chats/:movieId', cors(), (req,res)=>{
   res.end()
 })
 
+/**
+ * Список сообщений чата
+ */
 app.options('/chats/:chatId/messages', cors())
 app.get('/chats/:chatId/messages', cors(), (req,res)=>{
   try {

@@ -6,7 +6,7 @@
 
 Задание состоит из 3-х модулей:
 
-* **Модуль 1**  - разработка приложения для смартфона. Основное задание.
+1. **Модуль 1**  - разработка приложения для смартфона. Основное задание.
     - [Создание проекта](#создание-проекта)
     - [Заставка](#экран-launch-screen)
     - [Экран регистрации](#экран-регистрации)
@@ -41,8 +41,10 @@
         - [Список иконок плиткой](#список-иконок-плиткой)
     - [Экран создания коллекций](#экран-создания-коллекций)
 
-* **Модуль 2**  - разработка приложения для часов (может быть и для телевизора). Коротенькое задание (30 минут). Нужно просто создать приложение из двух окон + работа с интернетом.
-* **Модуль 3**  - презентация.
+1. **Модуль 2**  - разработка приложения для часов (может быть и для телевизора). Коротенькое задание (30 минут). Нужно просто создать приложение из двух окон + работа с интернетом.
+    - [Создание проекта для часов](#создание-проекта-для-часов)
+
+1. **Модуль 3**  - презентация.
 
 >**Модуль 1**: Смартфоны (разработка мобильного приложения для управления коллекцией фильмов)
 >
@@ -909,7 +911,7 @@ messageTextView.layoutParams = param
 
 >9. Реализуйте экран Collections Screen согласно макету:
 >   * При нажатии на иконку в правом верхнем углу необходимо переходить на экран Create Collection Screen.
->   * На экране необходимо отображать созданные коллекции. Информация о коллекциях должна храниться в памяти устройства. Необходимо хранить название коллекции и иконку.
+>   * На экране необходимо отображать созданные коллекции. **Информация о коллекциях должна храниться в памяти устройства**. Необходимо хранить название коллекции и иконку.
 >   * Реализуйте Swipe-to-delete для удаления коллекции, в том числе из памяти устройства.
 
 Критерий | Баллы
@@ -918,19 +920,120 @@ messageTextView.layoutParams = param
 Реализована возможность удаления коллекции с помощью swipe-to-delete | 0.3
 **Итог** | 0.6
 
+Так как реализовывать фичи надо атомарно, то желательно завершить реализацию этого экрана, прежде чем делать следующие.
+
 ### Хранение информация о коллекциях в памяти устройства
 
-Вспоминаем метод *getSharedPreferences* - список коллекций можно хранить JSON-строкой (напоминаю, что хранилище оперирует скалярными типами). В качестве идентификатора иконки использовать Id ресурса.
+Вспоминаем метод *getSharedPreferences* - список коллекций можно хранить JSON-строкой (напоминаю, что хранилище оперирует только скалярными типами). В качестве идентификатора иконки использовать `id` ресурса.
 
-### Список иконок плиткой
+Чтобы иметь идентификаторы ресурсов иконок создадим массив ресурсов (естественно эти ресурсы должны быть в проекте). Можно его объявить локально, но нам он понадобится ещё на одном экране - выбор иконки для создания коллекций, поэтому ~~вынесем его в ресурсы~~ (выковыривание из ресурсов  получилось слишком трудоёмким, этот вариант правильный, но использовать будем другой):
 
-https://developer.android.com/codelabs/kotlin-android-training-grid-layout#0
+>* в каталоге `res/values` создайте файл ресурсов (*New -> Values Resource File*) и опишите в нём массив ресурсов:
+>
+>    ```xml
+>    <?xml version="1.0" encoding="utf-8"?>
+>    <resources>
+>        <integer-array name="icons">
+>            <item>@drawable/ico1</item>
+>            <item>@drawable/ico2</item>
+>            <item>@drawable/ico3</item>
+>            <item>@drawable/ico4</item>
+>            <item>@drawable/ico5</item>
+>            <item>@drawable/ico6</item>
+>            <item>@drawable/ico7</item>
+>            <item>@drawable/ico8</item>
+>            <item>@drawable/ico9</item>
+>        </integer-array>
+>    </resources>
+>    ```
+>
+>   Причём Android Studio достаточно умный, чтобы показать нам содержимое массива
+>    
+>    ![](../img/f6_025.png)
+>
+>* в классе активности получим массив из ресурсов:
+>
+>   ```kt
+>   // массив идентификаторов объявлен на уровне класса
+>   private var iconArray = arrayListOf<Int>()
+>
+>   // в конструкторе считываем массив из ресурсов и преобразуем его в массив идентификаторов...
+>   val typedArray = resources.obtainTypedArray(R.array.icons)
+>   for(i in 0 until typedArray.length()){
+>   iconArray.add( typedArray.getResourceId(i, 0) )
+>   }
+>   typedArray.recycle()
+>   ```
 
-https://github.com/google-developer-training/android-kotlin-fundamentals-apps/tree/master/RecyclerViewGridLayout
+Реализация через ресурсы получается достаточно сложной, проще этот массив объявить в классе приложения (MyApp):
+
+```kt
+val iconArray = arrayOf(
+    R.drawable.ico1, 
+    R.drawable.ico2, 
+    R.drawable.ico3, 
+    R.drawable.ico4, 
+    R.drawable.ico5,
+    R.drawable.ico6, 
+    R.drawable.ico7, 
+    R.drawable.ico8, 
+    R.drawable.ico9
+)
+```
+
+Как быть, если у нас ещё нет сохраненного списка коллекций?
+
+При получении списка коллекций, в качестве значения по-умолчанию, вернём JSON-строку, где `id` зададим первый элемент массива ресурсов:
+
+```kt
+val collectionsString = myPreferences.getString(
+    "collections",
+    """[{"id":${iconArray[0]},"name":"Первый список"}]"""
+)
+```
+
+Преобразовать полученную JSON-строку в массив и сделать RecyclerView вы уже можете сами.
+
+### Удаление свайпом с подтверждением
+
+В констуктор, после создания адаптера для RecyclerView добавьте отслеживание свайпа:
+
+```kt
+val simpleCallback = object :
+    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean = false
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        deleteItem(viewHolder.adapterPosition)
+    }
+}
+
+val itemTouchHelper = ItemTouchHelper(simpleCallback)
+itemTouchHelper.attachToRecyclerView(collectionsRecycleView)
+```
+
+И в классе определить метод *deleteItem*:
+
+```kt
+fun deleteItem(position: Int){
+    // удаляем элемент из списка коллекций
+    collectionList.removeAt(position)
+
+    // обновляем RecyclerView
+    collectionsRecycleView.adapter?.notifyDataSetChanged()
+
+    // самостоятельно сформируйте JSON-массив оставшихся коллекций и сохраните его в preferences
+}
+```
 
 ## Экран создания коллекций
 
 ![](../img/f6_023.png)
+![](../img/f6_026.png)
 
 >10. Реализуйте экран Create Collection Screen согласно макету:
 >   * При открытии экрана в качестве иконки должно быть выбрано случайное изображение из коллекции иконок.
@@ -940,3 +1043,66 @@ https://github.com/google-developer-training/android-kotlin-fundamentals-apps/tr
 
 Критерий | Баллы
 ---------|:----:
+Экран соответствует макету (оценивается верстка). Корректно реализованы 6 элементов: заголовок экрана, поле для ввода, иконка, 3 кнопки (минус 0,1 за каждый отсутствующий или некорректный элемент) | 0.6
+При создании коллекции без названия отображается соответствующая ошибка | 0.3
+Данные о коллекции сохраняются в памяти устройства | 1
+Экран выбора иконки соответствует макету (оценивается верстка): корректно реализованы 2 элемента: заголовок, кнопка (минус 0,1 за каждый отсутствующий или некорректный элемент) | 0.2
+Ячейка таблицы иконок соответствует макету (2 элемента) | 0.2
+При открытии экрана отображается случайная иконка коллекции | 0.1
+**Итого** | 2.4
+
+Про экран создания коллекции писать особа нечего, вёрстка простая, запросов к АПИ нет...
+
+### Список иконок плиткой
+
+Намного интереснее следующий экран - выбор иконки для коллекции. Создаём новую активность и запускаем её с получением результата.
+
+В созданной активности:
+
+```kt
+icoRecyclerView = findViewById(R.id.iconRecyclerView)
+
+// в качестве менеджера разметки для RecyclerView используем класс GridLayoutManager. Во втором параметре указывается сколько колонок будет у нашей сетки
+icoRecyclerView.layoutManager = GridLayoutManager(this, 4)
+
+// создаем адаптер
+val someClassAdapter = IconAdapter(app.iconArray, this)
+
+// задаём обработчик клика по иконке, по которому возвращаем id выбранной иконки
+someClassAdapter.setItemClickListener {
+    val resultIntent = Intent()
+    resultIntent.putExtra("icoIndex", it)
+    setResult(RESULT_OK, resultIntent)
+    finish()
+}
+
+icoRecyclerView.adapter = someClassAdapter
+```
+
+В вызывающей активности извлекаем результат
+
+```kt
+override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        intent: Intent?)
+{
+    super.onActivityResult(requestCode, resultCode, intent)
+
+    // проверяем код запроса
+    when (requestCode) 
+    {
+        ICON_SELECT -> {
+            if (resultCode == Activity.RESULT_OK && intent != null) 
+            {
+                val icoIndex = intent.getIntExtra("icoIndex", -1)
+                if (icoIndex>=0){
+                    imageView.setImageResource(icoIndex)
+                }
+            }
+        }
+    }
+}
+```
+
+## Создание проекта для часов
