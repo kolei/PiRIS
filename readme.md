@@ -307,12 +307,18 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Wear OS](./articles/wear_os.md)
 
-<!-- 1. [Использование регулярных выражений для разбора данных в любом формате](./articles/regex.md) -->
-
 1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
 
+1. [Фрагменты](./articles/fragments.md)
+
+1. [Android TV](./articles/android_tv.md)
+
+<!-- https://corochann.com/introduction-android-tv-application-hands-on-tutorial-1-32/#Android_TV_application_development_introduction -->
 
 <!-- 
+
+1. [Использование регулярных выражений для разбора данных в любом формате](./articles/regex.md)
+
 
 TODO
 
