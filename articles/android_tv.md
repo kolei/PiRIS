@@ -436,6 +436,415 @@ for (i in categoriesList.indices){
 
 ### Настройка вёрстки карточки фильма
 
+Представление для карточки фильма реализовано в файле `CardPresenter.kt`.
+
+Класс **CardPresenter** наследуется от абстрактного класса **Presenter** и должен реализовать три метода: *onCreateViewHolder*, *onBindViewHolder*, *onUnbindViewHolder*. Всё это похоже на знакомый нам адаптер для **RecyclerView**.
+
+1. Метод *onCreateViewHolder*
+
+    Создаёт визуальное представление элемента. Можно реализовать своё представление и мы это позже рассмотрим, а можно использовать встроенный в библиотеку класс **ImageCardView**. В **CardPresenter** реализован второй вариант, разберём его подробнее:
+
+    ```kt
+    override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder 
+    {
+        // цвет фона по-умолчанию, если по ТЗ его менять не нужно, то и не трогаем
+        // в принципе в этом представлении мы его и не увидим - у нас на всю карточку рисуется изображение
+        sDefaultBackgroundColor = ContextCompat
+            .getColor(
+                parent.context, 
+                R.color.default_background)
+
+        // аналогично для выбранной (активной) карточки
+        sSelectedBackgroundColor =  ContextCompat
+            .getColor(
+                parent.context, 
+                R.color.selected_background)
+
+        // изображение, которое будет показано, если не найдёт нужную картинку        
+        mDefaultCardImage = ContextCompat
+            .getDrawable(
+                parent.context, 
+                // в ресурсах должна быть соответсвующая картинка 
+                R.drawable.movie)   
+
+
+        // создаётся экземпляр класса ImageCardView с переопределением
+        // метода setSelected
+        val cardView = object : ImageCardView(parent.context) {
+            override fun setSelected(selected: Boolean)
+            {
+                updateCardBackgroundColor(this, selected)
+                super.setSelected(selected)
+            }
+        }
+
+        // но можно и проще, если нам не надо менять цвет фона
+        // val cardView = ImageCardView(parent.context)
+
+
+        cardView.isFocusable = true
+        cardView.isFocusableInTouchMode = true
+        updateCardBackgroundColor(cardView, false)
+
+        // возвращаем настроенный экземпляр cardView
+        return Presenter.ViewHolder(cardView)
+    }
+    ``` 
+
+2. Метод *onBindViewHolder*
+
+    Этот метод привязывает данные текущего элемента списка к его визуальному представлению. Первый параметр это результат метода *onCreateViewHolder*, второй - очередной элемент списка. Метод универсальный, поэтому тип элемента **Any**, мы при реализации приводим к тому типу данных, который использовали при формировании списка (передавали в методе *add*)
+
+    Как уже выше писалось, мы для визуального представления используем стандартный класс [ImageCardView](https://developer.android.com/reference/androidx/leanback/widget/ImageCardView), в котором можем задать свойства: 
+
+    * *titleText* - название
+    * *contentText* - содержание
+    * *badgeImage* - иконка (в этом примере не используется, но позже мы сюда что-нибудь добавим)
+    * *mainImage* или *mainImageView* - изображение
+
+    ```kt
+    override fun onBindViewHolder(
+        viewHolder: Presenter.ViewHolder, 
+        item: Any) 
+    {
+        // создаём переменные, приведённые к нужным типам
+        val movie = item as Movie
+        val cardView = viewHolder.view as ImageCardView
+
+        // если задан URL картинки, то заполняем данные карточки
+        if (movie.cardImageUrl != null) {
+            // задаём название и содержание
+            cardView.titleText = movie.title
+            cardView.contentText = movie.description
+
+            // задаём размеры изображения
+            cardView.setMainImageDimensions(
+                CARD_WIDTH, 
+                CARD_HEIGHT)
+
+            // загружаем картинку cardImageUrl в элемент разметки mainImageView
+            // если при загрузке картинки возникнет ошибка, то выведется изображение по-умолчанию
+            Glide.with(viewHolder.view.context)
+                .load(movie.cardImageUrl)
+                .centerCrop()
+                .error(mDefaultCardImage)
+                .into(cardView.mainImageView)
+        }
+    }
+    ```
+
+3. Метод *onUnbindViewHolder*
+
+    Вызывается при "отвязке" элемента. Используется для обнуления ссылок на изображения, чтобы сборщик мусора мог освободить память.
+
+    ```kt
+    override fun onUnbindViewHolder(
+        viewHolder: Presenter.ViewHolder) 
+    {
+        val cardView = viewHolder.view as ImageCardView
+        cardView.badgeImage = null
+        cardView.mainImage = null
+    }
+    ```
+
+**Доработка**
+
+В примере не продемонстрирована установка иконки у карточки. Иконка задаётся *drawable* ресурсом, т.е. может быть либо изображением, либо фигурой.  
+
+У нас в АПИ у класса **Movie** есть возрастные ограничения, добавим их отображение иконкой:
+
+1. Добавьте изображения для иконок для всех доступных возрастов: `[0,6,12,16,18]` (так как название ресурса одновременно является названием переменной, а переменная должна начинаться с буквы или подчёркивания, то добавьте к имени файла префикс `age`: `age0.png`, `age6.png`, ...)
+
+1. Добавьте свойство `age: String? = null` в класс **Movie** и заполняйте его при получении списка фильмов.
+
+1. В метод *onBindViewHolder* добавьте установку свойства *badgeImage*:
+
+    ```kt
+    cardView.badgeImage  = cardView.context.getDrawable(  
+        cardView.context.resources.getIdentifier(
+            "age${movie.age}", 
+            "drawable", 
+            cardView.context.getPackageName()))
+    ```
+
+    Так как заранее не известно, какое название ресурса понадобится мы ищем ресурс не по `id`, а по имени. Метод *getIdentifier* принимает три параметра:
+
+    * название ресурса
+    * тип ресурса
+    * название пакета
+
+    Ну и как видно по коду выполняться всё это должно в нужном контексте (по-умолчанию это `this` - указатель на класс активности, но этот код работает в контексте класса **CardPresenter**, поэтому контекст приходится вытаскивать из **View**)
+
+    В итоге в карточках должна появиться иконка:
+
+    ![](../img/tv_11.png)
+
+    По-умолчанию иконка выводится в справа, но можно с помощью стилей поместить её слева:
+
+    * в файл `values/themes.xml` добавьте стиль, переопределяющий стандартный стиль `Widget.Leanback.ImageCardViewStyle`, в котором переопределяем значение для элемента `lbImageCardViewType` (допускаемые значения: Title, Content, IconOnRight, IconOnLeft, ImageOnly):
+
+        ```xml
+        <style 
+            name="ImageCardViewStyle" 
+            parent="Widget.Leanback.ImageCardViewStyle"
+        >
+            <item 
+                name="lbImageCardViewType"
+            >
+                IconOnLeft|Title|Content
+            </item>
+        </style>
+        ```
+
+    * затем добавляем тему `ImageCardTheme`, переопределяющую стандартную тему `Theme.Leanback`, в которой задаём свойство `imageCardViewStyle`:
+
+        ```xml
+        <style 
+            name="ImageCardTheme" 
+            parent="Theme.Leanback"
+        >
+            <item 
+                name="imageCardViewStyle"
+            >
+                @style/ImageCardViewStyle
+            </item>
+        </style>
+        ```
+
+    * в методе `CardPresent.onCreateViewHolder` меняем параметры конструктора **ImageCardView**:
+
+        ```kt
+        // val cardView = ImageCardView(parent.context)
+        val cardView = ImageCardView(  
+            ContextThemeWrapper(
+                parent.context, 
+                R.style.ImageCardTheme))
+        ```
+
+    ![](../img/tv_12.png)
+
+>В Котлин-е есть оператор **with**, который позволяет выполнять блок кода в заданном контексте, причем его можно использовать как реализацию функции:
+>```kt
+>override fun onBindViewHolder(
+>    viewHolder: Presenter.ViewHolder, item: Any
+>) = with(viewHolder.view as ImageCardView) 
+>{
+>    val movie = item as Movie
+>
+>    if (movie.cardImageUrl != null) {
+>        titleText = movie.title
+>        contentText = movie.description
+>
+>        badgeImage  = context.getDrawable(
+>            context.resources.getIdentifier(
+>                "age18",
+>                "drawable", 
+>                context.getPackageName()))
+>
+>        setMainImageDimensions(
+>            CARD_WIDTH, 
+>            CARD_HEIGHT)
+>
+>        Glide.with(context)
+>            .load(movie.cardImageUrl)
+>            .centerCrop()
+>            .error(mDefaultCardImage)
+>            .into(mainImageView)
+>    }
+>}
+>```
+
+На этом варианты настроек (**ImageCardView**) исчерпаны, если нам нужно поменять элементы местами или добавить кнопку, то придётся рисовать свой презентер.
+
+### Реализация самописанной (custom) разметки карточки 
+
+Собственно такая разметка используется при выводе пунктов меню настройки (**GridItemPresenter**):
+
+```kt
+private inner class GridItemPresenter : Presenter() {
+    override fun onCreateViewHolder(
+        parent: ViewGroup
+    ): Presenter.ViewHolder 
+    {
+        // в качестве визуального элемента используется 
+        // обычный TextView
+        val view = TextView(parent.context)
+
+        view.layoutParams = ViewGroup.LayoutParams(
+            GRID_ITEM_WIDTH, 
+            GRID_ITEM_HEIGHT)
+
+        view.isFocusable = true
+        view.isFocusableInTouchMode = true
+        view.setBackgroundColor(
+            ContextCompat.getColor(
+                activity!!, 
+                R.color.default_background))
+
+        view.setTextColor(Color.WHITE)
+        view.gravity = Gravity.CENTER
+        
+        return Presenter.ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(
+        viewHolder: Presenter.ViewHolder, 
+        item: Any) 
+    {
+        // элементы списка обычные строки
+        (viewHolder.view as TextView).text = item as String
+    }
+
+    override fun onUnbindViewHolder(
+        viewHolder: Presenter.ViewHolder) {}
+}
+```
+
+Это представление простое, но даёт нам понимание, что в качестве представления может быть любой визуальный элемент. 
+
+Сделаем свою карточку: **CardView** со скруглёнными углами, картинка, текст и переключатель (**Switch**) с функцией обратного вызова:
+
+1. Нарисуем разметку в `layout/card_item.xml`
+
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="150dp"
+        android:layout_height="300dp"
+        app:cardCornerRadius="20dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/logoImageView"
+                android:layout_width="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:focusable="false"
+                android:layout_height="200dp"/>
+            <TextView
+                android:id="@+id/captionTextView"
+                android:layout_margin="10dp"
+                android:text="caption"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <Switch
+                android:id="@+id/stateSwitch"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusedByDefault="true"
+                android:text="Состояние" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    ```
+2. Создадим класс **CustomPresenter**:
+
+    ```kt
+    class CustomPresenter : Presenter() {
+        // в классе описываем доступные визуальные элементы
+        lateinit var logo: ImageView
+        lateinit var caption: TextView
+        lateinit var state: Switch
+        private var mDefaultCardImage: Drawable? = null
+
+        // переменная для задания callback-функции
+        private var switchListener: ((Movie, Boolean) -> Unit)? = null
+
+        // метод, устанавливающий callback-функцию
+        fun setOnSwitchListener(
+            switchListener: (Movie, Boolean) -> Unit) 
+        {
+            this.switchListener = switchListener
+        }
+
+        @SuppressLint("MissingInflatedId")
+        override fun onCreateViewHolder(
+            parent: ViewGroup): ViewHolder 
+        {
+            // получаем указатель на layout
+            val view = LayoutInflater
+                .from(parent?.context)
+                .inflate(
+                    R.layout.card_item, 
+                    parent, 
+                    false)
+
+            // получаем указатели на визуальные элементы
+            logo = view.findViewById(R.id.logoImageView)
+            caption = view.findViewById(R.id.captionTextView)
+            state = view.findViewById(R.id.stateSwitch)
+            mDefaultCardImage = ContextCompat
+                .getDrawable(parent.context, R.drawable.movie)
+
+            return Presenter.ViewHolder(view)
+        }
+
+        override fun onBindViewHolder(
+            viewHolder: ViewHolder?, 
+            item: Any?) 
+        {
+            val movie = item as Movie
+
+            caption.text = movie.title
+
+            // при изменении состояния переключателя 
+            // пробросим событие наружу
+            state.setOnCheckedChangeListener { 
+                _, b ->
+                switchListener?.invoke(item, b)
+            }
+
+            // рисуем логотип
+            Glide.with(viewHolder!!.view.context)
+                .load(movie.cardImageUrl)
+                .centerCrop()
+                .error(mDefaultCardImage)
+                .into(logo)
+        }
+
+        override fun onUnbindViewHolder(
+            viewHolder: ViewHolder?) {}
+    }
+    ```
+
+3. И в методе *loadRows* поменяем класс для представления:
+
+    ```kt
+    val cardPresenter = CustomPresenter()  // CardPresenter()
+    cardPresenter.setOnSwitchListener { movie, b ->
+        Log.w("switch", "${movie.title} to ${b}")
+    }
+    ```
+
+Получится что-то такое:
+
+![](../img/tv_13.png)
+
+После реализации своего презентера сломался клик по карточке (с переходом на окно детальной информации). Как починить по-правильному я пока не сообразил, сделаем пока "криво":
+
+В методе *onItemClicked* класса **ItemViewClickedListener** поменяем получение ссылки на картинку:
+
+```kt
+// костыль, нарушающий инкапсуляцию
+val logo = itemViewHolder.view
+    .findViewById<ImageView>(
+        R.id.logoImageView)
+
+val bundle = ActivityOptionsCompat
+    .makeSceneTransitionAnimation(
+        activity!!,
+        logo,
+        DetailsActivity.SHARED_ELEMENT_NAME
+    )
+```
+
+
 <!-- https://tv.withgoogle.com/# -->
 
 <!-- https://habr.com/ru/company/ivi/blog/351084/ -->
