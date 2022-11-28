@@ -14,7 +14,7 @@
 
 ## Создание проекта в Android Studio
 
-Запустив Android Studio, необходимо создать новый проект. При создании выбрать платформу TV и указать минимальную версию SDK. Android Studio предложит нам создать "Blank Activity", его и создадим (в оригинальной статье предлагают руками добавлять классы, файлы разметки и фрагменты, но это долго, проще выкинуть лишнее из рабочего проекта) 
+Запустив Android Studio, необходимо создать новый проект. При создании выбрать платформу TV и указать минимальную версию SDK. Android Studio предложит нам создать "Blank Activity", его и создадим (в оригинальной статье предлагают создать пустой проект без активности "No Activity" и руками добавлять классы, файлы разметки и фрагменты, но это долго, проще выкинуть лишнее из рабочего проекта) 
 
 ![](../img/tv_01.png)
 
@@ -97,7 +97,7 @@ class MainActivity : FragmentActivity()
     tools:ignore="MergeRootFrame" />
 ```    
 
-По коду мы видим, что активность наследуется от **FragmentActivity** и при запуске содержимое `main_browse_fragment` заменяется тем, что сгенерирует класс **MainFragment**. (Файла разметки `main_browse_fragment` в проекте нет, похоже он реализован в библиотеке **Leanback**)
+По коду мы видим, что вёрстка приложени состоит из единственного фрагмента, содержимое для которого генерится в классе **MainFragment**.
 
 ### MainFragment
 
@@ -147,7 +147,7 @@ override fun onActivityCreated(savedInstanceState: Bundle?) {
 
     Свойство *list* класса **MovieList** возвращает массив объектов **Movie**, реализацию можно не разбирать, мы в реальном проекте всё-равно этот список будем получать динамически из АПИ.
 
-1. `val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())` - Создаётся **стандартный** адаптер (массива объектов) использующий **стандартный** класс для вывода элементов в виде "строки".
+1. `val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())` - Создаётся **стандартный** адаптер **ArrayObjectAdapter** использующий **стандартный** класс-представление **ListRowPresenter** для вывода "строки". "Строка" (*ListRow* - строка списка), отображаемая этим представлением, выводит во фрагменте заголовков (*HeadersFragment* - левая часть экрана) заголовок, а во фрагменте строк (*RowsFragment* - правая часть) содержимое.
 
 1. `val cardPresenter = CardPresenter()` - создание самописанного (реализующего абстрактный класс) экземпляра представления карточки фильма
 
@@ -165,7 +165,7 @@ override fun onActivityCreated(savedInstanceState: Bundle?) {
 
     ![](../img/tv_05.png)
 
-    Далее создаётся адаптер для строки, которая будет отображаться в RowFragment (правая часть экрана) и заполняется фильмами из списка
+    Далее создаётся адаптер для содержимого, которое будет отображаться в *RowsFragment* (правая часть экрана) и заполняется фильмами из списка:
 
     ```kt
     val listRowAdapter = ArrayObjectAdapter(cardPresenter)
@@ -174,17 +174,24 @@ override fun onActivityCreated(savedInstanceState: Bundle?) {
     }
     ```
 
-    В конце цикла создаётся заголовок для категории и заголовок вместе со списком фильмов добавляется в адаптер строк *rowsAdapter*
+    В конце цикла создаётся заголовок для категории. Заголовок вместе со списком фильмов добавляется в адаптер "строк" *rowsAdapter*:
 
     ```kt
     val header = HeaderItem(
         i.toLong(), 
         MovieList.MOVIE_CATEGORY[i])
+
     rowsAdapter.add(
         ListRow(
             header, 
             listRowAdapter))
     ```
+
+    В итоге структура выглядит примерно так:
+
+    ![](../img/tv_07.png)
+
+    **ListRowPresenter** это стандартный класс библиотеки **Leanback**, отвечающий за размещение заголовка и содержимого по разным фрагментам (Headers и Rows). **CardPresenter** класс, отвечающий за отображение отдельного элемента (в правом фрагменте).
 
 1. Добавление строки с настройками
 
@@ -242,7 +249,6 @@ setOnSearchClickedListener {
 
 Назначение этого события **включает** иконку поиска. Реализации поиска пока никакой нет.
 
-
 ```kt
 onItemViewClickedListener = ItemViewClickedListener()
 ```
@@ -259,7 +265,7 @@ onItemViewSelectedListener = ItemViewSelectedListener()
 
 ### Загрузочный экран
 
-Не знаю, будет ли это на демо-экзамене, но для демонстрации работы с обычными активностями андроид добавим загрузочный экран:
+Не знаю, будет ли это на демо-экзамене, но для демонстрации работы с обычными *activity* добавим загрузочный экран:
 
 1. Добавьте пустую активность (в контекстном меню пакета `New -> Activity -> Empty Activity`)
 
@@ -293,10 +299,142 @@ onItemViewSelectedListener = ItemViewSelectedListener()
 
 Всё замечательно работает!!!
 
-### Получение списка фильмов и категорий
+### Получение списка фильмов с сервера
 
 Что-бы не терять время просто так, поместим этот код в загрузочную активность (заодно проверим как тут работает класс **Application**)
 
+В классе приложения (**MyApp**) описываем переменную
+`val movieList = ArrayList<Movie>()`, в которую будем записывать информацию о фильмах (Класс **Movie** я пока оставил как есть).
+
+
+```kt
+override fun onCreate(savedInstanceState: Bundle?) 
+{
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_launch)
+    app = applicationContext as MyApp
+    that = this
+    Timer().schedule(3000L){
+        that.runOnUiThread {
+            startActivity(Intent(that, MainActivity::class.java))
+        }
+    }
+    // запрос списка фильмов вынесен в отдельный метод
+    getMovieList()
+}
+
+private fun getMovieList() {
+    Http.call("http://cinema.kolei.ru/movies?filter=new"){ 
+        response, error ->
+        try {
+            if (error != null) throw error
+            if (!response!!.isSuccessful) 
+                throw Exception(response.message)
+
+            var json = JSONArray(response.body!!.string())
+
+            // работу с классом приложения на всякий случай тоже заворачиваю в UI поток
+            runOnUiThread {
+                app.movieList.clear()
+                for (i in 0 until json.length()){
+                    val item = json.getJSONObject(i)
+                    app.movieList.add(Movie(
+                        id = item.getLong("movieId"),
+                        title = item.getString("name"),
+                        description = item.getString("description"),
+                        cardImageUrl = "http://cinema.kolei.ru/up/images/${item.getString("poster")}"
+                    ))
+                }
+            }
+        } catch (e: Exception) {
+            // любую ошибку показываем на экране
+            runOnUiThread {
+                AlertDialog.Builder(this)
+                    .setTitle("Ошибка")
+                    .setMessage(e.message)
+                    .setPositiveButton("OK", null)
+                    .create()
+                    .show()
+            }
+        }
+    }
+}
+```
+
+В классе **MainFragment** указатель на *app* получаем через ссылку на текущую активность (я упоминал в прошлой лекции, что фрагмент не может существовать сам по себе, а работает в контексте какой-то активности)
+
+```kt
+override fun onActivityCreated(savedInstanceState: Bundle?) 
+{
+    super.onActivityCreated(savedInstanceState)
+    app = activity?.application as MyApp
+```
+
+И в методе *loadRows* задаём в качестве списка фильмов тот, который получили с сервера
+
+```kt
+private fun loadRows() {
+    val list = app.movieList  //MovieList.list
+```
+
+Запускаем проект и видим, что данные получены и отображаются верно (нужно только поправить вёрстку) и знакомые нам механизмы работы с классом приложения и сетевые запросы работают как надо:
+
+![](../img/tv_08.png)
+
+### Группировка по категориям
+
+В АПИ в информацию о фильме я добавил категорию. 
+
+Добавим поле для категории в класс **Movie**
+
+```kt
+var category: String? = null
+```
+
+Не забываем заполнить его при получении данных:
+
+```kt
+app.movieList.add(Movie(
+    id = item.getLong("movieId"),
+    title = item.getString("name"),
+    description = item.getString("description"),
+    cardImageUrl = "http://cinema.kolei.ru/up/images/${item.getString("poster")}",
+    category = item.getString("category")
+))
+```
+
+В методе *loadRows*, перед формированием данных для отображения, получаем список уникальных названий категорий:
+
+```kt
+val categoriesList = list.map{m->m.category}.distinct()
+```
+
+С методом *distinct* вы уже знакомы, а метод *map* преобразует содержимое массива. В нашем случае мы выбираем только название категорий (в итоге получается массив строк).
+
+![](../img/tv_09.png)
+
+Теперь перебираем список категорий, создавая для каждой свой *listRowAdapter*. Далее во вложенном цикле заполняем этот адаптер подходящими по категории фильмами. После заполнения одной категории заголовок (категория) и содержимое этой категории (*listRowAdapter*) записываются в общий 
+
+```kt
+for (i in categoriesList.indices){
+    val listRowAdapter = ArrayObjectAdapter(cardPresenter)
+
+    // формируем элементы строки, фильтруя фильмы по категории
+    for (j in list.indices) {
+        if (list[j].category != null && list[j].category == categoriesList[i]) {
+            listRowAdapter.add(list[j])
+        }
+    }
+
+    // сформированную строку с заголовком пишем в rowsAdapter
+    val header = HeaderItem(categoriesList[i])
+    rowsAdapter.add(ListRow(header, listRowAdapter))
+}
+```
+
+![](../img/tv_10.png)
+
+### Настройка вёрстки карточки фильма
 
 <!-- https://tv.withgoogle.com/# -->
 

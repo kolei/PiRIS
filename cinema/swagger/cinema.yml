@@ -380,8 +380,12 @@ components:
             description: Название картинки постера
           tags:
             $ref: '#/components/schemas/Tag'
+          category:
+            type: string
+            description: Жанр фильма
         required:
           - movieId
+          - category
     Tag:
       type: array
       items:
