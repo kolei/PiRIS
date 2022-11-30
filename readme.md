@@ -297,38 +297,31 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Фрагменты](./articles/fragments.md)
 
-1. [Принципы навигации внутри и между андроид-приложениями](./articles/navigation.md)
-
-1. [ViewPager, Fragments, Tabs](./articles/pager.md)
-
 1. [Android Navigation. Знакомство с BottomNavigationView.](./articles/android_bottom_navigation.md)
 
 1. TODO по итогам курсов сюда сделать каршеринг [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
 
+1. [Работа с картами](./articles/map_yandex.md)
+
 1. [Wear OS](./articles/wear_os.md)
-
-1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
-
-1. [Фрагменты](./articles/fragments.md)
 
 1. [Android TV](./articles/android_tv.md)
 
-<!-- https://corochann.com/introduction-android-tv-application-hands-on-tutorial-1-32/#Android_TV_application_development_introduction -->
+1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
 
 <!-- 
 
-1. [Использование регулярных выражений для разбора данных в любом формате](./articles/regex.md)
+1. [Принципы навигации внутри и между андроид-приложениями](./articles/navigation.md)
 
+1. [ViewPager, Fragments, Tabs](./articles/pager.md)
 
 TODO
 
-BottomNavigation + frames
 темы DayNight
 ViewPager
 swype вниз (обновление списка)
 tablayout
 
-кнопки с картинками (нижнее или боковое меню)(фрагменты)
 поиск (фильтрация) - строка поиска и выпадающий список
 операции с датой
 

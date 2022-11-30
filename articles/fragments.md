@@ -1,3 +1,11 @@
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="./weather2.md">Проект погода
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="./android_bottom_navigation.md">Android Navigation. Знакомство с BottomNavigationView.
+</a></td><tr></table>
+
 # Фрагменты
 
 >Содрано [отсюда](https://metanit.com/java/android/8.1.php)
@@ -373,3 +381,11 @@ button.setOnClickListener {
         }
         ...
     ```
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="./weather2.md">Проект погода
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="./android_bottom_navigation.md">Android Navigation. Знакомство с BottomNavigationView.
+</a></td><tr></table>

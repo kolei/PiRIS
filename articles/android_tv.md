@@ -951,6 +951,52 @@ val bundle = ActivityOptionsCompat
     mBackgroundManager.drawable = drawable
     ```
 
+### Реализация поиска
+
+В примере не написано, как реализовывать поиск. Попробуем разобраться сами:
+
+1. Нам нужно поле ввода, которое будет отображаться при клике на иконку поиска. 
+
+    В разметке главного окна `activity_main.xml` в тег **FrameLayout** добавьте **EditText**:
+
+    ```xml
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:elevation="100dp"
+        android:padding="20dp"
+        android:hint="Поиск по названию или описанию фильма"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
+        android:background="@drawable/rect_rounded_filled"
+        android:layout_gravity="center"/>
+    ```
+
+    * атрибут *elevation* аналог *z-index*
+    * фон задан залитым прямоугольником со скруглёнными углами
+
+    Остальное на своё усмотрение (либо по ТЗ)
+
+    Должно получиться что-то подобное:
+
+    ![](../img/tv_14.png)
+
+    После настройки строки поиска скройте её: ` android:visibility="invisible"`. Показывать этот элемент мы будем при клике по значку поиска.
+
+1. В **MainFragment** 
+
+    * на уровне класса создайте переменную для этого элемента
+    * в методе *onActivityCreated* ДО вызова других элементов получите указатель на этот элемент `activity!!.findViewById(...)` (фрагмент работает в контексте активности)
+    * реализуйте обработчик клика для поиска
+
+        ```kt
+        setOnSearchClickedListener {
+            searchEditText.visibility = View.VISIBLE
+            searchEditText.requestFocus()
+        }
+        ```
+
 <!-- https://medium.com/@Marcus_fNk/building-an-android-tv-app-part-2-824766c1ddbe -->
 
 
