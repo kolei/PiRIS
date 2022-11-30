@@ -1,9 +1,9 @@
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/android_auth.md">Проект "база". Авторизация на сервере (Basic auth, token)
+<a href="../articles/map_yandex.md">Работа с картами
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/wear_os.md">Wear OS
+<a href="../articles/android_tv.md">Android TV
 </a></td><tr></table>
 
 # Wear OS
@@ -102,10 +102,20 @@
 >
 >![](../img/04037.png)
 
-# Задание
+---
+
+## Задание
 
 Разработать приложение для **Wear OS** c несколькими экранами:
 
 * заставка
 * авторизация
 * чат (приём и отправка сообщений)
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="../articles/map_yandex.md">Работа с картами
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/android_tv.md">Android TV
+</a></td><tr></table>
