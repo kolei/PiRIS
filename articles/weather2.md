@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="./navigation.md">Принципы навигации внутри и между андроид-приложениями
+<a href="./fragments.md">Фрагменты
 </a></td><tr></table>
 
 # Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.
@@ -652,5 +652,5 @@ https://habr.com/ru/company/true_engineering/blog/267497/
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/android_auth.md">Проект "база". Авторизация на сервере (Basic auth, token). POST-запросы. API.
+<a href="./fragments.md">Фрагменты
 </a></td><tr></table>
