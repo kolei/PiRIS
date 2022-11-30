@@ -1,3 +1,11 @@
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="./wear_os.md">Wear OS
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/f6_demo_1.md">Разбор заданий прошлых лет
+</a></td><tr></table>
+
 # Android TV
 
 * [Коротко о библиотеке Leanback](#коротко-о-библиотеке-leanback)
@@ -1009,3 +1017,12 @@ val bundle = ActivityOptionsCompat
 https://corochann.com/construction-of-browsefragment-android-tv-application-hands-on-tutorial-2-71/
 
 https://www.kodeco.com/20747024-android-tv-getting-started -->
+
+
+<table style="width: 100%;"><tr><td style="width: 40%;">
+<a href="./wear_os.md">Wear OS
+</a></td><td style="width: 20%;">
+<a href="../readme.md">Содержание
+</a></td><td style="width: 40%;">
+<a href="../articles/f6_demo_1.md">Разбор заданий прошлых лет
+</a></td><tr></table>
