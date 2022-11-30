@@ -1,9 +1,9 @@
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/weather2.md">Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.
+<a href="../articles/android_bottom_navigation.md">Android Navigation. Знакомство с BottomNavigationView.
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/wear_os.md">Wear OS
+<a href="../articles/map_yandex.md">Работа с картами
 </a></td><tr></table>
 
 # Проект "база". Авторизация на сервере (Basic auth, token). POST-запросы. API.
@@ -952,9 +952,9 @@ productTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedL
 * на окне со списком продукции сделать кнопку "выход" (logout), после чего вернуться на экран авторизации. У нас после первой авторизации осталось имя, сделайте передачу имени в диалог авторизации, чтобы он был уже заполнен.
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/weather2.md">Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.
+<a href="../articles/android_bottom_navigation.md">Android Navigation. Знакомство с BottomNavigationView.
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/wear_os.md">Wear OS
+<a href="../articles/map_yandex.md">Работа с картами
 </a></td><tr></table>
