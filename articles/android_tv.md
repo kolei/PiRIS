@@ -1,5 +1,18 @@
 # Android TV
 
+* [Коротко о библиотеке Leanback](#коротко-о-библиотеке-leanback)
+* [Создание проекта в Android Studio (и разбор структуры проекта)](#создание-проекта-в-android-studio)
+    - [Манифест](#манифест)
+    - [MainActivity](#mainactivity)
+    - [MainFragment](#mainfragment)
+* [Модификация под свои нужды](#модификация-под-свои-нужды)
+    - [Загрузочный экран](#загрузочный-экран)
+    - [Получение списка фильмов с сервера](#получение-списка-фильмов-с-сервера)
+    - [Группировка по категориям](#группировка-по-категориям)
+    - [Настройка вёрстки карточки фильма](#настройка-вёрстки-карточки-фильма)
+    - [Реализация самописанной (custom) разметки карточки](#реализация-самописанной-custom-разметки-карточки)
+    - [Разбор оставшихся методов главного фрагмента](#разбор-оставшихся-методов-главного-фрагмента)
+
 >Содрано [отсюда](https://habr.com/ru/post/316260/), [отсюда](https://skillbox.ru/media/code/razrabotka_pod_android_tv/) и [отсюда](https://skillbox.ru/media/code/razrabotka_pod_android_tv_part2/)
 
 [Первая](https://habr.com/ru/post/316260/) статья довольно древняя (2016 год), попробуем реализовать в 2022
@@ -704,7 +717,7 @@ private inner class GridItemPresenter : Presenter() {
 
 Сделаем свою карточку: **CardView** со скруглёнными углами, картинка, текст и переключатель (**Switch**) с функцией обратного вызова:
 
-1. Нарисуем разметку в `layout/card_item.xml`
+1. Нарисуем разметку в `layout/card_item.xml` (мой пример не копипастить - у каждого должна быть своя реализация)
 
     ```xml
     <?xml version="1.0" encoding="utf-8"?>
@@ -843,6 +856,102 @@ val bundle = ActivityOptionsCompat
         DetailsActivity.SHARED_ELEMENT_NAME
     )
 ```
+
+### Фон главного окна
+
+Фон автоматически устанавливается при выборе карточки фильма. Но у экземпляра фильма при этом должно быть установлено свойство *backgroundImageUrl*, которое мы пока не заполняли. 
+
+В АПИ в списке изображений (images) я добавил по картинке для каждого фильма. 
+
+Ваша задача при получении списка фильмов вытащить элемент этого массива и присвоить его свойству *backgroundImageUrl*.
+
+### Разбор оставшихся методов главного фрагмента
+
+1. *setupUIElements* - настройка брендирования
+
+    * Установка названия бренда (строка в правом верхнем углу):
+
+        ```kt
+        title = getString(R.string.browse_title)
+        ```
+
+        Вместо текста можно вывести логотип:
+
+        ```kt
+        badgeDrawable = ContextCompat.getDrawable(
+            context, 
+            R.drawable.app_icon_your_company)
+        ```
+
+        Причём установить можно только один из этих элементов, и наибольший приоритет всегда у логотипа.
+
+    * Настройка режима отображения левой панели (список категорий).
+
+        В базовой реализации **HeadersFragment** сразу виден пользователю. Это поведение можно изменить с помощью метода *setHeadersState* (в Котлине просто сеттер *headersState*). К нему нужно обратиться во время настройки и передать одно из состояний:
+
+        * HEADERS_ENABLED — фрагмент виден пользователю.
+        * HEADERS_HIDDEN — фрагмент свёрнут.
+        * HEADERS_DISABLED — фрагмент полностью скрыт с экрана.
+
+        ```kt
+        headersState = BrowseSupportFragment.HEADERS_ENABLED
+        isHeadersTransitionOnBackEnabled = true
+        ```
+
+    * Цвет левой панели
+
+        ```kt
+        brandColor = ContextCompat.getColor(
+            activity!!, 
+            R.color.fastlane_background)
+        ```
+
+    * Настройка иконки "поиска" (напомню, сама иконка появляется, если для неё задан обработчик)
+
+        ```kt
+        searchAffordanceColor = ContextCompat.getColor(
+            activity!!, 
+            R.color.search_opaque)
+        ```
+
+1. *setupEventListeners*
+
+    * Включение иконки поиска
+
+        Как уже выше писалось, иконка автоматически включается, если для неё задан обработчик. В примере ничего не делается, просто выводится сообщение на экран
+
+        ```kt
+        setOnSearchClickedListener {
+            Toast.makeText(
+                activity!!, 
+                "Implement your own in-app search", 
+                Toast.LENGTH_LONG)
+            .show()
+        }
+        ```
+
+    * Назначение событий при клике и активации карточки фильма
+
+        ```kt
+        onItemViewClickedListener = ItemViewClickedListener()
+        onItemViewSelectedListener = ItemViewSelectedListener()
+        ```    
+
+1. *ItemViewClickedListener*
+
+    Обработчик клика по карточке фильма. При клике происходит переход на окно детальной информации о фильме (с анимацией)
+
+1. *ItemViewSelectedListener*
+
+    Обработчик события выбора карточки фильма (при перемещении по списку фильмов)
+
+    В стандартной реализации устанавливается фон окна (с анимацией), но в итоге интерес представляет только эта строка:
+
+    ```kt
+    mBackgroundManager.drawable = drawable
+    ```
+
+<!-- https://medium.com/@Marcus_fNk/building-an-android-tv-app-part-2-824766c1ddbe -->
 
 
 <!-- https://tv.withgoogle.com/# -->
