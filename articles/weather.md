@@ -1,5 +1,5 @@
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/themes.md">Стили и темы. Ресурсы. Фигуры. Обработчики событий.
+<a href="../articles/layout_orientation.md">Смена ориентации, жизненный цикл activity, сохранение данных
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
@@ -465,12 +465,14 @@ httpGet("https://openweathermap.org/img/w/${icoName}.png")
 }
 ```
 
-# Задание
+---
+
+## Задание
 
 Разобрать все перечисленные выше параметры погоды и вывести их на экран
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/themes.md">Стили и темы. Ресурсы. Фигуры. Обработчики событий.
+<a href="../articles/layout_orientation.md">Смена ориентации, жизненный цикл activity, сохранение данных
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">

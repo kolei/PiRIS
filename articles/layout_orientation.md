@@ -1,9 +1,9 @@
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/themes.md">Стили и темы. Ресурсы. Фигуры. Обработчики событий.
+<a href="./themes.md">Стили и темы. Ресурсы. Фигуры. Обработчики событий.
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/weather.md">Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
+<a href="./weather.md">Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
 </a></td><tr></table>
 
 # Ориентация экрана, жизненный цикл activity, сохранение данных
@@ -97,9 +97,9 @@ override fun onRestoreInstanceState(savedInstanceState: Bundle) {
 ```
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/themes.md">Стили и темы. Ресурсы. Фигуры. Обработчики событий.
+<a href="./themes.md">Стили и темы. Ресурсы. Фигуры. Обработчики событий.
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/weather.md">Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
+<a href="./weather.md">Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
 </a></td><tr></table>
