@@ -10,7 +10,7 @@
 
 >Этот вариант написан для [Яндекс.карт](https://yandex.ru/dev/maps/mapkit/doc/intro/concepts/about.html?from=mapkit)
 
->Описание протокола API доступно по ссылке:
+>Описание API каршеринга доступно по ссылке:
 >http://swagger.kolei.ru/?url=http://carsharing.kolei.ru/swagger/api.yml
 
 ### Шаг 1. Получите ключ для работы с MapKit
@@ -52,7 +52,7 @@ implementation 'com.yandex.android:maps.mobile:4.2.2-lite'
 
 ### Шаг 3. Настройте библиотеку
 
-1. Добавьте карту на Activity (создайте активность для карты, если её ещё нет):
+1. Добавьте карту на Activity:
 
     ```xml
     <com.yandex.mapkit.mapview.MapView
@@ -61,15 +61,17 @@ implementation 'com.yandex.android:maps.mobile:4.2.2-lite'
         android:layout_height="match_parent"/>
     ```
 
-1. Установите ваш API-ключ в методе *onCreate()* вашего наследника **Application** (судя по названию класса это должен быть наш класс MyApp, но я устанавливаю ключ в активности с картой):
+1. Установите ваш API-ключ в методе *onCreate()* вашего наследника **Application** (судя по названию класса это должен быть наш класс **MyApp**, но я устанавливаю ключ в активности с картой):
 
     ```kt
-    private lateinit var mapView: MapView  
+    private lateinit var mapView: MapView
+    val yotcLat = 56.639478
+    val yotcLon = 47.892127  
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        MapKitFactory.setApiKey( !!!ТУТ ВАШ КЛЮЧ!!! )
+        MapKitFactory.setApiKey( ТУТ ВАШ КЛЮЧ )
     ```
 
 1. Инициализируйте карту в методе *onCreate()* нужного **Activity**:
@@ -77,7 +79,7 @@ implementation 'com.yandex.android:maps.mobile:4.2.2-lite'
     **Внимание!!! Инициализацию нужно делать до вызова *setContentView***
 
     ```kt
-    MapKitFactory.setApiKey(apiKey!!)
+    MapKitFactory.setApiKey(apiKey)
 
     MapKitFactory.initialize(this)
 
@@ -89,7 +91,7 @@ implementation 'com.yandex.android:maps.mobile:4.2.2-lite'
     // перемещение камеры в нужную точку
     mapView.map.move(
         CameraPosition(
-            Point(55.751574, 37.573856),
+            Point(yotcLat, yotcLon),
             18.0f,  // зум
             0.0f, 
             0.0f
@@ -115,7 +117,7 @@ implementation 'com.yandex.android:maps.mobile:4.2.2-lite'
     }
     ```
 
-На этом этапе приложение уже должно нормально запускаться и показывать карту где-то в реке Москве
+На этом этапе приложение уже должно нормально запускаться и показывать карту.
 
 ### Добавление маркеров на карту
 
@@ -132,8 +134,8 @@ mapView
         .mapObjects
             .addPlacemark(
                 Point(
-                    55.751574, 
-                    37.573856),
+                    yotcLat, 
+                    yotcLon),
                 imageProvider)
 ```
 
@@ -190,7 +192,11 @@ mapView
         // mapObject.userData содержит экземпляр Car, который вы задали при создании маркера
         true
     }
+    ```
 
+    Этот кусок выполнять в цикле при разборе массива автомобилей
+
+    ```kt
     // создайте экземпляр информации об автомобиле
     val car = Car(...)
 
@@ -203,3 +209,7 @@ mapView
         )
     )
     ```
+
+<!-- TODO дописать про анимацию -->
+
+![](../img/map_01.gif)
