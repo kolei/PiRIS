@@ -1,10 +1,11 @@
-// тут не забыть установить свой пакет
-package ru.yotc.baza
+// package тут не забыть установить свой пакет
 
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.IOException
+
+typealias HttpCallback = (response: Response?, error: Exception?)->Unit
 
 /*
 В манифест добавьте разрешение на работу с интернетом
@@ -42,6 +43,29 @@ Http.call("урл строка"){ response, error ->
                 .show()
             }
         }
+    }
+}
+*/
+
+/*
+callback отдельным свойством
+
+Http.call(
+    "http://s4a.kolei.ru/Product",
+    weatherCallback
+)
+
+private val weatherCallback: HttpCallback = {
+    response, error ->
+    try {
+        if (error != null) throw error
+        if (!response!!.isSuccessful) throw Exception(response.message)
+
+        // тут реализуем обработку результата
+
+    } catch (e: Exception) {
+        // любую ошибку показываем на экране
+        showAlert(e.message ?: "какая-то ошибка")
     }
 }
 */
