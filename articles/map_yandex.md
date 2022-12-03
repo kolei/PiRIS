@@ -281,25 +281,40 @@ mapView
 * невидимость убрать
 * добавить отрицательную нижнюю границу равную высоте контейнера: `android:layout_marginBottom="-432dp"`
 
-Как уже писалось анимацию можно включить 
+Используя [способ анимации свойств объекта](./animation.md#анимация-свойств-объекта-aka-property-animator) сделаем, чтобы наше окно с детальной информацией всплывало при клике на маркер и скрывалось при клике на карту:
 
-* программно:
+1. Создайте в каталоге `res` каталог `animator` (*New -> Android Resource Directory*)
 
-    ```kt
-    detailInfo
-        .animate()
-        .setDuration(200)
-        .translationY(-resources.displayMetrics.ydpi * 400f / 160)
-        .start()
-    ```
+1. В этом каталоге создайте два файла анимации, для открытия и закрытия окна:
 
-    Метод *translationY* оперирует пикселями, поэтому мы должны преобразовать реальное разрешение экрана к размерности `dp` (160ppi). Цифра `400` это высота моего окна.  
+    >Моё окно высотой `432dp` со скруглёнными углами `32dp`. Чтобы его не было видно в неактивном состоянии в разметке задана нижняя граница `-432dp` (по размеру элемента) 
+    >
+    >![](../img/mad_40.png)
+    >
+    >Правильнее было бы нижнюю границу и менять при анимации, но похоже класс **Animator** не понимает свойства `layout_`
 
-* используя xml-разметку:
+    `open_animator.xml`:
 
     ```xml
     <?xml version="1.0" encoding="utf-8"?>
     <set xmlns:android="http://schemas.android.com/apk/res/android">
+        <objectAnimator
+            android:duration="300"
+            android:propertyName="translationY"
+            android:valueTo="-400dp"
+            android:valueType="floatType"
+            android:interpolator="@android:anim/decelerate_interpolator"/>
+    </set>
+    ```
+
+    >Обратите внимание, окно поднимается не на всю высоту, а за вычетом размера радиуса, чтобы нижнее скругление не было видно. Меняется свойство *translationY*
+
+    и `close_animator.xml`:
+
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <set 
+        xmlns:android="http://schemas.android.com/apk/res/android">
         <objectAnimator
             android:duration="300"
             android:propertyName="translationY"
@@ -309,7 +324,80 @@ mapView
     </set>
     ```
 
-Для не сложных преобразований проще использовать программную анимацию (только не забывать про перевод координат из `dp` в пиксели).
+1. В классе окна включить анимацию открытия при тапе по маркеру и анимацию закрытия при тапе по карте или по кнопке "закрыть" в окне:
+
+    Меняем обработчик тапа для маркера:
+
+    ```kt
+    setTapListener { mapObject, point ->
+        // тут предыдущий код с заполнением окна данными выбранного автомобиля
+
+        // запоминаем состояние окна в переменной класса
+        isOpen = true
+
+        // извлекаем нужный аниматор
+        val set = AnimatorInflater.loadAnimator(this, R.animator.open_animator) as AnimatorSet
+
+        // назначаем целевой визуальный элемент
+        set.setTarget(detailInfo)
+
+        // и запускаем анимацию
+        set.start()
+
+        true
+    }
+    ```
+
+    Обработчика тапа по карте у нас ещё не было, создадим:
+
+    ```kt
+    private val inputListener: InputListener = object : InputListener {
+        override fun onMapTap(
+            p0: com.yandex.mapkit.map.Map,
+            p1: Point) 
+        {
+            closePopup()
+        }
+
+        override fun onMapLongTap(
+            p0: com.yandex.mapkit.map.Map,
+            p1: Point) 
+        {
+            // обработка длинного тапа нам пока не нужна
+        }
+    }
+
+    // в методе onCreate цепляем обработчик к карте    
+    mapView.map.addInputListener(inputListener)
+    ```
+
+    Метод *closePopup* вынесен отдельно, т.к. в контексте объекта мы не видим экземпляр активности (this)
+
+    ```kt
+    private fun closePopup(){
+        if(isOpen) {
+            isOpen = false
+            val set = AnimatorInflater.loadAnimator(
+                this,
+                R.animator.close_animator
+            ) as AnimatorSet
+            set.setTarget(detailInfo)
+            set.start()
+        }
+    }
+    ```
+
+Для не сложных преобразований проще использовать программную анимацию (на примере открытия):
+
+```kt
+detailInfo
+    .animate()
+    .setDuration(300)
+    .translationY(-resources.displayMetrics.ydpi * 400f / 160)
+    .start()
+```
+
+Метод *translationY* оперирует пикселями, поэтому мы должны преобразовать реальное разрешение экрана к размерности `dp` (160ppi). Цифра `400` это высота моего окна.  
 
 &nbsp;|&nbsp;
 ---|---
