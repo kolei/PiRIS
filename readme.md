@@ -299,6 +299,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Android Navigation. Знакомство с BottomNavigationView.](./articles/android_bottom_navigation.md)
 
+1. [Анимация](./articles/animation.md)
+
 1. TODO по итогам курсов сюда сделать каршеринг [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
 
 1. [Работа с картами](./articles/map_yandex.md)
