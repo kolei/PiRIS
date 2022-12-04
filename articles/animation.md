@@ -59,7 +59,7 @@ val animationX = ObjectAnimator.ofFloat(card, "scaleX", 1F)
 val animationY = ObjectAnimator.ofFloat(card, "scaleY", 1F)
 val set = AnimatorSet()
 set.play(animationX)
-        .with(animationY)
+    .with(animationY)
 set.duration = DURATION
 set.interpolator = DecelerateInterpolator()
 set.start()

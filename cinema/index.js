@@ -91,6 +91,11 @@ function findUserByToken(token) {
   return null
 }
 
+app.get('/', (req, res) => {
+  res.sendFile(
+    __dirname + '/swagger/index.html')
+})
+
 app.options('/auth/register', cors())
 app.post('/auth/register', cors(), (req,res)=>{
   try {
