@@ -334,9 +334,10 @@ class ApiServer
     {
         // пытаемся подключиться к MySQL серверу
         $this->db = new PDO(
-            "mysql:host=kolei.ru;port=3306;
-            dbname=ТУТ-НАЗВАНИЕ-БАЗЫ;
-            charset=UTF8", 
+            "mysql:host=kolei.ru;
+                port=3306;
+                dbname=ТУТ-НАЗВАНИЕ-БАЗЫ;
+                charset=UTF8", 
             "ТУТ-ЛОГИН-MYSQL", 
             "ТУТ-ПАРОЛЬ-MYSQL"
         );
