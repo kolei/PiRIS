@@ -298,6 +298,7 @@ class ApiServer
         switch($path)
         {
             case '/Product':
+                $this->connect();
                 $this->auth();
                 
                 // получаем данные
@@ -316,11 +317,29 @@ class ApiServer
         if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']))
             throw new Exception('Не задан логин/пароль');
 
+        // ищем пользователя по логину
+        $user = $this->db
+            ->query("SELECT * FROM User WHERE login=:login")
+            ->execute([':login'=>$_SERVER['PHP_AUTH_USER']])
+            ->fetch();
+        
+        if ($user == null)
+            throw new Exception('Пользователь не найден');
+
+        if ($user->password != $_SERVER['PHP_AUTH_PW'])
+            throw new Exception('Не верный пароль');
+    }
+
+    private function connect()
+    {
         // пытаемся подключиться к MySQL серверу
         $this->db = new PDO(
-            "mysql:host=kolei.ru;port=3306;dbname={$_SERVER['PHP_AUTH_USER']};charset=UTF8", 
-            $_SERVER['PHP_AUTH_USER'], 
-            $_SERVER['PHP_AUTH_PW']);
+            "mysql:host=kolei.ru;port=3306;
+            dbname=ТУТ-НАЗВАНИЕ-БАЗЫ;
+            charset=UTF8", 
+            "ТУТ-ЛОГИН-MYSQL", 
+            "ТУТ-ПАРОЛЬ-MYSQL"
+        );
     }
 }
 ```
