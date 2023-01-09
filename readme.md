@@ -139,6 +139,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 1. [Основы SQL](./articles/sql_for_beginner.md)
 
+1. [DDL](./articles/ddl.md)
+
 1. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 
 1. [Импорт данных (вариант 22).](./articles/sql_import_22.md)
@@ -248,12 +250,16 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 <!-- переделать на asp.net -->
 
+<!-- TODO библиотека классов -->
+
 ## Тема 5.1.6. C#, разбор заданий предыдущих лет.
 
 <!-- 1. [Сессия 1. Создание БД. Импорт данных. Окно авторизации](./articles/wsr_1.md) -->
 1. [HTTP запросы в C#. Получение списка материалов выбранного продукта](./articles/cs_http.md)
 
 2. [C# Параллельное программирование и асинхронность](./articles/cs_async_await.md)
+
+## [Code Review](./articles/code_review.md)
 
 <!-- 
 
