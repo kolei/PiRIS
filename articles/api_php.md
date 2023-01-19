@@ -404,11 +404,18 @@ class ApiServer
         if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']))
             throw new Exception('Не задан логин/пароль');
 
-        // ищем пользователя по логину
-        $user = $this->db
-            ->query("SELECT * FROM User WHERE login=:login")
-            ->execute([':login'=>$_SERVER['PHP_AUTH_USER']])
-            ->fetch();
+        // подгатавливаем шаблон запроса (вместо реальных данных - алиасы)
+        $query = $this->db
+            ->prepare("SELECT * FROM User WHERE login=:login")
+
+        // меняем алиасы на реальные данные
+        $query->bindValue(':login', $_SERVER['PHP_AUTH_USER']);
+        
+        // отправляем запрос на сервер
+        $query->execute();
+
+        // читаем полученный результат
+        $user = $query->fetch(FETCH_ASSOC);
         
         if ($user == null)
             throw new Exception('Пользователь не найден');
