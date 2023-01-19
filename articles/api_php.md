@@ -410,18 +410,20 @@ class ApiServer
 
         // меняем алиасы на реальные данные
         $query->bindValue(':login', $_SERVER['PHP_AUTH_USER']);
-        
+
         // отправляем запрос на сервер
         $query->execute();
 
         // читаем полученный результат
-        $user = $query->fetch(FETCH_ASSOC);
+        $user = $query->fetch(PDO::FETCH_ASSOC);
         
         if ($user == null)
             throw new Exception('Пользователь не найден');
 
         if ($user->password != $_SERVER['PHP_AUTH_PW'])
             throw new Exception('Не верный пароль');
+
+        return $user;
     }
 
     private function connect()
@@ -452,17 +454,32 @@ class ApiServer
         ->fetchAll(PDO::FETCH_ASSOC);
     ```
 
-    Запрос с параметром (литерал `:login` заменяется перед запросом значением из массива, переданного в *execute*).
+* Запрос с параметрами
 
-    Метод *fetch* возвращает одну запись (строку)
+    подгатавливаем шаблон запроса (вместо реальных данных - алиасы)
 
     ```php
-    $user = $this->db
-        ->query("SELECT * FROM User WHERE login=:login")
-        ->execute([':login'=>$_SERVER['PHP_AUTH_USER']])
-        ->fetch();
+    $query = $this->db
+        ->prepare("SELECT * FROM User WHERE login=:login")
     ```
 
+    меняем алиасы на реальные данные. Это необходимо для защиты от SQL-иньекций (злоумышленник может в качестве логина послать строку `'ха-ха-ха'; drop table User;`)
+
+    ```php
+    $query->bindValue(':login', $_SERVER['PHP_AUTH_USER']);
+    ```
+
+    выполняем запрос на сервер
+
+    ```php
+    $query->execute();
+    ```
+
+    читаем полученный результат (метод *fetch* возвращает одну запись (строку))
+
+    ```php
+    $user = $query->fetch(PDO::FETCH_ASSOC);
+    ```
 
 * подключение к БД mysql
 
