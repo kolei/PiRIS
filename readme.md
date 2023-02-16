@@ -266,7 +266,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ## Введение в WEB-разработку
 
-### [Intro](./articles/web_01.md)
+1. [Intro](./articles/web_01.md)
+1. [Зачем нужен Vue.js? - Vue.js: концепции](./articles/web_02.md)
 
 <!-- 
 
