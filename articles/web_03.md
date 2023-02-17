@@ -4,6 +4,8 @@
 
 <!-- 7 минут -->
 
-[#2 Реактивность - Vue.js: концепции](https://www.youtube.com/watch?v=LV235z6qOUI)
+1. [#2 Реактивность - Vue.js: концепции](https://www.youtube.com/watch?v=LV235z6qOUI)
 
-[Назад](./web_02.md)
+1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/polyfills)
+
+[Назад](./web_02.md) | [Дальше](./web_04.md)

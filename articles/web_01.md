@@ -8,9 +8,10 @@
 
 >На момент написания лекции уже прошло больше 2-х лет с написания курса, поэтому примеры будут переписываться на *Composition API*
 
-1. [О структуре](https://www.youtube.com/watch?v=4XTy6ucbLNg&list=PLvTBThJr861yMBhpKafII3HZLAYujuNWw&index=1)
+<!-- 23 минуты -->
+<!-- Потом рассказать о вебе -->
 
-<!-- Тут рассказать о вебе -->
+1. [#0 О структуре](https://www.youtube.com/watch?v=4XTy6ucbLNg&list=PLvTBThJr861yMBhpKafII3HZLAYujuNWw&index=1)
 
 1. [Учебник по JavaScript](https://learn.javascript.ru/)
 
