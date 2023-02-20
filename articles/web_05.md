@@ -6,6 +6,6 @@
 
 1. [#4 Как во Vue.js использовать Х - Vue.js: нюансы](https://www.youtube.com/watch?v=orWKmX4xO1g)
 
-1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/comparison)
+1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/symbol)
 
 [Назад](./web_04.md)
