@@ -273,6 +273,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Как во Vue.js использовать Х - Vue.js: нюансы](./articles/web_05.md)
 1. [Знакомство - Vue.js: практика](./articles/web_06.md)
 1. [Декларативность - Vue.js: концепции](./articles/web_07.md)
+1. [Бизнес логика или детали реализации? - Vue.js: концепции](./articles/web_08.md)
 
 <!-- 
 
