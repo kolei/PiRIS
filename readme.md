@@ -275,6 +275,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Декларативность - Vue.js: концепции](./articles/web_07.md)
 1. [Бизнес логика или детали реализации? - Vue.js: концепции](./articles/web_08.md)
 1. [Введение во Vue](./articles/web_09.md)
+1. [Учимся учиться - Vue.js: практика](./articles/web_10.md)
 
 <!-- 
 
