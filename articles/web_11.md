@@ -14,7 +14,7 @@
 
 1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/modules)
 
----
+## Материалы
 
 1. [Исходный HTML/CSS для самостоятельного повторения](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon-html)
 
