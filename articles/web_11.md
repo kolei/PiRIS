@@ -6,6 +6,12 @@
 
 1. [#10 Криптономикон-1 - Vue.js: практика](https://www.youtube.com/watch?v=0MEpPU3rWCk)
 
+    * описание проекта
+    * создание проекта
+    * удаление лишего
+    * добавление контента
+    ...
+
 1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/modules)
 
 ---

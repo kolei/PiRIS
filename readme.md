@@ -277,6 +277,12 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Введение во Vue](./articles/web_09.md)
 1. [Учимся учиться - Vue.js: практика](./articles/web_10.md)
 1. [Криптономикон-1 - Vue.js: практика](./articles/web_11.md)
+1. [Криптономикон-2 - Vue.js: практика](./articles/web_12.md)
+1. [Реализация реактивности - Vue.js: нюансы](./articles/web_13.md)
+1. [Компоненты - Vue.js: концепции](./articles/web_14.md)
+1. [Криптономикон-3: vue-cli и tailwind](./articles/web_15.md)
+1. [Криптономикон-4 - Самостоятельная работа (валидации)](./articles/web_16.md)
+1. [Криптономикон-5: Работа со списком - Vue.js: практика](./articles/web_17.md)
 
 <!-- 
 
