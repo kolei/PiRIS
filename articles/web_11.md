@@ -26,3 +26,13 @@
 
 1. [Исходный код урока](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon/-/tree/lesson1)
 1. [API для получения ключа:](https://www.cryptocompare.com/)
+
+---
+
+## Задание
+
+1. Пересмотреть видео [#10 Криптономикон-1 - Vue.js: практика](https://www.youtube.com/watch?v=0MEpPU3rWCk). Желательно повторить урок самостоятельно, как минимум склонировать [Исходный код урока](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon/-/tree/lesson1) и разобраться что там происходит.
+
+1. Перечитать и осмыслить первую часть [Учебника](https://learn.javascript.ru/modules) до конца первой части (Язык JavaScript)
+
+[Назад](./web_10.md) | [Дальше](./web_12.md)
