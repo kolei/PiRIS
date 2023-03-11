@@ -266,6 +266,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ## Введение в WEB-разработку
 
+<!-- codesandbox -->
+
 1. [Intro](./articles/web_01.md)
 1. [Зачем нужен Vue.js? - Vue.js: концепции](./articles/web_02.md)
 1. [Реактивность - Vue.js: концепции](./articles/web_03.md)
