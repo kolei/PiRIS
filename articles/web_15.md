@@ -8,6 +8,9 @@
 
 1. Продолжаем изучать вторую часть учебника [JavaScript (Формы, элементы управления)](https://learn.javascript.ru/forms-controls) 
 
+
+<!-- TODO расписать установку taiwind для vite -->
+
 ---
 
 ## Задание
