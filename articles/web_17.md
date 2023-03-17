@@ -7,3 +7,15 @@
 1. [#16 Криптономикон-5: Работа со списком - Vue.js: практика](https://www.youtube.com/watch?v=BNDo6MVbPn4)
 
     * сохранение тикеров в LocalStorage
+
+1. Продолжаем изучать вторую часть учебника [JavaScript (Разное)](https://learn.javascript.ru/ui-misc) 
+
+---
+
+## Задание
+
+1. Пересмотреть видео [#16 Криптономикон-5: Работа со списком - Vue.js: практика](https://www.youtube.com/watch?v=BNDo6MVbPn4) и доработать свой код. 
+
+1. Перечитать и осмыслить раздел "Разное" второй части часть [Учебника](https://learn.javascript.ru/ui-misc)
+
+[Назад](./web_15.md) | [Дальше](./web_17.md)
