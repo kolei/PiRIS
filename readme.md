@@ -253,6 +253,9 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [C# Параллельное программирование и асинхронность](./articles/cs_async_await.md)
 
 1. [ASP NET Web API (Метанит)](https://metanit.com/sharp/aspnet_webapi/1.1.php)
+1. [ASP NET Core (Метанит)](https://metanit.com/sharp/aspnet6/2.11.php)
+
+
 
 ## Тема 6. Разбор заданий предыдущих лет.
 
