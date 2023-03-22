@@ -4,7 +4,7 @@
 
 <!-- 1 час 24 мин -->
 
-1. [#17 Криптономикон: рефакторинг - Vue.js: практика](https://www.youtube.com/watch?v=_esgbWGiP3c)
+1. [#17 Криптономикон: рефакторинг - Vue.js: практика (computed)](https://www.youtube.com/watch?v=_esgbWGiP3c)
 
     **Содержание урока:**
 

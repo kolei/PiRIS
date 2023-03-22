@@ -288,7 +288,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Криптономикон-3: vue-cli и tailwind](./articles/web_15.md)
 1. [Криптономикон-4 - Самостоятельная работа (валидации)](./articles/web_16.md)
 1. [Криптономикон-5: Работа со списком - Vue.js: практика](./articles/web_17.md)
-1. [Криптономикон: рефакторинг - Vue.js: практика](./articles/web_18.md)
+1. [Криптономикон: рефакторинг - Vue.js: практика (computed)](./articles/web_18.md)
+1. [Криптономикон: рефакторинг - Vue.js: практика (часть 2)](./articles/web_19.md)
 
 <!-- 
 
