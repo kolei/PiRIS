@@ -290,6 +290,9 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Криптономикон-5: Работа со списком - Vue.js: практика](./articles/web_17.md)
 1. [Криптономикон: рефакторинг - Vue.js: практика (computed)](./articles/web_18.md)
 1. [Криптономикон: рефакторинг - Vue.js: практика (часть 2)](./articles/web_19.md)
+1. [Криптономикон: ещё раз о рефакторинге - Vue.js: практика. #20 YAGNI - Vue.js: практика.](./articles/web_20.md)
+1. [Криптономикон: улучшаем API - Vue.js: практика. #22 Криптономикон: refs - Vue.js: практика. #23 nextTick - Vue.js: нюансы](./articles/web_21.md)
+1. [Криптономикон: компоненты - Vue.js: практика](./articles/web_22.md)
 
 <!-- 
 

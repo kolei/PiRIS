@@ -6,6 +6,10 @@
 
 1. [#18 Криптономикон: рефакторинг - Vue.js: практика](https://www.youtube.com/live/AzsO67rloQw?feature=share&t=248)
 
+    **Содержание урока:**
+
+    - Презентация задачи для шаблона письма
+
     **Материалы к изучению:**
 
     [исходный код урока](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon/-/tree/lesson6)
