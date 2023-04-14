@@ -494,6 +494,10 @@ CSS/HTML поддерживает 140 стандартных имен цвета
 
 ### CSS свойство background-color. Фоновый цвет элемента
 
+<h1 style="background-color: dodgerblue;">Привет всем</h1>
+
+<p style="background-color: tomato;">Разнообразный и богатый...</p>
+
 Чтобы определить фоновый цвет HTML элемента, используется CSS свойство background-color со значением цвета:
 
 ```html
