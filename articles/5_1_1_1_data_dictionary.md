@@ -3,7 +3,7 @@
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/5_1_1_1_erd_workbench.md">Создание ER-диаграммы в среде MySQL Workbench
+<a href="../articles/5_1_1_1_erd_workbench.md">Создание ER-диаграммы
 </a></td><tr></table>
 
 # Словарь данных
@@ -75,5 +75,5 @@ FK | TagId | INT | | | Ссылка на словарь **Теги клиент�
 </a></td><td style="width: 20%;">
 <a href="../readme.md">Содержание
 </a></td><td style="width: 40%;">
-<a href="../articles/5_1_1_1_erd_workbench.md">Создание ER-диаграммы в среде MySQL Workbench
+<a href="../articles/5_1_1_1_erd_workbench.md">Создание ER-диаграммы
 </a></td><tr></table>

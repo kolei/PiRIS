@@ -196,11 +196,9 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 1. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
 
-1. [Создание ER-диаграммы в среде MySQL Workbench](articles/5_1_1_1_erd_workbench.md)
+1. [Создание ER-диаграммы](articles/5_1_1_1_erd_workbench.md)
 
 1. [Основы SQL](./articles/sql_for_beginner.md)
-
-1. [DDL](./articles/ddl.md)
 
 1. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 
