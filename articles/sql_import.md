@@ -502,6 +502,8 @@
 
 Самостоятельно загрузите данные из файлов `products_k_import.csv` и `productmaterial_k_import.xlsx`
 
+[Продолжение (вариант22)](./sql_import_22.md)
+
 <table style="width: 100%;"><tr><td style="width: 40%;">
 <a href="../articles/sql_for_beginner.md">Основы SQL
 </a></td><td style="width: 20%;">
