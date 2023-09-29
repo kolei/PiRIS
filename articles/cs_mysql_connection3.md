@@ -195,74 +195,46 @@ public partial class Product
 
         >При редактировании версии пакета можно нажать комбинацию клавишь `Ctrl+Пробел` и выйдет подсказка с возможными вариантами версий
 
-Для демонстрации работы используем прошлогоднюю [заготовку](https://github.com/kolei/OAP/blob/master/articles/wpf_template.md) - вывод в DBGrid
+    1. Добавить стили в файл `App.axaml`:
 
-* XAML
+        ```xml
+        <Application.Styles>
+            <FluentTheme />
+            <!-- стиль для DataGrid -->
+            <StyleInclude 
+                Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        </Application.Styles>
+        ``` 
 
-    ```xml
-    <Grid ShowGridLines="True">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition />
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+Для демонстрации работы в `MainWindow.axaml` добавим DataGrid:
 
-        <StackPanel 
-            Orientation="Vertical"
-            Grid.RowSpan="3"
-            VerticalAlignment="Bottom">
-            <!-- левая панель для кнопок -->
-        </StackPanel>
+```xml
+<DataGrid 
+    Name="productsGrid"
+    AutoGenerateColumns="True">
+</DataGrid>
+```
 
-        <WrapPanel
-            Orientation="Horizontal"
-            Grid.Column="1"
-            MinHeight="50">
-            <!-- минимальную высоту я тут поставил, чтобы верхнюю строку сетки было видно. В реальном приложении она не нужна -->
-        </WrapPanel>
+и в коде проекта (`MainWindow.axaml.cs`) получим данные из БД и выведем их в DataGrid:
 
-        <DataGrid
-            Grid.Row="1"
-            Grid.Column="1"
-            CanUserAddRows="False"
-            AutoGenerateColumns="False"
-            ItemsSource="{Binding ProductList}">
-            <DataGrid.Columns>
-                <DataGridTextColumn
-                    Header="Название"
-                    Binding="{Binding Title}"/>
-                <DataGridTextColumn
-                    Header="Номер"
-                    Binding="{Binding ArticleNumber}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
-    ```
-
-* CS
-
-    ```cs
-    public partial class MainWindow : Window
+```cs
+public partial class MainWindow : Window
+{
+    public IEnumerable<Product> productList { get; set; }
+    public MainWindow()
     {
-        public IEnumerable<Product> ProductList { get; set; }
-        public MainWindow()
+        InitializeComponent();
+        using (var context = new esmirnovContext())
         {
-            InitializeComponent();
-            DataContext = this;
-            using (var context = new esmirnovContext())
-            {
-                ProductList = context.Products.ToList();
-            }
+            productList = context.Products.ToList();
+            productsGrid.ItemsSource = productList;
         }
     }
-    ```
+}
+```
 
-    Обратите внимание, **context.Products** это не модель, а виртуальный DbSet (коллекция сущностей), объявленный в классе контекста: `public virtual DbSet<Product> Products { get; set; }`. При чтении этой коллекции как раз и происходит обращение к БД (посылка SQL-команд)
+Обратите внимание, *context.Products* это не модель, а виртуальный **DbSet** (коллекция сущностей), объявленный в классе контекста: `public virtual DbSet<Product> Products { get; set; }`. При чтении этой коллекции как раз и происходит обращение к БД (посылка SQL-команд)
 
-Всё работает!!!
+**Всё работает!!!**
 
-![](../img/cs004.png)
+![](../img/rider011.png)
