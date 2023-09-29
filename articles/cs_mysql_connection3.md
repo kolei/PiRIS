@@ -195,16 +195,16 @@ public partial class Product
 
         >При редактировании версии пакета можно нажать комбинацию клавишь `Ctrl+Пробел` и выйдет подсказка с возможными вариантами версий
 
-    1. Добавить стили в файл `App.axaml`:
+После добавления **DataGrid** нужно добавить стили в файл `App.axaml` (без них *контрол* не работает):
 
-        ```xml
-        <Application.Styles>
-            <FluentTheme />
-            <!-- стиль для DataGrid -->
-            <StyleInclude 
-                Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
-        </Application.Styles>
-        ``` 
+```xml
+<Application.Styles>
+    <FluentTheme />
+    <!-- стиль для DataGrid -->
+    <StyleInclude 
+        Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+</Application.Styles>
+``` 
 
 Для демонстрации работы в `MainWindow.axaml` добавим DataGrid:
 
