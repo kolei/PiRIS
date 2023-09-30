@@ -6,16 +6,20 @@
 <a href="../articles/cs_layout2.md">Вывод данных согласно макету (ListView, Image).
 </a></td><tr></table>
 
-* [Создание подключения к БД MySQL](#создание-подключения-к-бд-mysql)
-* [Получение данных с сервера](#получение-данных-с-сервера)
+# Создание подключения к БД MySQL.
+
+* [Установка Rider](#установка-rider)
+* [Создание проекта, подключение пакетов для работы с БД](#создание-проекта-подключение-пакетов-для-работы-с-бд)
+* [Создание подключения к БД (контекст)](#создание-подключения-к-бд-контекст)
+* [Получение данных с сервера и вывод на экран](#получение-данных-с-сервера-и-вывод-на-экран)
 
 Дальше мы продолжим разбор задания одного из прошлых демо-экзаменов. 
 
 Базу мы развернули и данные в неё импортировали, теперь начнём разбор второй сессии: создание desktop-приложения.
 
-># Разработка desktop-приложений
+>**Разработка desktop-приложений**
 >
->## Список продукции
+>**Список продукции**
 >
 >Необходимо реализовать вывод продукции, которая хранится в базе данных, согласно предоставленному макету (файл `product_list_layout.jpg` находится в ресурсах). При отсутствии изображения необходимо вывести картинку-заглушку из ресурсов (picture.png).
 >
@@ -24,8 +28,6 @@
 >...
 >
 >Стоимость продукта должна быть рассчитана исходя из используемых материалов.
-
-# Создание подключения к БД MySQL.
 
 По макету видно, что на первом экране уже нужны почти все данные, которые мы импортировали ранее: *наименование продукта* и *артикул* (таблица **Product**), *тип продукта* (**ProductType**), *список* материалов и *стоимость* материалов (**Material** через **ProductMaterial**).
 
@@ -206,16 +208,68 @@ public partial class Product
 </Application.Styles>
 ``` 
 
+**ВАЖНО!**
+
+В последней версии **Авалонии** (11) привязка (*binding*) не работает, если не указать тип данных используемых в контроле (DataGrid, ListBox ...). Выдаёт ошибку *"Unable to infer DataContext type for compiled binding"*
+
+Типы данных у нас находятся в другом пространстве имён и для того, чтобы они стали доступны в текущем окне нужно добавить использование нужного пространства имён:
+
+```xml
+<Window
+   xmlns:model="using:AvaloniaApplication1.esmirnov"
+```
+
+После чего, добавить в контрол аттрибут `x:DataType`:
+
+```xml
+<DataGrid 
+    x:DataType="model:Product"
+```
+
+После этого у нас ломается текущий контекст и выдаёт ошибку, что не видит свойство _productList_: _"Unable to resolve field or property 'productList' in data context of type 'AvaloniaApplication1.esmirnov.Product'"_
+
+Чтобы это поправить, нужно указывать путь от корня окна. Для этого в окно добавляем аттрибут _Name_:
+
+```xml
+<Window
+   xmlns:model="using:AvaloniaApplication1.esmirnov"
+   Name="root"
+```
+
+И в **DataGrid**-e в привязке указываем путь от корня окна:
+
+```xml
+x:DataType="model:Product"
+ItemsSource="{Binding #root.productList}"
+```
+
 Для демонстрации работы в `MainWindow.axaml` добавим DataGrid:
 
 ```xml
 <DataGrid 
     Name="productsGrid"
-    AutoGenerateColumns="True">
+    AutoGenerateColumns="False"
+    x:DataType="model:Product"
+    ItemsSource="{Binding #root.productList}"
+>
+    <DataGrid.Columns>
+        <DataGridTextColumn
+            Header="Название"
+            Binding="{Binding Title}"
+        />
+        <DataGridTextColumn
+            Header="Номер"
+            Binding="{Binding ArticleNumber}"
+        />
+        <DataGridTextColumn
+            Header="Изображение"
+            Binding="{Binding Image}"
+        />
+    </DataGrid.Columns>
 </DataGrid>
 ```
 
-и в коде проекта (`MainWindow.axaml.cs`) получим данные из БД и выведем их в DataGrid:
+и в коде проекта (`MainWindow.axaml.cs`) получим данные из БД:
 
 ```cs
 public partial class MainWindow : Window
@@ -223,17 +277,19 @@ public partial class MainWindow : Window
     public IEnumerable<Product> productList { get; set; }
     public MainWindow()
     {
-        InitializeComponent();
+        // считываем данные ДО инициализации окна, 
+        // иначе без INotifyPropertyChanged
+        // авалония не понимает, что данные изменились
         using (var context = new esmirnovContext())
         {
             productList = context.Products.ToList();
-            productsGrid.ItemsSource = productList;
         }
+        InitializeComponent();
     }
 }
 ```
 
-Обратите внимание, *context.Products* это не модель, а виртуальный **DbSet** (коллекция сущностей), объявленный в классе контекста: `public virtual DbSet<Product> Products { get; set; }`. При чтении этой коллекции как раз и происходит обращение к БД (посылка SQL-команд)
+>Обратите внимание, *context.Products* это не модель, а виртуальный **DbSet** (коллекция сущностей), объявленный в классе контекста: `public virtual DbSet<Product> Products { get; set; }`. При чтении этой коллекции как раз и происходит обращение к БД (посылка SQL-команд)
 
 **Всё работает!!!**
 
