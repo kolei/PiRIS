@@ -120,6 +120,8 @@
 
 выполните команду (естественно, вписав свои базы и пароли):
 
+>Перед этим, возможно, нужно выполнить команду `dotnet tool install --global dotnet-ef` (спасибо Андрею Кропинову).
+
 ```
 dotnet ef dbcontext scaffold "server=kolei.ru;database=esmirnov;uid=esmirnov;password=111103;" MySql.EntityFrameworkCore -o esmirnov -f
 ```
