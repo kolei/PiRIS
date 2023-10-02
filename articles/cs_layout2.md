@@ -6,15 +6,7 @@
 <a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск
 </a></td><tr></table>
 
-Колока 1 | Колонка 2
----------|----------
-&nbsp;   | Панель элементов управления `<WrapPanel Grid.Column="1"`
-&nbsp;   | Список продукции `<ListView Grid.Column="1" Grid.Row="1"`
-&nbsp;   | Пагинатор `<ListView Grid.Column="1" Grid.Row="2"`
-
-# Вывод данных согласно макету (ListView, Image).
-
->Старый вариант с SQL-запросами находится [тут](./cs_layout.md)
+# Вывод данных согласно макету (ListBox, Image).
 
 >Напоминаю как выглядит макет списка продукции
 >![](../img/product_list_layout.jpg)
@@ -25,24 +17,24 @@
 >У каждой продукции в списке отображается изображение | 0.3
 >При отсутствии изображения отображается картинка-заглушка из ресурсов | 0.3
 
-Для создания такого макета используется элемент **ListView**
+Для создания такого макета в **Авалонии** используется элемент **ListBox**
 
-В разметке вместо **DataGrid** вставляем **ListView**
+В разметке вместо **DataGrid** вставляем **ListBox**
 
 ```xml
-<ListView
+<ListBox 
     Grid.Row="1"
-    Grid.Column="1"
-    ItemsSource="{Binding ProductList}"
->
-    <!-- сюда потом вставить ListView.ItemTemplate -->
-</ListView>
+    Background="White"
+    x:DataType="model:Product"
+    ItemsSource="{Binding #root.productList}">
+    <!-- сюда потом вставить ListBox.ItemTemplate -->
+</ListBox>
 ```
 
-Внутри него вставляем шаблон для элемента списка (*ListView.ItemTemplate*): пока у нас только прямоугольная рамка со скруглёнными углами (в этом макете вроде скрулять не надо, возможно осталось от другого шаблона)
+Внутри него вставляем шаблон для элемента списка (*ListBox.ItemTemplate*): пока у нас только прямоугольная рамка со скруглёнными углами (в этом макете вроде скрулять не надо, возможно осталось от другого шаблона)
 
 ```xml
-<ListView.ItemTemplate>
+<ListBox.ItemTemplate>
     <DataTemplate>
         <Border 
             BorderThickness="1" 
@@ -53,7 +45,7 @@
 
         </Border>
     </DataTemplate>
-</ListView.ItemTemplate>                
+</ListBox.ItemTemplate>                
 ```
 
 Внутри макета вставляем **Grid** из трёх колонок: для картинки, основного содержимого и стоимости.
@@ -76,45 +68,53 @@
 
 **В первой** колонке выводим изображение:
 
+**Авалонии** для вывода изображения нужно преобразовать имя файла в объект пиксельной графики: класс **Bitmap**. Есть два способа это сделать:
+
+* Конвертер (в принципе ничего сложного, в инете куча примеров, но я не хочу пока нагружать вас лишними сущностями)
+* Вычисляемое свойство. Этот вариант я и буду использовать. 
+
 ```xml
 <Image
     Width="64" 
     Height="64"
-    Source="{Binding ImagePreview,TargetNullValue={StaticResource defaultImage}}" />
+    Source="{Binding ImageBitmap}" />
 ```
 
-Обратите внимание, вместо поля *Image* я вывожу вычисляемое поле *ImagePreview* - в геттере проверяю есть ли такая картинка, т.к. наличие названия в базе не означает наличие файла на диске.
 
-Вычисляемое поле можно добавить в сгенерированный класс **Product** (файл `Models/Product.cs`), но этот файл может быть перезаписан при повторном реконструировании БД, поэтому лучше создавать модифицированные классы в другом месте. Классы в C# могут быть описаны в нескольких файлах (главное чтобы они были в одном namespace), для этого используется ключевое слово **partial**:
+Обратите внимание, в классе **Product** нет поля *ImageBitmap*. Для получения картинки я использую вычисляемое свойство *ImagePreview* - в геттере проверяю есть ли такая картинка, т.к. наличие названия в базе не означает наличие файла на диске.
 
-На демо экзамене есть критерии оценки за логическую и файловую структуру, поэтому куда попало классы писать не надо. Создайте каталог `Classes` и в нём класс **Product**. В созданном классе поменяйте namespace (напоминаю, оно должно быть таким же, как у модели) и добавьте в класс **Product** вычисляемые поля:  
+Вычисляемое поле можно добавить в сгенерированный класс **Product** (файл `Models/Product.cs`), но этот файл может быть перезаписан при повторном реконструировании БД, поэтому лучше создавать свои классы в другом месте. Классы в C# могут быть описаны в нескольких файлах (главное чтобы они были в одном **namespace**), для этого используется ключевое слово **partial**:
+
+На демо экзамене есть критерии оценки за логическую и файловую структуру, поэтому куда попало классы писать не надо. Создайте каталог `Classes` и в нём класс **Product**. В созданном классе поменяйте **namespace** (напоминаю, оно должно быть таким же, как у модели) и добавьте в класс **Product** вычисляемое свойство:  
 
 ```cs
-namespace WpfApp3.Models
-{
-    public partial class Product
-    {
-        public Uri ImagePreview
-        {
-            get
-            {
-                var imageName = Environment.CurrentDirectory + (Image ?? "");
-                return System.IO.File.Exists(imageName) ? new Uri(imageName) : null;
-            }
-        }
+namespace AvaloniaApplication1.esmirnov;
 
-        public string TypeAndName
+public partial class Product
+{
+    public Bitmap? ImageBitmap
+    {
+        get
         {
-            get
-            {
-                // обратите внимание, мы читаем свойство Title виртуального поля ProductType
-                return ProductType?.Title + " | " + Title;
-            }
+            var imageName = Environment.CurrentDirectory + (Image ?? "");
+            // windows лояльно относится к разным слешам в пути, 
+            // а вот linux не находит такие файлы, 
+            // поэтому меняю обратные слеши на прямые
+            imageName = imageName.Replace('\\', '/');
+
+            // если файл существует, то возвращаю его
+            // иначе картинку заглушку
+            var result = System.IO.File.Exists(imageName) ? 
+                new Bitmap(imageName) :
+                new Bitmap(Environment.CurrentDirectory+"/picture.png");
+
+            return result;
         }
     }
 }
 ```
 
+<!--
 1. Файлы подгружаемые с диска должны быть в формате **Uri**, иначе программа ищет их в ресурсах исполняемого файла
 1. К имени файла добавляю путь к текущему каталогу 
 1. Если такого файла нет, то возвращаю **null**, в этом случае срабатывает параметр привязки *TargetNullValue* - отображать изображение по-умолчанию.
@@ -129,6 +129,7 @@ namespace WpfApp3.Models
     ```
 
     тут, как раз, указывается путь к изображению в ресурсах (в моём случае в приложении создан каталог `Images` и в него ЗАГРУЖЕН файл)
+-->
 
 **Во второй** колонке вывожу основную информацию о продукте: тип + название, аритикул и список материалов.
 
@@ -151,38 +152,66 @@ namespace WpfApp3.Models
 </StackPanel>
 ```
 
-Вообще выводимый текст можно форматировать, но чтобы не запоминать лишних сущностей можно нарисовать ещё один геттер *TypeAndName* (в том же классе **Product**)
+Вообще выводимый текст можно форматировать, но чтобы не запоминать лишних сущностей можно нарисовать ещё одно вычисляемое свойство *TypeAndName* (в том же классе **Product**)
+
+```cs
+public string TypeAndName
+{
+    get
+    {
+        // обратите внимание, мы читаем свойство TitleType виртуального поля ProductType
+        return ProductType?.TitleType + " | " + Title;
+    }
+}
+```
 
 Артикул выводится как есть
 
-Строка материалов должна формироваться динамически по таблице связей **ProductMaterial**, про неё раскажу ниже.
-
-**В третьей** колонке выводим **сумму материалов**, т.е. опять динамически формируем по таблице связей.
+Строка материалов (вычисляемое свойство *MaterialString*) должна формироваться динамически по таблице связей **ProductMaterial**, про неё раскажу ниже. Пока пишем заглушку:
 
 ```cs
+public string MaterialString { get; } = "тут будет список используемых  материалов";
+```
+
+**В третьей** колонке выводим **сумму материалов**, т.е. опять динамически будем формировать по таблице связей.
+
+```xml
 <TextBlock 
     Grid.Column="2"
     Text="{Binding MaterialSum}"/>
 ```
 
-Если мы сейчас попробуем запустить наше приложение, то получим исключение (что-то с **NULL**). Дело в том, что по-умолчанию в модель загружаются данные только текущей таблицы (Product), а виртуальное свойство **ProductType** остаётся не заполненным. Для того, чтобы считать связанные данные, нужно при чтении данных использовать метод **Include**:
+И пока тоже заглушка:
 
->Количество включений не ограничено, но всё сразу лучше не загружать - WPF достаточно "умный", чтобы вычислять нужные свойства только при отображении, поэтому строку материалов и сумму можно считать отдельно
+```cs
+public string MaterialSum { get; } = "тут будет сумма используемых  материалов";
+```
+
+Если мы сейчас запустим наше приложение, то не увидим тип материала. Дело в том, что по-умолчанию в модель загружаются данные только текущей таблицы (**Product**), а виртуальное свойство **ProductType** остаётся не заполненным. 
+
+![](../img/rider012.png)
+
+Для того, чтобы считать связанные данные, нужно при чтении данных использовать метод **Include** (можно несколько раз для нескольких связанных таблиц):
+
+>Количество включений не ограничено, но всё сразу лучше не загружать - C# достаточно "умный", чтобы вычислять нужные свойства только при отображении, поэтому строку материалов и сумму можно считать отдельно
+
+Меняем в конструкторе код получения данных:
 
 ```cs
 using (var context = new esmirnovContext())
 {
-    ProductList = context.Products
+    productList = context.Products
         .Include(product => product.ProductType)
         .Include(product => product.ProductMaterials)
         .ToList();
 }
 ```
 
-На данный момент приложение выглядит примерно так
+Теперь типы выводятся нормально:
 
-![](../img/cs005.png)
+![](../img/rider013.png)
 
+<!--
 Видно, что размер элемента зависит от содержимого.
 
 Чтобы это исправить нужно добавить в **ListView** стиль для элемента контейнера, в котором задать горизонтальное выравнивание по ширине:
@@ -207,10 +236,11 @@ using (var context = new esmirnovContext())
 Теперь окно должно выглядеть как положено:
 
 ![](../img/cs006.png)
+-->
 
 ## Расчёт материалов
 
-Материалы (название и цену) мы можем взять из таблицы **Material**, которая связана с продуктами (**Product**) отношением *многие-ко-многим* через таблицу **ProductMaterial**. Массив этих связей мы в продукты уже включили, осталось выбрать материалы: 
+Материалы (название и цену) мы можем взять из таблицы **Material**, которая связана с продуктами (**Product**) отношением *многие-ко-многим* через таблицу **ProductMaterial**. Массив этих связей мы в продукты уже включили (*product.ProductMaterials*), осталось выбрать материалы (переписываем заглушки в файле `Classes/Product.cs`): 
 
 ```cs
 private string? _materialString = null;
@@ -222,15 +252,18 @@ public string MaterialString
     {
         if (_materialString == null)
         {
-            using (var context = new ksmirnovContext())
+            using (var context = new esmirnovContext())
             {
                 _materialString = "";
                 foreach (var item in ProductMaterials)
                 {
                     var material = context.Materials
                         .Where(m => m.Id == item.MaterialId).First();
+
                     _materialString += material?.Title + ", ";
-                    _materialSum += Convert.ToDouble(material?.Cost ?? 0) * (item.Count ?? 0);
+
+                    _materialSum += Convert.ToDouble(material?.Cost ?? 0) *
+                        (item.Count ?? 0);
                 }
             }
         }
@@ -259,14 +292,19 @@ private string? _materialString = null;
 **Во-вторых**, перебираем список материалов и формируем строку и сумму материалов
 
 ```cs
-// перебираем массив материалов продукта
+// перебираем массив материалов продукта 
+// (значения из связи ProductMaterials, 
+// полученные вместе с основным запросом к базе)
 foreach (var item in ProductMaterials)
 {
     // ищем материал по его Id
     var material = context.Materials
-        .Where(m => m.Id == item.MaterialId).First();
+        .Where(m => m.Id == item.MaterialId)
+        .First();
+
     // формируем строку
     _materialString += material?.Title + ", ";
+
     // и цену, учитывая количество материалов
     _materialSum += Convert.ToDouble(material?.Cost ?? 0) * (item.Count ?? 0);
 }
@@ -274,9 +312,9 @@ foreach (var item in ProductMaterials)
 
 Теперь отображается всё что требуется по заданию, причём мы не написали ни одного запроса к БД, всё за нас сделал ORM фреймворк.
 
-![](../img/cs007.png)
+![](../img/rider014.png)
 
-# Вывод данных "плиткой"
+## Вывод данных "плиткой"
 
 Такое задание было на одном из прошлых соревнований WorldSkills, вполне вероятно что появится и на демо-экзамене.
 
@@ -285,56 +323,30 @@ foreach (var item in ProductMaterials)
 Мы будем использовать уже знакомую вам **WrapPanel**:
 
 ```xml
-<ListView.ItemsPanel>
-    <ItemsPanelTemplate>
-        <WrapPanel 
-            HorizontalAlignment="Center" />
-    </ItemsPanelTemplate>
-</ListView.ItemsPanel>
-```
-
->Атрибут *HorizontalAlignment* используем, чтобы "плитки" центрировались.
-
-![](../img/01072.png)
-
-Как видим, элементы отображаются горизонтальным списком, но нет переноса. Для включения переноса элементов нужно в **ListView** отключить горизонтальный скролл, добавив атрибут `ScrollViewer.HorizontalScrollBarVisibility="Disabled"`:
-
-![](../img/01073.png)
-
-Свойство *ItemContainerStyle* уже не нужно и его можно убрать.
-
-Размеры наших элементов по-прежнему зависят от содержимого - тут надо править шаблон **ItemTemplate**.
-
-Итоговая разметка для вывода "плиткой" должна выглядеть примерно так:
-
-```xml
-<ListView
-    ItemsSource="{Binding ProductList}"
-    x:Name="ListView"
-    ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
->
-    <ListView.ItemsPanel>
+<ListBox ...>
+    <ListBox.ItemsPanel>
         <ItemsPanelTemplate>
             <WrapPanel 
                 HorizontalAlignment="Center" />
         </ItemsPanelTemplate>
-    </ListView.ItemsPanel>
-
-    <!--ListView.ItemContainerStyle>
-        <Style 
-            TargetType="ListViewItem">
-            <Setter 
-                Property="HorizontalContentAlignment"
-                Value="Stretch" />
-        </Style>
-    </-->
-    
-    
-    <ListView.ItemTemplate>
-        ...
-    </ListView.ItemTemplate>
-</ListView>    
+    </ListBox.ItemsPanel>
+    ...
+</ListBox>
 ```
+
+>Атрибут *HorizontalAlignment* используем, чтобы "плитки" центрировались.
+
+И ещё нужно поменять ширину второй колонки элемента (у нас стоит "на всё свободное место", вместо этого нужно прописать фиксированное значение)
+
+Получается примерно такое (первая ячейка получилась шире остальных из-за того, что третья колонка имеет ширину "auto" - это поправьте сами)
+
+![](../img/rider015.png)
+
+## Задачи на дополнительную оценку
+
+* Конвертер для отображения картинок
+* Разобраться с **TargetNullValue**
+* MVVM
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
 <a href="../articles/cs_mysql_connection3.md">Создание подключения к БД MySQL. Получение данных с сервера.
