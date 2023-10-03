@@ -6,7 +6,7 @@
 <a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.
 </a></td><tr></table>
 
-Продолжаем реализовывать макет
+# Продолжаем реализовывать макет
 
 >Нужно вспомнить материалы прошлогодних лекций про [INotifyPropertyChanged](https://github.com/kolei/OAP/blob/master/articles/wpf_filtering.md)
 
@@ -15,7 +15,7 @@
 * [Фильтрация](#фильтрация)
 * [Поиск](#поиск)
 
-# Пагинация
+## Пагинация
 
 >В случае если в базе более 20 продуктов, то вывод должен осуществляться постранично (по 20 продуктов на страницу). Для удобства навигации по страницам необходимо вывести список их номеров (как на макете) с возможностью перехода к выбранной странице, а также предусмотреть переходы к предыдущей и следующей страницам.
 >
@@ -32,7 +32,7 @@
 
 ## Постраничный вывод данных
 
-Тут всё просто. Нам в любом случае придется делать геттер для фильтрованного списка продукции. Сразу в этом геттере и сделаем выборку данных порциями. Для этого используются LINQ-запросы **Skip(N)** (пропустить) и **Take(N)** (получить), где N - количество пропускаемых и выбираемых элементов соответсвенно.
+Тут всё просто. Нам в любом случае придется делать *геттер* для фильтрованного списка продукции. Сразу в этом геттере и сделаем выборку данных порциями. Для этого используются методы LINQ-запросов **Skip(N)** (пропустить) и **Take(N)** (получить), где N - количество пропускаемых и выбираемых элементов соответсвенно.
 
 ```cs
 // КЛАСС ГЛАВНОГО ОКНА
@@ -40,6 +40,7 @@
 // тут у нас будет храниться полный список продукции
 private IEnumerable<Product> _productList;
 
+private const int PAGE_LEN = 20;
 // тут мы храним номер текущей страницы
 private int _currentPage = 0;
 
@@ -50,6 +51,7 @@ private int currentPage {
     }
     set {
         _currentPage = value;
+        // при смене текущей страницы перечитываем список продукции
         Invalidate();
     }
 }
@@ -57,10 +59,16 @@ private int currentPage {
 // и реализуем геттер и сеттер списка продукции
 public IEnumerable<Product> productList { 
     get {
-        return _ProductList.Skip(20 * CurrentPage).Take(20);
+        var res = _productList;
+
+        // тут будет поиск, сортировка и фильтрация
+
+        res = res.Skip(PAGE_LEN * currentPage).Take(PAGE_LEN);
+
+        return res;
     } 
     set {
-        _ProductList = value;
+        _productList = value;
         Invalidate();
     }
 }
@@ -68,85 +76,96 @@ public IEnumerable<Product> productList {
 
 ## Динамический вывод номеров страниц 
 
-В принципе можно руками в разметке нарисовать эти элементы, и может даже эксперты не обратят на это внимания. Но рассмотрим всё-таки ~~правильный вариант~~. 
+>Для пагинатора используем третью строку главной сетки
 
-Этот вариант рабочий, но проще сделать по [другому](#пагинация-версия-2)
-
-<details>
-
-<summary>Старый вариант пагинатора с программным созданием элементов</summary>
-
-1. В разметку страницы под **ListView** добавьте **пустой** именованный **StackPanel** (горизонтальный с выравниванием по правому краю)
+1. В вёрстке использовать горизонтальный **ListBox** (есть в прошлой версии про вёрстку плиткой)
 
     ```xml
-    <StackPanel 
-        x:Name="Paginator"
-        Margin="5"
-        Grid.Row="2" 
-        Grid.Column="1"
-        HorizontalAlignment="Right" 
-        Orientation="Horizontal"/>
+    <ListBox
+        x:DataType="system:String"
+        ItemsSource="{Binding PageList}"
+        Grid.Row="2">
+
+        <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel 
+                    HorizontalAlignment="Right" />
+            </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <TextBlock 
+                    Margin="5"
+                    Text="{Binding}" 
+                    PreviewMouseDown="InputElement_OnPointerPressed"/>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListView>
     ```
 
-2. Теперь в сеттере списка продукции динамически создадим текстовые блоки
-
-    Таким образом, при любом изменении списка продукции будут перерисовываться и номера страниц
+1. В **классе окна** объявить массив **pageList** и в **геттере списка продукции** заполнять его
 
     ```cs
-    set {
-        // это остаётся как есть
-        _ProductList = value;
+    public List<String> pageList { get; set; } = new List<String>();
 
-        // очищаем содержимое пагинатора
-        Paginator.Children.Clear();
+    ...
 
-        // добавляем переход на предыдущую страницу
-        Paginator.Children.Add(new TextBlock { Text = " < " });
+    // в геттере списка продукции после поиска и фильтрации
+    pageList.Clear();
+    pageList.Add("<");
+    for (int i = 1; i < (res.Count() / PAGE_LEN) + 1; i++){
+        pageList.Add(i.ToString());
+    }
+    pageList.Add(">");
 
-        // в цикле добавляем страницы
-        for (int i = 1; i < _ProductList.Count()/20; i++)
-            Paginator.Children.Add(
-                new TextBlock { Text = " "+i.ToString()+" " });
+    // не забываем уведомить визуальный интерфейс о том, что список страниц изменился
+    Invalidate("pageList");
+    
+    res = res.Skip(PAGE_LEN*currentPage).Take(PAGE_LEN);
 
-        // добавляем переход на следующую страницу
-        Paginator.Children.Add(new TextBlock { Text = " > " });
+    return res;
+    ```
 
-        // проходимся в цикле по всем сохданным элементам и задаем им обработчик PreviewMouseDown
-        foreach (TextBlock tb in Paginator.Children)
-            tb.PreviewMouseDown += PrevPage_PreviewMouseDown;
+1. Метод **Invalidate** с указанием изменившегося элемента
+
+    ```cs
+    private void Invalidate(string ComponentName = "productList") 
+    {
+        if (PropertyChanged != null)
+            PropertyChanged(
+                this, 
+                new PropertyChangedEventArgs(ComponentName));
     }
     ```
 
-3. И реализуем обработчик нажатия мыши на номерах страниц
+1. Реализация обработчика клика по кнопкам пагинатора:
 
     ```cs
-    private void PrevPage_PreviewMouseDown(
-        object sender,
-        MouseButtonEventArgs e)
+    private void InputElement_OnPointerPressed(
+        object? sender, PointerPressedEventArgs e)
     {
         switch ((sender as TextBlock).Text)
         {
-            case " < ":
+            case "<":
                 // переход на предыдущую страницу с проверкой счётчика
-                if (CurrentPage > 0) CurrentPage--;
+                if (currentPage > 0) currentPage--;
                 return;
-            case " > ":
+            case ">":
                 // переход на следующую страницу с проверкой счётчика
-                if (CurrentPage < _ProductList.Count() / 20) CurrentPage++;
+                if (currentPage < productList.Count() / PAGE_LEN) currentPage++;
                 return;
             default:
                 // в остальных элементах просто номер странцы
-                // учитываем, что надо обрезать пробелы (Trim)
-                // и то, что номера страниц начинаются с 0
-                CurrentPage = Convert.ToInt32(
-                    (sender as TextBlock).Text.Trim() )-1;
+                // учитываем, что номера страниц начинаются с 0
+                currentPage = Convert.ToInt32(
+                    (sender as TextBlock).Text) - 1;
                 return;
-        }   
+        }
     }
     ```
-</details>
 
-# Сортировка
+## Сортировка
 
 >Пользователь должен иметь возможность отсортировать продукцию (по возрастанию и убыванию) по следующим параметрам: наименование, номер производственного цеха и минимальная стоимость для агента. Выбор сортировки должен быть реализован с помощью выпадающего списка. 
 
@@ -164,7 +183,7 @@ public IEnumerable<Product> productList {
 1. Создаем массив со списком типов сортировок
 
     ```cs
-    public string[] SortList { get; set; } = {
+    public string[] sortList { get; set; } = {
         "Без сортировки",
         "название по убыванию",
         "название по возрастанию",
@@ -174,7 +193,7 @@ public IEnumerable<Product> productList {
         "цена по возрастанию" };
     ```
 
-2. В разметке (основной Grid) добавляем контейнер для управляющих элементов (WrapPanel) и в него выпадающий список (**ComboBox**)
+1. В разметке (в первую строку основного **Grid**) добавляем контейнер для управляющих элементов (**WrapPanel**) и в него выпадающий список (**ComboBox**)
 
     ```xml
     <WrapPanel
@@ -188,49 +207,52 @@ public IEnumerable<Product> productList {
             VerticalContentAlignment="Center"
             MinWidth="200"
             SelectionChanged="SortTypeComboBox_SelectionChanged"
-            ItemsSource="{Binding SortList}"/>
+            x:DataType="system:String"
+            ItemsSource="{Binding #root:sortList}"/>
     </WrapPanel>    
     ```
 
-3. Реализуем обработчик выбора из списка
+1. Реализуем обработчик выбора из списка
 
     Запоминаем ИНДЕКС выбранного элемента
 
     ```cs
+    private int sortType = 0;
 
-    private int SortType = 0;
-
-    private void SortTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void SortTypeComboBox_SelectionChanged(
+        object? sender, 
+        SelectionChangedEventArgs e)
     {
-        SortType = SortTypeComboBox.SelectedIndex;
-        Invalidate();
+        if (SortTypeComboBox != null)
+        {
+            sortType = SortTypeComboBox.SelectedIndex;
+            Invalidate();
+        }
     }
     ```
 
-4. И дорабатываем геттер списка продукции
+1. И дорабатываем геттер списка продукции
 
     ```cs
     get {
-        var Result = _ProductList;
+        var res = _productList;
 
-        switch (SortType)
+        switch (sortType)
         {
             // сортировка по названию продукции
             case 1:
-                Result = Result.OrderBy(p => p.Title);
+                res = res.OrderBy(p => p.Title);
                 break;
             case 2:
-                Result = Result.OrderByDescending(p => p.Title);
+                res = res.OrderByDescending(p => p.Title);
                 break;
             // остальные сортировки реализуйте сами
         }
-
-        // пагинатор в самом конце
-        return Result.Skip(20 * CurrentPage).Take(20);
+        ...
     } 
     ```
 
-# Фильтрация
+## Фильтрация
 
 >Кроме этого, пользователь должен иметь возможность отфильтровать данные по типу продукта. Все типы из базы данных должны быть выведены в выпадающий список для фильтрации. Первым элементом в выпадающем списке должен быть “Все типы”, при выборе которого настройки фильтра сбрасываются.
 
@@ -244,7 +266,7 @@ public IEnumerable<Product> productList {
 
 Список типов продукции мы можем получить из базы данных.
 
-1. Создаем список продукции, заполняем его данными из базы (в конструкторе главного окна, там же где получали список продукции) и добавляем в начало пункт "Все типы продукции"
+1. Создаем список типов продукции, заполняем его данными из базы (в конструкторе главного окна, там же где получали список продукции) и добавляем в начало пункт "Все типы продукции"
 
     ```cs
     public List<ProductType> ProductTypeList { get; set; }
@@ -255,7 +277,7 @@ public IEnumerable<Product> productList {
     ProductTypeList.Insert(0, new ProductType { Title = "Все типы продукции" });
     ```
 
-2. В разметке в панель элементов управления (WrapPanel) добавляем выпадающий список
+1. В разметке в панель элементов управления (WrapPanel) добавляем выпадающий список
 
     ```xml
     <ComboBox
@@ -263,8 +285,8 @@ public IEnumerable<Product> productList {
         x:Name="ProductTypeFilter"
         SelectedIndex="0"
         SelectionChanged="ProductTypeFilter_SelectionChanged"
-        ItemsSource="{Binding ProductTypeList}">
-    </ComboBox>
+        x:DataType="model:ProductType"
+        ItemsSource="{Binding #root.productTypeList}"/>
     ```
 
     Элементами списка являются не строки, а объекты. В прошлом году я показывал как делать шаблон элемента списка, но как мне кажеться шаблон здесь излишен (его имеет смысл использовать если кроме названия выводится ещё что-то)
@@ -277,7 +299,7 @@ public IEnumerable<Product> productList {
     }
     ```
 
-3. Реализуем обработчик выбора элемента фильтра    
+1. Реализуем обработчик выбора элемента фильтра    
 
     ```cs
     private int ProductTypeFilterId = 0;
@@ -290,22 +312,22 @@ public IEnumerable<Product> productList {
     }
     ```
 
-4. И опять дорабатываем геттер списка продукции
+1. И опять дорабатываем геттер списка продукции
 
     ```cs
     ...
-    var Result = _ProductList;
+    var res = _productList;
 
     // действия, которые уменьшают размер выборки помещаем вверх
-    if (ProductTypeFilterId > 0)
-        Result = Result.Where(
-            p => p.ProductTypeID == ProductTypeFilterId);
+    if (productTypeFilterId > 0)
+        res = res.Where(
+            p => p.ProductTypeId == productTypeFilterId);
 
-    switch (SortType)
+    switch (sortType)
     ...
     ```
 
-# Поиск
+## Поиск
 
 >Пользователь должен иметь возможность искать конкретную продукцию, используя поисковую строку.
 >
@@ -326,190 +348,35 @@ public IEnumerable<Product> productList {
     <TextBox
         Width="200"
         VerticalAlignment="Center"
-        x:Name="SearchFilterTextBox" 
-        KeyUp="SearchFilterTextBox_KeyUp"/>
+        x:Name="searchFilterTextBox" 
+        KeyUp="SearchFilterTextBox_OnKeyUp"/>
     ```
 
-2. В коде окна запоминаем вводимую строку
+1. В коде окна запоминаем вводимую строку
 
     ```cs
-    private string SearchFilter="";
-    private void SearchFilterTextBox_KeyUp(object sender, KeyEventArgs e)
+    private string searchFilter="";
+    private void SearchFilterTextBox_OnKeyUp(object? sender, KeyEventArgs e)
     {
-        SearchFilter = SearchFilterTextBox.Text;
-        Invalidate();
+        if (SearchFilterTextBox) {
+            SearchFilter = SearchFilterTextBox.Text;
+            Invalidate();
+        }
     }
     ```
-3. И снова правим геттер списка продукции
+1. И снова правим геттер списка продукции
 
     ```cs
     // ищем вхождение строки фильтра в названии и описании объекта без учета регистра
-    if (SearchFilter != "")
-        Result = Result.Where(
-            p => p.Title.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                p.Description?.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0
+    if (searchFilter != "")
+        res = res.Where(
+            p => p.Title.IndexOf(searchFilter, 
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                 p.Description?.IndexOf(searchFilter, 
+                    StringComparison.OrdinalIgnoreCase) >= 0
         );
     ```
-
----
-
-В принципе всё работает, но список страниц формируется по полному списку продукции и не учитывает фильтр и поиск - перенесём этот код из сеттера в геттер. 
-
-Ещё одна засада в том, что если мы находимся на последней странице и включаем фильтр, то сдвиг уходит за границы массива и отображается пустой список - т.е. перед выводом списка надо проверять валидность старицы
-
-Итоговый список продукции должен выглядеть примерно так:
-
-```cs
-public IEnumerable<Product> ProductList {
-    get {
-        var Result = _ProductList;
-
-        // фильтр по типу продукции
-        if (ProductTypeFilterId > 0)
-            Result = Result.Where(i => i.ProductTypeID == ProductTypeFilterId);
-
-        // поиск
-        // ищем вхождение строки фильтра в названии и описании объекта без учета регистра
-        if (SearchFilter != "")
-            Result = Result.Where(
-                p => p.Title.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        p.Description?.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0
-            );
-
-        // сортировка
-        switch (SortType)
-        {
-            // сортировка по названию продукции
-            case 1:
-                Result = Result.OrderBy(p => p.Title);
-                break;
-            case 2:
-                Result = Result.OrderByDescending(p => p.Title);
-                break;
-                // остальные сортировки реализуйте сами
-
-        }
-
-        // пагинатор
-        Paginator.Children.Clear();
-
-        Paginator.Children.Add(new TextBlock { Text = " < " });
-        for (int i = 1; i <= (Result.Count() / 20)+1; i++)
-            Paginator.Children.Add(new TextBlock { Text = " " + i.ToString() + " " });
-        Paginator.Children.Add(new TextBlock { Text = " > " });
-        foreach (TextBlock tb in Paginator.Children)
-            tb.PreviewMouseDown += PrevPage_PreviewMouseDown;
-
-        // если текущая страница больше расчетного количества
-        if (CurrentPage > Result.Count() / 20)
-            CurrentPage = Result.Count() / 20;
-
-        return Result.Skip(20 * CurrentPage).Take(20);
-    } 
-    set {
-        _ProductList = value;
-        Invalidate();
-    }
-}
-```
-
-# Пагинация (версия 2)
-
-Пагинацию можно сделать проще:
-
-1. В вёрстке использовать горизонтальный **ListView** (есть в прошлой версии про вёрстку плиткой)
-
-    Вместо `<StackPanel Name="Paginator"...`
-
-    ```xml
-    <ListView
-        ItemsSource="{Binding PageList}"
-        Grid.Column="1"
-        Grid.Row="2">
-
-        <ListView.ItemsPanel>
-            <ItemsPanelTemplate>
-                <WrapPanel 
-                    HorizontalAlignment="Right" />
-            </ItemsPanelTemplate>
-        </ListView.ItemsPanel>
-
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <TextBlock 
-                    Margin="5"
-                    Text="{Binding label}" 
-                    PreviewMouseDown="TextBlock_PreviewMouseDown"/>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
-    ```
-
-1. В проект добавить класс **PageItem**
-
-    ```cs
-    public class PageItem
-    {
-        public string label { get; set; }
-    }
-    ```
-
-1. В **классе окна** объявить массив **PageList** и в **геттере списка продукции** заполнять его, а не генерировать динамически содержимое для пагинатора
-
-    ```cs
-    public List<PageItem> PageList { get; set; } = new List<PageItem>();
-
-    ...
-
-    // в геттере
-    PageList.Clear();
-    PageList.Add(new PageItem { label = "<" });
-    for (int i = 1; i <= (Result.Count() / 20) + 1; i++){
-        PageList.Add(new PageItem { label = i.ToString() });
-    }
-    PageList.Add(new PageItem { label = ">" });
-
-    // не забываем уведомить визуальный интерфейс о том, что список страниц изменился
-    Invalidate("PageList");
-    ```
-
-1. Метод **Invalidate** с указанием изменившегося элемента
-
-    ```cs
-    private void Invalidate(string ComponentName = "ProductList") 
-    {
-        if (PropertyChanged != null)
-            PropertyChanged(
-                this, 
-                new PropertyChangedEventArgs(ComponentName));
-    }
-    ```
-
-1. Реализация обработчика клика по кнопкам пагинатора:
-
-    ```cs
-    private void TextBlock_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        switch ((sender as TextBlock).Text)
-        {
-            case "<":
-                // переход на предыдущую страницу с проверкой счётчика
-                if (currentPage > 0) currentPage--;
-                return;
-            case ">":
-                // переход на следующую страницу с проверкой счётчика
-                if (currentPage < _ProductList.Count() / PAGE_LEN) currentPage++;
-                return;
-            default:
-                // в остальных элементах просто номер странцы
-                // учитываем, что надо обрезать пробелы (Trim)
-                // и то, что номера страниц начинаются с 0
-                currentPage = Convert.ToInt32(
-                    (sender as TextBlock).Text) - 1;
-                return;
-        }
-    }
-    ```
+    
 ---
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
