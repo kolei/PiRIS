@@ -1,10 +1,6 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_layout2.md">Вывод данных согласно макету (ListView, Image)
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.
-</a></td><tr></table>
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Вывод данных согласно макету (ListBox, Image)](../articles/cs_layout2.md) | [Содержание](../readme.md) | [Подсветка элементов по условию. Дополнительные выборки.](../articles/cs_coloring2.md)
 
 # Продолжаем реализовывать макет
 
@@ -379,10 +375,6 @@ public IEnumerable<Product> productList {
     
 ---
 
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_layout2.md">Вывод данных согласно макету (ListView, Image)
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.
-</a></td><tr></table>
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Вывод данных согласно макету (ListBox, Image)](../articles/cs_layout2.md) | [Содержание](../readme.md) | [Подсветка элементов по условию. Дополнительные выборки.](../articles/cs_coloring2.md)

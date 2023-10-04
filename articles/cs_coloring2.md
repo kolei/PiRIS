@@ -8,6 +8,8 @@
 
 # Подсветка элементов по условию. Дополнительные выборки.
 
+* [Подсветка элементов по условию](#раскраска-по-условию)
+
 >В списке продукции необходимо подсвечивать светло-красным цветом те продукты, которые не продавались агентами в последний месяц.
 
 Критерий | Баллы
@@ -30,21 +32,21 @@
 
     И так как исходных данных нет, то добавляем данные прямо в таблицы.
 
-2. Добавляем агента
+1. Добавляем агента
 
     Тут заполняем только обязательные поля. *AgentTypeID* смотрим в таблице **AgentType**.
 
-3. Создание продаж продукции
+1. Создание продаж продукции
 
-    Добавляем несколько записей. Поля *AgentID* и *ProductID* смотрим в соответствующих таблицах. Дата продажи заполняется в формате `YYYY-MM-DD`
+    Добавляем несколько записей в таблицу **ProductSale**. Поля *AgentID* и *ProductID* смотрим в соответствующих таблицах. Дата продажи заполняется в формате `YYYY-MM-DD`
 
 ## Получение данных
 
 Можно в методе получения данных с сервера добавить **Include** для виртуального списка **ProductSales**, но я уже упоминал в лекциях, что списки лучше загружать динамически. Мы это сделаем на следующем шаге, при получении цвета ячейки.
 
-## Раскраска по условию
+### Раскраска по условию
 
-Тут элементарно. У элемента рамка (Border) задаем цвет фона:
+Тут элементарно. У элемента рамка (**Border**) задаем цвет фона:
 
 ```cs
 <Border 
@@ -85,7 +87,7 @@ public string BackgroundColor
 
 ![](../img/01069.png)
 
-# Массовая смена цены продукции
+## Массовая смена цены продукции
 
 >Необходимо добавить возможность изменения минимальной стоимости продукции для агента сразу для нескольких выбранных продуктов. Для этой цели реализуйте возможность выделения сразу нескольких элементов в списке продукции, после чего должна появиться кнопка “Изменить стоимость на ...”. При нажатии на кнопку необходимо отобразить модальное окно с возможностью ввода числового значения, на которое и будет увеличена стоимость выбранных продуктов. По умолчанию в поле должно быть введено среднее значение цены на продукцию для агента. После нажатия кнопки “Изменить” стоимость выделенных продуктов должна быть изменена в базе данных, а также обновлена в интерфейсе.
 
@@ -101,53 +103,51 @@ public string BackgroundColor
 После нажатия кнопки "Изменить" стоимость всех выбранных продуктов обновляется в списке | 0.2
 **Итого** | **1.8**
 
-## Выделение нескольких элементов
+### Выделение нескольких элементов
 
-Возможность выделения нескольких элементов в **ListView** есть, специально её реализовывать не надо. Надо лишь поймать это событие и сосчитать количество выделенных элементов.
+Возможность выделения нескольких элементов в **ListBox** есть, нужно только добавить аттрибут `SelectionMode="Multiple"`. Реализовать событие выбора и сосчитать количество выделенных элементов.
 
-В **ListView** нужно добавить название (мы потом будем по нему искать количество выделенных элементов) и обработчик события *SelectionChanged*
+В **ListBox** нужно добавить название (мы потом будем по нему искать количество выделенных элементов) и обработчик события *SelectionChanged*
 
 ```cs
-x:Name="ProductListView"
-SelectionChanged="ListView_SelectionChanged"
+Name="ProductListBox"
+SelectionMode="Multiple"
+SelectionChanged="ProductListBox_OnSelectionChanged"
 ```
 
-Реализуем обработчик *ListView_SelectionChanged*:
+Реализуем обработчик *ProductListBox_OnSelectionChanged*:
 
 ```cs
-public int ProductsSelectedCount = 0;
-private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+public int productsSelectedCount = 0;
+private void ProductListBox_OnSelectionChanged(
+    object? sender, 
+    SelectionChangedEventArgs e)
 {
-    ProductsSelectedCount = ProductListView.SelectedItems.Count;
+    if (ProductListBox != null)
+    {
+       productsSelectedCount = ProductListBox.  SelectedItems.Count;
+    }
 }
 ```
 
-## Отображение кнопки "Изменить стоимость на ..."
+### Отображение кнопки "Изменить стоимость на ..."
 
 Сначала просто добавляем эту кнопку в разметку (можно в панель управления, можно в левую панель)
 
 ```xml
 <Button
     x:Name="CostChangeButton"
-    Visibility=""
+    IsVisible="True"
     Content="Изменить стоимость на..."
     />
 ```
 
-И запоминаем какие значения может прнимать атрибут *Visibility*
-
-![](../img/01070.png)
-
-* **Collapsed** - элемент не отображается и НЕ ЗАНИМАЕТ МЕСТО в контейнере
-* **Hidden** - элемент не отображается, но под него остается выделенное место
-* **Visible** - элемент отображается
-
-Теперь, чтобы видимость кнопки зависела от количества выделенных элементов, мы привязываем атрибут *Visibility* к свойству *CostChangeButtonVisible*
+Теперь, чтобы видимость кнопки зависела от количества выделенных элементов, мы привязываем атрибут *IsVisible* к свойству *costChangeButtonVisible*
 
 ```xml
 <Button
     x:Name="CostChangeButton"
-    Visibility="{Binding CostChangeButtonVisible}"
+    IsVisible="{Binding CostChangeButtonVisible}"
     Content="Изменить стоимость на..."
     />
 ```
@@ -155,65 +155,41 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
 И реализуем это свойство в коде ОКНА
 
 ```cs
-public string CostChangeButtonVisible {
+public string costChangeButtonVisible {
     get {
-        if (ProductsSelectedCount > 1) return "Visible";
-        return "Collapsed";
+        return productsSelectedCount > 1;
     }
 }
 ```
 
-Осталось в обработчик события *ListView_SelectionChanged* вставить вызов метода PropertyChanged для свойства *CostChangeButtonVisible*
+Осталось в обработчик события *ProductListBox_OnSelectionChanged* вставить вызов метода *Invalidate* для свойства *costChangeButtonVisible*
 
-Чтобы не плодить кучу одинаковых методов, я добавил в параметры метода **Invalidate** имя свойства, которое изменилось
-
-```cs
-private void Invalidate(string ComponentName = "ProductList") {
-    if (PropertyChanged != null)
-        PropertyChanged(this, new PropertyChangedEventArgs(ComponentName));
-}
-
-private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-{
-    ProductsSelectedCount = ProductListView.SelectedItems.Count;
-    Invalidate("CostChangeButtonVisible");
-}
-```
-
-## Вывод модального окна
+### Вывод модального окна
 
 1. Добавляем кнопке обработчик события клика
 
     ```xml
     <Button
         x:Name="CostChangeButton"
-        Visibility="{Binding CostChangeButtonVisible}"
-        Click="CostChangeButton_Click"
+        x:DataType="system:Boolean"
+        IsVisible="{Binding #root.costChangeButtonVisible}"
+        Click="CostChangeButton_OnClick"
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         Content="Изменить стоимость на..."
     />
     ```
 
-2. Создаем и показываем модальное окно
+1. Создаем и показываем модальное окно
 
     >Вспоминаем, что мы должны соблюдать файловую структуру проекта, т.е. все однотипные объекты распихивать по соответствующим папкам. 
     
-    Создадим папку `Windows` и в неё добавим окно (WPF)
+    Создадим папку `Windows` и в неё добавим окно:
 
     ![](../img/01071.png)
 
     Название окна должно быть осмысленным и с суффиксом *Window*. У меня получилось *EnterMinCostForAgentWindow*
 
-    >Можно в каталог `Windows` перетащить и главное окно **MainWindow**. Только в этом случае надо в разметке приложения (App.xaml) добавить название каталога:
-    >
-    >```xml
-    ><Application x:Class="mysql.App"
-    >   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    >   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    >   xmlns:local="clr-namespace:mysql"
-    >   StartupUri="Windows/MainWindow.xaml">
-    >               ^^^^^^^^
-    >...
+    >Можно в каталог `Windows` перетащить и главное окно **MainWindow**.
 
     Опять же, все окна должны иметь нормальные заголовки. В разметке окна поменяйте атрибут *Title* элемента **Window** (это надо сделать и для основного окна)
 
@@ -246,73 +222,93 @@ private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs 
 
     **Во-первых**, в конструктор добавляем параметр (средняя цена). **Во-вторых**, записываем эту цену в текстовое поле.
 
-3. По условиям задачи мы должны вычислить среднюю цену для выделенных элементов списка (я на вскидку не нашёл как преобразовать **IList** в **IEnumerable**, поэтому тупо перебираем список выбранных элементов, считаем сумму и, заодно, собираем список идентификаторов)
+1. По условиям задачи мы должны вычислить среднюю цену для выделенных элементов списка (я на вскидку не нашёл как преобразовать **IList** в **IEnumerable**, поэтому тупо перебираем список выбранных элементов, считаем сумму и, заодно, собираем список идентификаторов для последующего переопределения цены)
+
+    >В **авалонии** окна запускаются асинхронно, поэтому если мы хотим получить результат выполнения диалога (а нам нужна сумма), то нужно использовать конструкцию *async/await*: метод, в котором нужно ждать выполнения асинхронной задачи должен иметь модификатор **async**, а перед функцией открытия окна должен быть модификатор **await**
 
     ```cs
-    private void CostChangeButton_Click(object sender, RoutedEventArgs e)
+    /* 
+        обработчик события клика по кнопке "Изменить стоимость на..." в главном окне
+        так как нам нужно дождаться результата ввода, то запускаем асинхронно
+    */
+    async private void CostChangeButton_OnClick(
+        object? sender, 
+        RoutedEventArgs e)
     {
-        decimal Sum = 0;
+        decimal sum = 0;
         List<int> idList = new List<int>();
-        foreach (Product item in ProductListView.SelectedItems){
-            Sum += item.MinCostForAgent;
-            idList.Add(item.ID);
+        foreach (Product item in ProductListBox.SelectedItems){
+            sum += item.MinCostForAgent;
+            idList.Add(item.Id);
         }
 
         // создаём окно, передавая ему среднюю цену    
-        var NewWindow = new EnterMinCostForAgentWindow(
-            Sum / ProductListView.SelectedItems.Count);
+        var newWindow = new EnterMinCostForAgentWindow(
+            sum / ProductListBox.SelectedItems.Count);
 
-        // показываем МОДАЛЬНОЕ окно    
-        NewWindow.ShowDialog();
+        // показываем МОДАЛЬНОЕ окно и ЖДЕМ результат
+        var res = await newWindow.ShowDialog<decimal?>(this);
     }
     ```
 
-4. Проверка на ввод только числового значения.
+    >Обратите внимание, в угловых скобках после *ShowDialog* указывается тип результата, возвращаемый окном. Результата может и не быть (хакрыли окно крестиком), поэтому тип нуллабельный.
+
+1. Проверка на ввод только числового значения.
 
     ```cs
-    // объявляем публичную переменную из которой
-    // будем считывать результат
-    public decimal Result;
-    private void Button_Click(object sender, RoutedEventArgs e)
+    private void Button_OnClick(
+        object? sender, 
+        RoutedEventArgs e)
     {
         try
         {
             // пробуем сконвертировать в число
-            Result = Convert.ToDecimal(CostTextBox.Text);
+            decimal Result = Convert.ToDecimal(CostTextBox.Text);
             // при присвоении результата свойству DialogResult модальное окно закрывается
-            DialogResult = true;
+            Close(Result);
         }
         catch (Exception)
         {
-            MessageBox.Show("Стоимость должна быть числом");
+            // в авлонии нет MessageBox, поэтому его надо реализовать как обычное окно
+            (new MessageBox("Стоимость должна быть числом")).ShowDialog(this);
         }
     }
     ```
 
-5. Запись новой цены в БД и обновление списка.
+1. Запись новой цены в БД и обновление списка.
 
 Редактируем пункт 3, добавляя анализ результата модального окна
 
 ```cs
-if ((bool)NewWindow.ShowDialog())
+var res = await newWindow.ShowDialog<decimal?>(this);
+if (res != null)
 {
-    using (var context = new ksmirnovContext())
+    using (var context = new esmirnovContext())
     {
-        // выбираем выделенные продукты из БД
-        var query = context.Products.Where(
-            p => idList.Contains(p.Id));
-
-        // меняем им стоимость
-        foreach (var product in query)
+        try
         {
-            product.MinCostForAgent = NewWindow.Result;
+            // перебираем выделенные продукты
+            foreach (var id in idList)
+            {
+                var product = context.Products.Where(p => p.Id == id).FirstOrDefault();
+                if (product != null)
+                {
+                    // меняем сумму для агента и сохраняем изменения
+                    product.MinCostForAgent = res ?? 0;
+                    context.SaveChanges();
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            (new MessageBox(exception.Message)).ShowDialog(this);
         }
 
-        // сохраняем данные
-        context.SaveChanges();
-
-        // перечитываем список продукции
-        ProductList = context.Products
+        /* 
+            перечитываем список продукции (так как эта операция повторяется, 
+            то лучше её вынести в отдельный метод)
+        */
+        productList = context.Products
             .Include(product => product.ProductType)
             .Include(product => product.ProductMaterials)
             .ToList();
