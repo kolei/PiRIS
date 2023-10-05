@@ -301,7 +301,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination2.md)<!-- datepicker -->
 
-1. [Подсветка элементов по условию. Дополнительные выборки. Массовая смена цены продукции.](./articles/cs_coloring2.md)
+1. [Подсветка элементов по условию. Массовая смена цены продукции.](./articles/cs_coloring2.md)
 
 1. [Создание, изменение продукции](./articles/cs_edit_product2.md)
 
