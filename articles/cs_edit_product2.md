@@ -390,6 +390,14 @@ private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
 }
 ```
 
+>Метод **RemoveRange** не рекомендуется использовать в больших базах, в инетах пишут, что он вытягивает всю таблицу в ОЗУ. Лучше использовать либо одиночное удаление в цикле, либо "чистый" SQL запрос:
+>```cs
+>context.Database.ExecuteSqlRaw($"DELETE FROM ProductMaterial WHERE ProductId={currentProduct.Id}");
+>// также можно удалить и сам продукт
+>context.Database.ExecuteSqlRaw($"DELETE FROM Product WHERE Id={currentProduct.Id}");
+>```
+>Но в случае использования "чистых" SQL-запросов нужно учитывать, что **EntityFramework** не будет знать сколько записей затронуто и нужно убрать проверку количества измененных записей в **SaveChanges** (собственно и сам этот метод не нужно вызывать, если всё сделано "чистыми" SQL-запросами)
+
 <table style="width: 100%;"><tr><td style="width: 40%;">
 <a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.
 </a></td><td style="width: 20%;">
