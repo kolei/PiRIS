@@ -398,6 +398,8 @@ private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
 >```
 >Но в случае использования "чистых" SQL-запросов нужно учитывать, что **EntityFramework** не будет знать сколько записей затронуто и нужно убрать проверку количества измененных записей в **SaveChanges** (собственно и сам этот метод не нужно вызывать, если всё сделано "чистыми" SQL-запросами)
 
+[Подробнее про RAW SQL](https://learn.microsoft.com/en-us/ef/core/querying/sql-queries)
+
 <table style="width: 100%;"><tr><td style="width: 40%;">
 <a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.
 </a></td><td style="width: 20%;">
