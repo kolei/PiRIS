@@ -69,10 +69,10 @@ public string BackgroundColor
 {
     get
     {
-        // вычисляем дату для сравнения (сегодня - 30 дней)
+        // вычисляем дату для сравнения ("сегодня" минус 30 дней)
         var compareDate = DateTime.Now.AddDays(-30);
         
-        using (var context = new ksmirnovContext())
+        using (var context = new esmirnovContext())
         {
             // ищем количество продаж, совершённых позже указанной даты
             // фильтруя продажи по Id продукта
@@ -81,8 +81,8 @@ public string BackgroundColor
                 .Count(ps => ps.SaleDate >= compareDate);
 
             // возвращаем цвет, в зависимости от количества продаж 
-            if (saleCount > 0) return "#fff";
-            return "#fee";
+            if (saleCount > 0) return "#fff"; // белый
+            return "#fee"; // розовый
         }
     }
 }
@@ -147,12 +147,13 @@ private void ProductListBox_OnSelectionChanged(
     />
 ```
 
-Теперь, чтобы видимость кнопки зависела от количества выделенных элементов, мы привязываем атрибут *IsVisible* к свойству *costChangeButtonVisible*
+Теперь, чтобы видимость кнопки зависела от количества выделенных элементов, мы привязываем атрибут *IsVisible* к свойству *costChangeButtonVisible* (дописав аттрибут `DataType`)
 
 ```xml
 <Button
     x:Name="CostChangeButton"
-    IsVisible="{Binding CostChangeButtonVisible}"
+    x:DataType="system:Boolean"
+    IsVisible="{Binding #root.costChangeButtonVisible}"
     Content="Изменить стоимость на..."
     />
 ```
@@ -201,17 +202,15 @@ public string costChangeButtonVisible {
     Содержимое у этого окна элементарное (текстовое поле и кнопка):
 
     ```xml
-    <Grid>
-        <StackPanel
-            Orientation="Vertical" Margin="0,50,0,0">
+    <StackPanel
+        Orientation="Vertical" Margin="0,50,0,0">
 
-            <TextBox
-                Name="CostTextBox"
-                />
-            <Button 
-                Content="Изменить"/>
-        </StackPanel>
-    </Grid>
+        <TextBox
+            Name="CostTextBox"
+            />
+        <Button 
+            Content="Изменить"/>
+    </StackPanel>
     ```
 
     В коде этого окна меняем конструктор:
@@ -284,44 +283,46 @@ public string costChangeButtonVisible {
 
 1. Запись новой цены в БД и обновление списка.
 
-Редактируем пункт 3, добавляя анализ результата модального окна
+    Редактируем пункт 3, добавляя анализ результата модального окна
 
-```cs
-var res = await newWindow.ShowDialog<decimal?>(this);
-if (res != null)
-{
-    using (var context = new esmirnovContext())
+    ```cs
+    ...
+    var res = await newWindow.ShowDialog<decimal?>(this);
+    if (res != null)
     {
-        try
+        using (var context = new esmirnovContext())
         {
-            // перебираем выделенные продукты
-            foreach (var id in idList)
+            try
             {
-                var product = context.Products.Where(p => p.Id == id).FirstOrDefault();
-                if (product != null)
+                // перебираем выделенные продукты
+                foreach (var id in idList)
                 {
-                    // меняем сумму для агента и сохраняем изменения
-                    product.MinCostForAgent = res ?? 0;
-                    context.SaveChanges();
+                    var product = context.Products.Where(p => p.Id == id).FirstOrDefault();
+                    if (product != null)
+                    {
+                        // меняем сумму для агента
+                        product.MinCostForAgent = res ?? 0;
+                    }
                 }
+                // сохраняем изменения
+                context.SaveChanges();
             }
-        }
-        catch (Exception exception)
-        {
-            (new MessageBox(exception.Message)).ShowDialog(this);
-        }
+            catch (Exception exception)
+            {
+                (new MessageBox(exception.Message)).ShowDialog(this);
+            }
 
-        /* 
-            перечитываем список продукции (так как эта операция повторяется, 
-            то лучше её вынести в отдельный метод)
-        */
-        productList = context.Products
-            .Include(product => product.ProductType)
-            .Include(product => product.ProductMaterials)
-            .ToList();
+            /* 
+                перечитываем список продукции (так как эта операция повторяется, 
+                то лучше её вынести в отдельный метод)
+            */
+            productList = context.Products
+                .Include(product => product.ProductType)
+                .Include(product => product.ProductMaterials)
+                .ToList();
+        }
     }
-}
-```
+    ```
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
 <a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск

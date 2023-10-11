@@ -8,6 +8,11 @@
 
 # Добавление/редактирование продукции
 
+* [Создание окна редактирования продукции](#создание-окна-редактирования-продукции)
+* [Открытие окна редактирования для существующей и новой продукции](#открытие-окна-редактирования-для-существующей-и-новой-продукции)
+* [Проверки перед сохранением продукта](#проверки-перед-сохранением-продукта)
+* [Удаление продукции](#удаление-продукции)
+
 >Необходимо добавить возможность редактирования данных существующей продукции, а также добавление новой продукции в новом окне - форме для добавления/редактирования продукции.
 >
 >Переходы на данное окно должны быть реализованы из главной формы списка: для редактирования - при нажатии на конкретный элемент, для добавления - при нажатии кнопки “Добавить продукцию”.
@@ -18,8 +23,7 @@
 >
 >При открытии формы для редактирования все поля выбранного объекта должны быть подгружены в соответствующие поля из базы данных, а таблица заполнена актуальными значениями.
 >
->Стоимость продукции может включать сотые части, а также не может быть отрицательной. Система должна проверять существование продукта с введенным артикулом и не давать использовать один
-артикул для нескольких продуктов.
+>Стоимость продукции может включать сотые части, а также не может быть отрицательной. Система должна проверять существование продукта с введенным артикулом и не давать использовать один артикул для нескольких продуктов.
 >
 >Пользователь может добавить/заменить изображение у продукции.
 >
@@ -62,47 +66,38 @@
 После закрытия окна данные в таблице обновляются | 0.3
 **Итого** | **7.9**
 
-# Создание окна редактирования продукции
+## Создание окна редактирования продукции
 
-Для добавления и редактирования мы будем использовать одно и то же окно. Название окна будем вычислять по наличию ID у продукции (у новой записи это поле = 0)
+Для добавления и редактирования мы будем использовать одно и то же окно. Заголовок окна будем вычислять по наличию ID у продукции (у новой записи это поле равно `0`)
 
 1. Создайте новое окно: **EditProductWindow** (в папке **Windows** - не забываем про логическую структуру проекта)
 
-1. В классе окна **EditProductWindow** добавьте свойство *CurrentProduct*, в котором будет храниться добавляемый/редактируемый экземпляр продукции:
+1. В классе окна **EditProductWindow** добавьте **свойство** *currentProduct*, в котором будет храниться добавляемый/редактируемый экземпляр продукции:
 
     ```cs
-    public Product CurrentProduct { get; set; }
+    public Product currentProduct { get; set; };
     ```
 
-    И геттер для названия окна:
-
-    ```cs
-    public string WindowName {
-        get {
-            return CurrentProduct.Id == 0 ? "Новый продукт" : "Редактирование продукта";
-        }
-    }
-    ```
-1. В конструктор окна добавьте параметр типа **Product** и присвойте его ранее объявленному свойству:
-
-    ```cs
-    public EditWindow(Product EditProduct)
-    {
-        InitializeComponent();
-        DataContext = this;
-        CurrentProduct = EditProduct;
-    }
-    ```
-
-1. В разметке окна вместо фиксированного названия вставьте привязку к свойству *WindowName*
+1. В разметке окна вставьте аттрибут *Name*
 
     ```xml
     <Window
         ...
-        Title="{Binding WindowName}">
+        Name="root">
     ```
 
-1. В окне редактирования продукции создайте сетку из трёх колонок: в первой у нас будет изображение, во второй редактируемые поля продукта, а в третей список материалов
+1. В конструктор окна добавьте параметр типа **Product**, присвойте его ранее объявленному свойству. Задайте заголовок окна:
+
+    ```cs
+    public EditWindow(Product EditProduct)
+    {
+        currentProduct = editProduct;
+        InitializeComponent();
+        root.Title = currentProduct.Id == 0 ? "Новый продукт" : "Редактирование продукта";
+    }
+    ```
+
+1. В разметке окна редактирования продукции создайте сетку из трёх колонок: в первой у нас будет изображение, во второй редактируемые поля продукта, а в третей список материалов
 
     ```xml
     <Grid.ColumnDefinitions>
@@ -114,7 +109,7 @@
 
 1. Во вторую колонку добавьте **StackPanel** с границами (чтобы визуальные компоненты не прилипали к границам окна) и в этом списке разместите редактируемые элементы
 
-    >На форме должны быть предусмотрены следующие поля: артикул, наименование, тип продукта (выпадающий список), изображение, количество человек для производства, номер производственного цеха, минимальная стоимость для агента и подробное описание
+    >На форме должны быть предусмотрены следующие поля: _артикул_, _наименование_, _тип продукта_ (выпадающий список), _изображение_, _количество человек для производства_, _номер производственного цеха_, _минимальная стоимость для агента_ и _подробное описание_
 
     ```xml
     <StackPanel
@@ -122,10 +117,11 @@
         Margin="5">
 
         <Label Content="Артикул"/>
-        <TextBox Text="{Binding CurrentProduct.ArticleNumber}"/>
+        <TextBox
+            Text="{Binding #root.currentProduct.ArticleNumber}"/>
 
         <Label Content="Наименование продукта"/>
-        <TextBox Text="{Binding CurrentProduct.Title}"/>
+        <TextBox Text="{Binding #root.currentProduct.Title}"/>
 
         ...
 
@@ -136,32 +132,32 @@
 
     * Выбор типа продукта из списка
 
-        В классе окна объявляем свойство *ProductTypes* - список типов продукции
+        В классе окна объявляем свойство *productTypeList* - список типов продукции
 
         ```cs
-        public IEnumerable<ProductType> ProductTypeList { get; set; }
+        public IEnumerable<ProductType> productTypeList { get; set; }
         ```
 
-        И в конструкторе получаем его из контекста БД:
+        И в конструкторе получаем его из БД:
 
         ```cs
         using (var context = new ksmirnovContext())
         {
-            ProductTypeList = context.ProductTypes.ToList();
+            productTypeList = context.ProductTypes.ToList();
         }        
         ```
 
-        В вёрстке окна редактирования продукции мы можем использовать выпадающий список, атрибут *SelectedItem* которого позволяет отобразить текущее значение редактируемого элемента
+        В вёрстке окна редактирования продукции мы можем использовать выпадающий список, атрибут *SelectedItem* которого позволяет отобразить **текущее** значение редактируемого элемента
 
         ```xml
         <ComboBox 
-            ItemsSource="{Binding ProductTypeList}"
-            SelectedItem="{Binding CurrentProduct.ProductType}"/>
+            ItemsSource="{Binding #root.productTypeList}"
+            SelectedItem="{Binding #root.currentProduct.ProductType}"/>
         ```
 
-        >Из документации: *Класс ComboBox выполняет поиск указанного объекта с помощью **IndexOf** метода. Этот метод использует **Equals** метод для определения равенства*.
+        >Из документации: *Класс ComboBox выполняет поиск указанного объекта с помощью **IndexOf** метода. Этот метод, в свою очередь, использует метод **Equals** для определения равенства (объектов)*.
 
-        А метод **Equals** сравнивает объекты по уникальному идентификатору, т.е. свойство **ProductType** у экземпляра продукции НЕ РАВНО экземпляру элемента списка *ProductTypeList*
+        А метод **Equals** сравнивает объекты по уникальному идентификатору (встроенное свойство у базового класса в C#, не путать с полем `id` таблицы БД), т.е. свойство **ProductType** у экземпляра продукции **НЕ РАВНО** экземпляру элемента списка *productTypeList*
 
         Чтобы исправить эту неприятность нужно переопределить метод **Equals** у класса **ProductType**:
 
@@ -171,7 +167,6 @@
             return (obj != null) && 
                 (obj is ProductType) && 
                 (this.Id == (obj as ProductType).Id);
-        
         }
         ```
 
@@ -183,30 +178,44 @@
 
         ```xml
         <Image
+            Name="CurrentProductImage"
             Width="200" 
             Height="200"
-            Source="{Binding CurrentProduct.ImagePreview,TargetNullValue={StaticResource defaultImage}}" />
+            Source="{Binding #root.currentProduct.ImageBitmap}" />
         ```
 
-        А для смены изображения используем стандартный диалог Windows, повесив его на кнопку *Сменить картинку* (кнопку добавьте сами в **StackPanel**)
+        А для смены изображения используем стандартный диалог открытия файлов, повесив его на кнопку *Сменить картинку* (кнопку добавьте сами в центральную колонку)
 
         Обработчик кнопки:
 
         ```cs
         private void ChangeImage_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog GetImageDialog = new OpenFileDialog();
+            var getImageDialog = new OpenFileDialog();
+
             // задаем фильтр для выбираемых файлов
-            // до символа "|" идет произвольный текст, а после него шаблоны файлов разделенные точкой с запятой
-            GetImageDialog.Filter = "Файлы изображений: (*.png, *.jpg)|*.png;*.jpg";
+            getImageDialog.Filters.Add(
+                new FileDialogFilter() {
+                    Name = "Файлы изображений", 
+                    Extensions = {"png", "jpg", "jpeg"}});
+
             // чтобы не искать по всему диску задаем начальный каталог
-            GetImageDialog.InitialDirectory = Environment.CurrentDirectory;
-            if (GetImageDialog.ShowDialog() == true)
+            // В ТЕКУЩЕЙ ВЕРСИИ АВАЛОНИИ ТАКОГО СВОЙСТВА НЕТ
+            // getImageDialog.InitialDirectory = Environment.CurrentDirectory;
+
+            // открываем СИНХРОННО диалог
+            // в ответ получим массив выбранных файлов
+            var files = await getImageDialog.ShowAsync(this);
+            if (files != null)
             {
                 // перед присвоением пути к картинке обрезаем начало строки, т.к. диалог возвращает полный путь
-                CurrentProduct.Image = GetImageDialog.FileName.Substring(Environment.CurrentDirectory.Length);
-                // обратите внимание, это другое окно и другой Invalidate, который реализуйте сами
-                Invalidate();
+                currentProduct.Image = files[0].Substring(Environment.CurrentDirectory.Length);
+
+                // тут нужно либо реализовать интерфейс InotifyPropertyChanged
+                // и обновить информацию о картинке
+
+                // либо тупо поменять свойство нужного контрола
+                CurrentProductImage.Source = currentProduct.ImageBitmap;
             }
         }
         ```
@@ -219,8 +228,8 @@
         <Label Content="Описание продукта"/>
         <TextBox 
             AcceptsReturn="True"
-            Height="2cm"
-            Text="{Binding CurrentProduct.Description}"/>
+            Height="200"
+            Text="{Binding #root.currentProduct.Description}"/>
         ```
 
 1. Сохранение введенных данных
@@ -230,14 +239,14 @@
     ```cs
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        using (var context = new ksmirnovContext())
+        using (var context = new esmirnovContext())
         {
             // вся работа с БД должна быть завернута в исключения
             try
             {
                 Product product = null;
-                if (CurrentProduct.Id != 0)
-                    product = context.Products.Find(CurrentProduct.Id);
+                if (currentProduct.Id != 0)
+                    product = context.Products.Find(currentProduct.Id);
                 else
                     product = new Product();
 
@@ -245,10 +254,12 @@
                 {
                     // сюда добавлять проверки
 
-                    product.Title = CurrentProduct.Title;
-                    product.ArticleNumber = CurrentProduct.ArticleNumber;
-                    product.ProductTypeId = CurrentProduct.ProductType.Id;
-                    product.MinCostForAgent = 100;
+                    product.Title = currentProduct.Title;
+                    product.ArticleNumber = currentProduct.ArticleNumber;
+
+                    ...
+
+                    product.ProductTypeId = currentProduct.ProductType.Id;
 
                     if (product.Id==0)
                         context.Products.Add(product);
@@ -257,109 +268,127 @@
 
                     if (context.SaveChanges() > 0)
                     {
-                        DialogResult = true;
+                        Close(true);
                     }
+                    
                 }
             }
             catch (Exception ex)
             {
-                if(ex.InnerException != null)
-                    MessageBox.Show(ex.InnerException.Message);
-                else
-                    MessageBox.Show(ex.Message);            
+                // if(ex.InnerException != null)
+                //     MessageBox.Show(ex.InnerException.Message);
+                // else
+                //     MessageBox.Show(ex.Message);            
             }
-        }        
+        }    
     }
     ```
 
-1. Открытие окна редактирования для существующей и новой продукции
+## Открытие окна редактирования для существующей и новой продукции
 
-    * для редактирования существующей продукции в списке продукции реализуем обработчик двойного клика
-
-        ```cs
-        private void ProductListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            // в создаваемое окно передаем выбранный продукт
-            var NewEditWindow = new EditProductWindow(ProductListView.SelectedItem as Product);
-            if ((bool)NewEditWindow.ShowDialog())
-            {
-                // при успешном сохранении продукта перечитываем список продукции
-                using (var context = new ksmirnovContext()) {
-                    ProductList = context.Products
-                        .Include(product => product.ProductType)
-                        .Include(product => product.ProductMaterials)
-                        .ToList();
-                }
-            }
-        }
-        ```
-
-    * для создания нового продукта в разметке главного окна создайте кнопку "Добавить продукцию" (в левой панели) и в её обработчике создайте новый экземпляр продукта
-
-        ```cs
-        var NewEditWindow = new EditWindow(new Product());
-        ...
-        ```
-1. Проверки перед сохранением продукта
-
-    Все проверки вставляем в обработчик кнопки "Сохранить" окна редактирования, т.к. это относится к бизнес-логике, до вызова метода сохранения продукта
-
-    * Стоимость продукции не может быть отрицательной
-
-        ```cs
-        if (ChangedProduct.MinCostForAgent < 0)
-            throw new Exception("Цена продукта не может быть отрицательной");
-        ```
-
-    * Стоимость продукции записывается только с точностью до сотых
-
-    * Реализована проверка артикула на уникальность
-
-        Тут по идее надо делать запрос к базе, но у нас есть метод получения списка продукции и мы можем искать в нём используя LINQ-запросы
-
-1. Удаление продукции
-
-    >В окне редактирования продукта должна присутствовать кнопка “Удалить”, которая удаляет продукт из базы данных. При этом должны соблюдаться следующие условия. Если у продукта есть информация о материалах, используемых при его производстве, или история изменения цен, то эта информация должна быть удалена вместе с продуктом. Но если у продукта есть информация о его продажах агентами, то удаление продукта из базы данных должно быть запрещено. После удаления продукта система должна сразу вернуть пользователя обратно к списку продукции.
-
-    Добавьте кнопку *удалить* в среднюю колоку (рядом с кнопкой *сохранить*). Атрибут **Visibility** привяжите к **Id** продукта (т.е. у нового продукта кнопки удалить быть не должно).
-
-    И реализуйте обработчик клика по этой кнопке
+* для редактирования существующей продукции в списке продукции реализуем обработчик двойного клика
 
     ```cs
-    private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
+    private void ProductListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        using (var context = new ksmirnovContext())
+        var currentProduct = (sender as ListBox).SelectedItem as Product;
+        // в создаваемое окно передаем выбранный продукт
+
+        var newEditWindow = new EditProductWindow(product);
+        var res = await newEditWindow.ShowDialog<bool>(this);
+        if (res)
         {
-            try
-            {
-                // тут вставить проверки, требуемые по ТЗ
-                // + исключение, если есть продажи
-                var saleCount = context.ProductSales
-                    .Where(ps => ps.ProductId==CurrentProduct.Id).Count();
-
-                if (saleCount > 0)
-                    throw new Exception("Нельзя удалять продукт с продажами");
-
-                // - удаление списа материалов продукта
-                // - удаление истории изменения цен
-
-                var product = context.Products.Find(CurrentProduct.Id);
-                context.Products.Remove(product);
-                if (context.SaveChanges() > 0)
-                {
-                    DialogResult = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                if(ex.InnerException != null)
-                    MessageBox.Show(ex.InnerException.Message);
-                else
-                    MessageBox.Show(ex.Message);            
-            }
+            // эту функцию реализуйте сами - тут перечитывание списка продукции из базы
+            getProductList();   
         }
     }
     ```
+
+* для создания нового продукта в разметке главного окна создайте кнопку "Добавить продукцию" (в левой или верхней панели) и в её обработчике создайте новый экземпляр продукта, а дальше то же, что и в предыдущем пункте
+
+    ```cs
+    var newEditWindow = new EditProductWindow(new Product());
+    ...
+    ```
+
+## Проверки перед сохранением продукта
+
+Все проверки вставляем в обработчик кнопки "Сохранить" окна редактирования,  до вызова метода сохранения продукта
+
+* Стоимость продукции не может быть отрицательной
+
+    ```cs
+    if (currentProduct.MinCostForAgent < 0)
+        throw new Exception("Цена продукта не может быть отрицательной");
+    ```
+
+* Стоимость продукции записывается только с точностью до сотых
+
+* Реализована проверка артикула на уникальность
+
+    Тут надо делать запрос к базе c методом `Where`
+
+    ```cs
+    var dublicateArticle = context.Products
+        .Where(p => p.ArticleNumber == currentProduct.ArticleNumber)
+        .FirstOrDefault();
+
+    if (dublicateArticle != null)
+        throw new Exception("Такой артикул уже есть в базе");
+    ```
+
+## Удаление продукции
+
+>В окне редактирования продукта должна присутствовать кнопка “Удалить”, которая удаляет продукт из базы данных. При этом должны соблюдаться следующие условия. Если у продукта есть информация о материалах, используемых при его производстве, или история изменения цен, то эта информация должна быть удалена вместе с продуктом. Но если у продукта есть информация о его продажах агентами, то удаление продукта из базы данных должно быть запрещено. После удаления продукта система должна сразу вернуть пользователя обратно к списку продукции.
+
+Добавьте кнопку *Удалить* в среднюю колоку (рядом с кнопкой *сохранить*). Атрибут **IsVisible** привяжите к **Id** продукта (т.е. у нового продукта кнопки удалить быть не должно). Можно реализовать через _Binding_, но можно задать в конструкторе
+
+```cs
+DeleteButton.IsVisible = currentProduct.Id > 0;
+```
+
+И реализуйте обработчик клика по этой кнопке
+
+```cs
+private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
+{
+    using (var context = new esmirnovContext())
+    {
+        try
+        {
+            // тут вставляем проверки, требуемые по ТЗ
+
+            // + исключение, если есть продажи
+            var saleCount = context.ProductSales
+                .Count(ps => ps.ProductId == currentProduct.Id);
+
+            if (saleCount > 0)
+                throw new Exception("Нельзя удалять продукт с продажами");
+
+            // - удаление списка материалов продукта (НЕ ПРОВЕРЯЛ)
+            context.ProductMaterials.RemoveRange(
+                context.ProductMaterials.Where(pm => pm.ProductId == currentProduct.Id)
+            );
+
+            // - удаление истории изменения цен (если есть)
+
+            var product = context.Products.Find(currentProduct.Id);
+            context.Products.Remove(product);
+            if (context.SaveChanges() > 0)
+            {
+                Close(true);
+            }
+        }
+        catch (Exception ex)
+        {
+            // if(ex.InnerException != null)
+            //    MessageBox.Show(ex.InnerException.Message);
+            // else
+            //    MessageBox.Show(ex.Message);            
+        }
+    }
+}
+```
 
 <table style="width: 100%;"><tr><td style="width: 40%;">
 <a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.
