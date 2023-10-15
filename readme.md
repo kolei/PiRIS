@@ -309,7 +309,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ## Тема 5.1.5. Разработка своего API.
 
-1. [API. PHP-сервер. GET-запрос.](./articles/api_php.md)
+1. [API. REST API. Создание сервера ASP.NET Core.](./articles/api_asp_net_core.md)
 
 1. [HTTP запросы в C#. Получение списка материалов выбранного продукта](./articles/cs_http.md)
 
