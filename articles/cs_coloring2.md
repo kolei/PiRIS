@@ -1,11 +1,3 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/cs_edit_product2.md">Создание, изменение продукции
-</a></td><tr></table>
-
 Предыдущая лекция |  | Следующая лекция
 :----------------:|:----------:|:----------------:
 [Пагинация, сортировка, фильтрация, поиск](./cs_pagination2.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [Создание, изменение продукции](./cs_edit_product2.md)
