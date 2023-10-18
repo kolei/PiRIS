@@ -10,3 +10,37 @@ GET https://api.openweathermap.org/data/2.5/forecast?q=Йошкар-Ола&appid
 ### Запрос погоды за 5 дней https://openweathermap.org/forecast5
 GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&appid={{token}}&lang=ru&units=metric&mode=xml
 
+### 
+GET http://localhost:8080/product?pageNum=15
+Authorization: Basic admin:passwor
+
+### 
+GET http://localhost:8080/product/150
+
+### 
+POST http://localhost:8080/product
+Content-Type: application/json
+
+{
+    "Title": "post title",
+    "ProductTypeId": 141,
+    "ArticleNumber": "1234",
+    "MinCostForAgent": 100.50
+}
+
+### 
+GET http://localhost:8080/test/1/2?pageNum=10
+
+###
+PUT http://localhost:8080/product/1227
+Content-Type: application/json
+
+{
+    "Title": "post title",
+    "ProductTypeId": 141,
+    "ArticleNumber": "1234",
+    "MinCostForAgent": 100.50
+}
+
+### 
+DELETE http://localhost:8080/product/232

@@ -309,7 +309,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ## Тема 5.1.5. Разработка своего API.
 
-1. [API. REST API. Создание сервера ASP.NET Core.](./articles/api_asp_net_core.md)
+1. [API. REST API. Создание сервера ASP.NET Core. Swagger.](./articles/api_asp_net_core.md)
 
 API. Авторизация и аутентификация. Методы авторизации. Basic-авторизация.
 
