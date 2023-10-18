@@ -297,13 +297,13 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection3.md)
 
-1. [Вывод данных согласно макету (ListView, Image). Вывод данных плиткой.](./articles/cs_layout2.md)
+1. [Вывод данных согласно макету (ListBox, Image). Вывод данных плиткой.](./articles/cs_layout2.md)
 
 1. [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination2.md)<!-- datepicker -->
 
 1. [Подсветка элементов по условию. Массовая смена цены продукции.](./articles/cs_coloring2.md)
 
-1. [Создание, изменение продукции](./articles/cs_edit_product2.md)
+1. [Создание, изменение, удаление продукции](./articles/cs_edit_product2.md)
 
 1. [Вывод списка материалов продукта. CRUD материалов продукта](./articles/cs_product_material.md)
 
@@ -311,12 +311,14 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [API. REST API. Создание сервера ASP.NET Core.](./articles/api_asp_net_core.md)
 
+API. Авторизация и аутентификация. Методы авторизации. Basic-авторизация.
+
 1. [HTTP запросы в C#. Получение списка материалов выбранного продукта](./articles/cs_http.md)
 
-1. [C# Параллельное программирование и асинхронность](./articles/cs_async_await.md)
+<!-- 1. [C# Параллельное программирование и асинхронность](./articles/cs_async_await.md) -->
 
-1. [ASP NET Web API (Метанит)](https://metanit.com/sharp/aspnet_webapi/1.1.php)
-1. [ASP NET Core (Метанит)](https://metanit.com/sharp/aspnet6/2.11.php)
+<!-- 1. [ASP NET Web API (Метанит)](https://metanit.com/sharp/aspnet_webapi/1.1.php)
+1. [ASP NET Core (Метанит)](https://metanit.com/sharp/aspnet6/2.11.php) -->
 
 
 
@@ -330,11 +332,11 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ## [Code Review](./articles/code_review.md)
 
-## Введение в WEB-разработку
+<!-- ## Введение в WEB-разработку -->
 
 <!-- codesandbox -->
 
-1. [Intro](./articles/web_01.md)
+<!-- 1. [Intro](./articles/web_01.md)
 1. [Зачем нужен Vue.js? - Vue.js: концепции](./articles/web_02.md)
 1. [Реактивность - Vue.js: концепции](./articles/web_03.md)
 1. [Двустороннее связывание - Vue.js: концепции](./articles/web_04.md)
@@ -357,7 +359,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Криптономикон: улучшаем API - Vue.js: практика. #22 Криптономикон: refs - Vue.js: практика. #23 nextTick - Vue.js: нюансы](./articles/web_21.md)
 1. [Криптономикон: компоненты - Vue.js: практика](./articles/web_22.md)
 1. [Введение в HTML](./articles/web_html_1.md)
-1. [Введение в CSS](./articles/web_css_1.md)
+1. [Введение в CSS](./articles/web_css_1.md) -->
 
 <!-- TODO накидать рыбу для tailwind с плиткой -->
 <!-- 1. Создать web-приложение на VUE, реализующее отображение списка товаров/услуг из базы данных вашего курсового проекта
@@ -491,25 +493,7 @@ tablayout
 # [Курсовой проект](articles/kp2.md)
 
 <!-- 
--- создание базы и пользователя для MSSQL
-DECLARE @userName AS VARCHAR(50) = 'test'
-DECLARE @password AS VARCHAR(50) = 'qzesc'
--- создаю базу
-DECLARE @createDB AS VARCHAR(50) = 'CREATE DATABASE {userName}'
-SET @createDB = REPLACE(@createDB, '{userName}', @userName)
-EXECUTE (@createDB)
--- создаю логин
-DECLARE @createLogin AS VARCHAR(150) = 'CREATE LOGIN {userName} WITH PASSWORD=''{password}'', CHECK_POLICY = OFF'
-SET @createLogin = REPLACE(@createLogin, '{userName}', @userName)
-SET @createLogin = REPLACE(@createLogin, '{password}', @password)
-EXECUTE (@createLogin)
--- создаю пользователя
-DECLARE @createUser AS VARCHAR(MAX) = '
-USE {userName}
-CREATE USER {userName} FOR LOGIN {userName};
-EXEC sp_addrolemember ''db_owner'', ''{userName}'';
-Grant Execute on Schema :: dbo TO [{userName}];
-'
-SET @createUser = REPLACE(@createUser, '{userName}', @userName)
-EXECUTE (@createUser)
+-- разрешение пользователю создавать базы 
+GRANT ALL PRIVILEGES ON `isergeev%`.* TO 'isergeev'@'%';
+FLUSH PRIVILEGES;
 -->

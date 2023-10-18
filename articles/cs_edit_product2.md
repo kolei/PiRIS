@@ -1,10 +1,6 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/kotlin.md">Основы языка Kotlin
-</a></td><tr></table>
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.](./cs_pagination2.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [Вывод списка материалов продукта. CRUD материалов продукта](./cs_product_material.md)
 
 # Добавление/редактирование продукции
 
@@ -400,10 +396,8 @@ private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
 
 [Подробнее про RAW SQL](https://learn.microsoft.com/en-us/ef/core/querying/sql-queries)
 
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_coloring2.md">Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/kotlin.md">Основы языка Kotlin
-</a></td><tr></table>
+---
+
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Подсветка элементов по условию. Дополнительные выборки.Массовая смена цены продукции.](./cs_pagination2.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [Вывод списка материалов продукта. CRUD материалов продукта](./cs_product_material.md)

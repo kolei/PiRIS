@@ -1,10 +1,6 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_mysql_connection3.md">Создание подключения к БД MySQL. Получение данных с сервера.
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/cs_pagination2.md">Пагинация, сортировка, фильтрация, поиск
-</a></td><tr></table>
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Создание подключения к БД MySQL. Получение данных с сервера.](./cs_mysql_connection3.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [Пагинация, сортировка, фильтрация, поиск](./cs_pagination2.md)
 
 # Вывод данных согласно макету (ListBox, Image).
 
@@ -299,6 +295,8 @@ foreach (var item in ProductMaterials)
 
 ![](../img/rider015.png)
 
+---
+
 Предыдущая лекция |  | Следующая лекция
 :----------------:|:----------:|:----------------:
-[Создание подключения к БД MySQL. Получение данных с сервера.](../articles/cs_mysql_connection3.md) | [Содержание](../readme.md) | [Пагинация, сортировка, фильтрация, поиск](../articles/cs_pagination2.md)
+[Создание подключения к БД MySQL. Получение данных с сервера.](./cs_mysql_connection3.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [Пагинация, сортировка, фильтрация, поиск](./cs_pagination2.md)

@@ -1,10 +1,6 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_edit_product2">Добавление/редактирование продукции
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<!-- <a href="../articles/cs_layout2.md">Вывод данных согласно макету (ListView, Image).</a> -->
-</td><tr></table>
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Создание, изменение, удаление продукции](./cs_edit_product2.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [API. REST API. Создание сервера ASP.NET Core.](./api_asp_net_core.md)
 
 # Вывод списка материалов продукта. CRUD материалов продукта
 
@@ -153,3 +149,9 @@ private void DeleteMaterialTextBlock_MouseDown(object sender, MouseButtonEventAr
 Составной первичный ключ в таблице **ProductMaterial**
 
 ![](../img/cs009.png)
+
+---
+
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Создание, изменение, удаление продукции](./cs_edit_product2.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [API. REST API. Создание сервера ASP.NET Core.](./api_asp_net_core.md)
