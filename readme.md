@@ -23,7 +23,7 @@
   </tr>
   <tr>
     <td style="text-align: center; border: none; height: 1em;">
-        г.Йошкар-Ола, 2021
+        г.Йошкар-Ола, 2021-2024
     </td>
   </tr>
 </table>
@@ -31,6 +31,10 @@
 <div style="page-break-after: always;"></div>
 
 # https://github.com/kolei/PiRIS
+
+![картинкой](http://qrcoder.ru/code/?https%3A%2F%2Fgithub.com%2Fkolei%2FPiRIS&4&0)
+
+[ссылкой](http://qrcoder.ru/code/?https%3A%2F%2Fgithub.com%2Fkolei%2FPiRIS&4&0)
 
 # Содержание
 
