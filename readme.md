@@ -30,11 +30,10 @@
 
 <div style="page-break-after: always;"></div>
 
-# https://github.com/kolei/PiRIS
-
-![картинкой](http://qrcoder.ru/code/?https%3A%2F%2Fgithub.com%2Fkolei%2FPiRIS&4&0)
-
-[ссылкой](http://qrcoder.ru/code/?https%3A%2F%2Fgithub.com%2Fkolei%2FPiRIS&4&0)
+QR код | Описание
+:-----:|---------- 
+![ссылка на гитхаб](http://qrcoder.ru/code/?https%3A%2F%2Fgithub.com%2Fkolei%2FPiRIS&4&0) | https://github.com/kolei/PiRIS
+![группа в телеге](http://qrcoder.ru/code/?https%3A%2F%2Ft.me%2F%2B5CXDecWYma8yODBi&4&0) | группа в `телеграм`
 
 # Содержание
 
