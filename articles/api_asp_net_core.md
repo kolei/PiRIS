@@ -1,3 +1,7 @@
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Вывод списка материалов продукта. CRUD материалов продукта](./cs_product_material.md) | [Содержание](../readme.md#тема-515-разработка-своего-api) | [Авторизация и аутентификация. Методы авторизации. Basic-авторизация.](./api_auth.md)
+
 # API. REST API. Создание сервера ASP.NET Core.
 
 * [API. REST API.](#api-rest-api)
@@ -696,9 +700,9 @@ param1 = 1, param2 = 2, pageNum = 10, pageLen =
     .Produces(StatusCodes.Status401Unauthorized)
     .Produces(StatusCodes.Status404NotFound);
     ```
-<!-- 
-авторизация
-https://andrewlock.net/exploring-the-dotnet-8-preview-introducing-the-identity-api-endpoints/#:~:text=In.NET%208%2C%20helpers%20have%20been%20added%20to%20ASP.NET,in%20your%20SPA%20app%20that%20uses%20the%20APIs
 
-https://metanit.com/sharp/aspnet6/13.1.php
--->
+---
+
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Вывод списка материалов продукта. CRUD материалов продукта](./cs_product_material.md) | [Содержание](../readme.md#тема-515-разработка-своего-api) | [Авторизация и аутентификация. Методы авторизации. Basic-авторизация.](./api_auth.md)

@@ -11,8 +11,8 @@ GET https://api.openweathermap.org/data/2.5/forecast?q=Йошкар-Ола&appid
 GET https://api.openweathermap.org/data/2.5/forecast?lat={{lat}}&lon={{lon}}&appid={{token}}&lang=ru&units=metric&mode=xml
 
 ### 
-GET http://localhost:8080/product?pageNum=15
-Authorization: Basic admin:passwor
+GET http://localhost:8080/
+Authorization: Basic admin:password
 
 ### 
 GET http://localhost:8080/product/150
