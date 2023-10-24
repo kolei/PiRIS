@@ -136,7 +136,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
     + [Диаграмма деятельности](./articles/uml_activity.md) недописана 
     + [Диаграмма классов](./articles/uml_class_alt.md)
 
-  - [Проектирование баз данных](#тема-512-проектирование-баз-данных)
+  - [Проектирование баз данных](#проектирование-баз-данных)
 
     + [Основы проектирования баз данных.](./articles/5_1_1_1_erd2.md)
     + [Словарь данных](./articles/5_1_1_1_data_dictionary.md)
@@ -147,7 +147,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
     + [Представления (View)](./articles/sql_view.md)
     + [Хранимые процедуры. Триггеры.](./articles/sql_trigger.md)
 
-  - [C# и MySQL](#тема-514-c-и-mysql)
+  - [C# и MySQL](#c-и-mysql)
 
     + [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection3.md)
     + [Вывод данных согласно макету (ListBox, Image). Вывод данных плиткой.](./articles/cs_layout2.md)
@@ -156,7 +156,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
     + [Создание, изменение, удаление продукции](./articles/cs_edit_product2.md)
     + [Вывод списка материалов продукта. CRUD материалов продукта](./articles/cs_product_material.md)
 
-  - [Разработка API](#тема-515-разработка-своего-api)
+  - [Разработка API](#разработка-своего-api)
 
     + [API. REST API. Создание сервера ASP.NET Core. Swagger.](./articles/api_asp_net_core.md)
     + [Авторизация и аутентификация. Методы авторизации. Basic-авторизация.](./articles/api_auth.md)
