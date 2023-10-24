@@ -253,6 +253,46 @@ Authorization: Basic base64encodedloginandpassword
         .RequireAuthorization();
     ```    
 
+1. Настройка авторизации в **Swagger**
+
+    >Взял [отсюда](https://habr.com/ru/companies/simbirsoft/articles/707108/)
+
+    В **Swagger** можно настроить заполнение логина и пароля, чтобы соответствующий заголовок автоматически добавлялся в запросы. Для этого надо добавить параметры в метод **AddSwaggerGen**:
+
+    ```cs
+    builder.Services.AddSwaggerGen(options =>
+    {
+        // Метод AddSecurityDefinition добавляет
+        // кнопку "Авторизовать" в верхней чести страницы
+        // которая настраивает заголовок авторизации
+        options.AddSecurityDefinition("Basic", new OpenApiSecurityScheme
+        {
+            Description = "Введите логин и пароль",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = "Basic"
+        });
+        // Метод AddSecurityRequirement 
+        // добавит заголовок авторизации 
+        // к каждой конечной точке при отправке запроса:
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Basic"
+                    }
+                },
+                new List<string>()
+            }
+        });
+    });
+    ```
+
 **Swagger** в этот проект я не прикручивал, вы можете сделать запрос из **Postman**-а или из плагина к VSCode (_REST Client_)
 
 В _REST Client_ запрос выглядит так:

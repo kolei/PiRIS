@@ -349,6 +349,11 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [HTTP запросы в C#. Получение списка материалов выбранного продукта](./articles/cs_http.md)
 
+<!-- TODO 
+  авторизация
+  
+-->
+
 <!-- 1. [C# Параллельное программирование и асинхронность](./articles/cs_async_await.md) -->
 
 <!-- 1. [ASP NET Web API (Метанит)](https://metanit.com/sharp/aspnet_webapi/1.1.php)
