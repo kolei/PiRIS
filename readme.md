@@ -779,3 +779,6 @@ ERD сохраните в формате PDF.
 механизмы выбранной вами СУБД. Сохраните копию базы данных в архиве в
 формате ZIP.
 -->
+
+![latex](https://www.hosthath.com/Show.aspx?Code=%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+)
