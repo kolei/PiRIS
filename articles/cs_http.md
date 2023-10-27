@@ -1,3 +1,7 @@
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Аутентификация и авторизация](./api_auth.md) | [Содержание](../readme.md#разработка-своего-api) | 
+
 # HTTP запросы в C#. Получение списка материалов выбранного продукта
 
 Возвращаемся к проекту на C#.
@@ -44,11 +48,11 @@ client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basi
 
 >[Асинхронность в C#](./cs_async_await.md)
 
-Я для облегчения вашей работы нарисовал синхронную реализацию:
+Я для облегчения вашей работы нарисовал реализацию:
 
 ```cs
 // в параметрах URL
-private string GetBody(string url){
+private Task<string> GetBody(string url){
     var basic = Convert.ToBase64String(
         ASCIIEncoding.ASCII.GetBytes("esmirnov:111103"));
         
@@ -56,9 +60,11 @@ private string GetBody(string url){
 
     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basic);
 
-    return client.GetStringAsync(url).Result;
+    return client.GetStringAsync(url);
 }
 ```
+
+Метод *GetStringAsync* возвращает объект `Task<string>`, т.е. задачу, которая выполняется в отдельном потоке и по завершении вернёт строку (тело ответа)
 
 ## GET-запрос. Разбор JSON ответа.
 
@@ -74,30 +80,29 @@ materialList = JsonConvert.DeserializeObject<Material[]>("тут ответ ва
 Весь метод получения списка материалов помещается в 3 строки:
 
 ```cs
-private void GetMaterials()
+private async void GetMaterials()
 {
-    var resp = GetBody($"http://localhost:8080/material/{currentProduct.Id}");
-    materialList = JsonConvert.DeserializeObject<Material[]>(resp);
+    var resp = await GetBody(
+        $"http://localhost:8080/material/{currentProduct.Id}");
+
+    materialList = JsonConvert
+        .DeserializeObject<Material[]>(resp);
+
     Invalidate("materialList");
 }
 ```
+
+Так как метод *GetBody* возвращает задачу (**Task**), то мы ставим перед ним ключевое слово **await**, то есть ждём завершения задачи, а сам метод помечаем как асинхронный (**async**), чтобы система знала, что этот метод асинхронный.
 
 ## Удаление записей
 
 Для вызова http-метода `DELETE` используется метод *DeleteAsync*:
 
 ```cs
-var basic = Convert.ToBase64String(
-            ASCIIEncoding.ASCII.GetBytes("esmirnov:111103"));
-
-var client = new HttpClient();
-
-client.DefaultRequestHeaders.Authorization = 
-    new AuthenticationHeaderValue("Basic", basic);
+// тут, как в GetBody, создайте клиента и задайте заголовок
 
 client.DeleteAsync(
-    $"http://localhost:8080/material/{productId}/{materialId}")
-    .Result;
+    $"http://localhost:8080/material/{productId}/{materialId}");
 ```
 
 При работе с таблицей **ProductMaterial** не забываем, что у нас составной первичный ключ и нужны идентификаторы и продукта и материала.
@@ -114,9 +119,11 @@ client.DeleteAsync(
     // и указано его количество
 
     // сначала запихиваем объект в JSON-строку. 
-    var jsonString = JsonConvert.SerializeObject(new {
-        MaterialId = Id выбранного материала,
-        Count = количество});
+    var jsonString = JsonConvert.SerializeObject(
+        new {
+            MaterialId = Id выбранного материала,
+            Count = количество
+        });
 
     // создаём контент для http-запроса
     var json = new StringContent(
@@ -133,6 +140,5 @@ client.DeleteAsync(
 
     var result = client.PostAsync(
         $"http://localhost:8080/material/{currentProduct.Id}", 
-        json)
-        .Result;
+        json);
     ```

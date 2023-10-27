@@ -1,6 +1,6 @@
 Предыдущая лекция |  | Следующая лекция
 :----------------:|:----------:|:----------------:
-[Создание, изменение, удаление продукции](./cs_edit_product2.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [API. REST API. Создание сервера ASP.NET Core.](./api_asp_net_core.md)
+[Создание, изменение, удаление продукции](./cs_edit_product2.md) | [Содержание](../readme.md#c-и-mysql) | [API. REST API. Создание сервера ASP.NET Core.](./api_asp_net_core.md)
 
 # Вывод списка материалов продукта. CRUD материалов продукта
 
@@ -158,4 +158,4 @@ private void DeleteMaterialTextBlock_MouseDown(object sender, MouseButtonEventAr
 
 Предыдущая лекция |  | Следующая лекция
 :----------------:|:----------:|:----------------:
-[Создание, изменение, удаление продукции](./cs_edit_product2.md) | [Содержание](../readme.md#тема-514-c-и-mysql) | [API. REST API. Создание сервера ASP.NET Core.](./api_asp_net_core.md)
+[Создание, изменение, удаление продукции](./cs_edit_product2.md) | [Содержание](../readme.md#c-и-mysql) | [API. REST API. Создание сервера ASP.NET Core.](./api_asp_net_core.md)
