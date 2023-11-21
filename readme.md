@@ -155,6 +155,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
     + [Подсветка элементов по условию. Массовая смена цены продукции.](./articles/cs_coloring2.md)
     + [Создание, изменение, удаление продукции](./articles/cs_edit_product2.md)
     + [Вывод списка материалов продукта. CRUD материалов продукта](./articles/cs_product_material.md)
+    + [Разное](./articles/cs_misc.md)
 
   - [Разработка API](#разработка-своего-api)
 
@@ -347,6 +348,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Вывод списка материалов продукта. CRUD материалов продукта](./articles/cs_product_material.md)
 
+1. [Разное](./articles/cs_misc.md)
+
 ### Разработка своего API.
 
 1. [API. REST API. Создание сервера ASP.NET Core. Swagger.](./articles/api_asp_net_core.md)
@@ -354,8 +357,6 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Авторизация и аутентификация. Методы авторизации. Basic-авторизация.](./articles/api_auth.md)
 
 1. [HTTP запросы в C#. Получение списка материалов выбранного продукта. Авторизация.](./articles/cs_http.md)
-
-1. [Разное](./articles/cs_misc.md)
 
 **Лабораторные работы**
 
