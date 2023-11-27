@@ -1,10 +1,7 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_edit_product.md">Создание, изменение продукции
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/android_studio.md">Первый проект в Android Studio
-</a></td><tr></table>
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+ | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Первый проект в Android Studio](./android_studio.md)
+
 
 # Основы языка Kotlin
 
@@ -4033,12 +4030,6 @@ data class Person(val name: String) {
     println("${person1 == person2}") // выведет "true"
 ```
 
-# Контрольные вопросы
-
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/cs_edit_product.md">Создание, изменение продукции
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/android_studio.md">Первый проект в Android Studio
-</a></td><tr></table>
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+ | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Первый проект в Android Studio](./android_studio.md)
