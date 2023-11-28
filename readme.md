@@ -165,6 +165,24 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
   - [Практика. Разработка мобильных приложений.](#практика-разработка-мобильных-приложений)
 
+    + [Основы языка Kotlin](./articles/kotlin.md)
+    + [Первый проект в Android Studio](./articles/android_studio.md)
+    + [Стили и темы. Ресурсы. Фигуры. Обработчики событий.](./articles/themes.md)
+    + [Смена ориентации, жизненный цикл activity, сохранение данных](./articles/layout_orientation.md)
+    + [Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.](./articles/weather.md)
+    + [Intent (намерение)](./articles/intents.md)
+    + [Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.](./articles/weather2.md)
+    + [Фрагменты](./articles/fragments.md)
+    + [Android Navigation. Знакомство с BottomNavigationView.](./articles/android_bottom_navigation.md)
+    + [Анимация](./articles/animation.md)
+    + TODO по итогам курсов сюда сделать каршеринг [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
+    + [Работа с картами](./articles/map_yandex.md)
+    + [Wear OS (умные часы)](./articles/wear_os.md)
+    + [Android TV](./articles/android_tv.md)
+
+1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
+
+
 * [МДК 05.03. Тестирование информационных систем](#мдк-0503-тестирование-информационных-систем)
 
 ## МДК. 05.02 Разработка кода информационных систем

@@ -1,12 +1,11 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/android_studio.md">Первый проект в Android Studio
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/layout_orientation.md">Ориентация экрана.
-</a></td><tr></table>
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Первый проект в Android Studio](./android_studio.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Смена ориентации, жизненный цикл activity, сохранение данных](./layout_orientation.md)
+
 
 <!-- `&lt;` `&gt;` -->
+
+<!-- TODO добавить parseFloat и форматирование строки -->
 
 # Стили и темы, ресурсы, фигуры, обработка событий
 
@@ -460,10 +459,30 @@ if (btn_one != null) {
 * сделать кнопки со скругленными углами используя фигуры
 * создайте обработчики нажатия кнопок и реализуйте работу калькулятора
 
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/android_studio.md">Первый проект в Android Studio
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/layout_orientation.md">Ориентация экрана.
-</a></td><tr></table>
+## Примечания
+
+1. Для преобразования строки в число можно использовать методы **toDouble** и **toInt**
+
+    ```kt
+    var strBuffer = ""
+
+    ...
+
+    val doubleBuffer = buffer.toDouble()
+    ```
+
+1. Преобразование числа в строку
+
+    ```kt
+    view.text = String.format("%.2f", doubleBuffer)
+    или
+    view.text = "%.2f".format(doubleBuffer)
+    ```
+
+    где `.2` - количество знаков после запятой
+
+    Правила форматирования строк можно посмотреть [тут](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#summary)
+
+Предыдущая лекция |  | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Первый проект в Android Studio](./android_studio.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Смена ориентации, жизненный цикл activity, сохранение данных](./layout_orientation.md)
