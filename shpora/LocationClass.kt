@@ -1,4 +1,9 @@
 /*
+В манифест добавить разрешеня на геолокацию
+
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 Пример использования класса
 
 // в классе главного окна объявляете переменную
@@ -19,7 +24,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
 }
 */
 
-package ru.yotc.location
+// package тут не забыть установить свой пакет
 
 import android.Manifest
 import android.app.Activity
