@@ -1,10 +1,7 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/layout_orientation.md">Смена ориентации, жизненный цикл activity, сохранение данных
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/weather2.md">Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная)
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Смена ориентации, жизненный цикл activity, сохранение данных](./layout_orientation.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Intent (намерение)](./intents.md)
+
 
 # Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.
 
@@ -140,7 +137,9 @@ fun onGetCoordinates(lat: Double, lon: Double){
 
 ## Получение информации о погоде
 
-[Раздел из ПМ 05.01 про HTTP](api_php.md)
+<!-- TODO вытащить полезную информацию из api_php.md -->
+
+[Раздел из ПМ 05.01 про HTTP](api_asp_net_core.md)
 
 Для получения информации о погоде воспользуемся открытым АПИ [openweathermap](https://openweathermap.org/api)
 
@@ -148,7 +147,7 @@ fun onGetCoordinates(lat: Double, lon: Double){
 
 Для начала получим данные о [текущей](https://openweathermap.org/current) погоде по координатам (By geographic coordinates)
 
-Формат запроса:
+Формат запроса (в фигурных скобках мы должны поместить свои значения):
 
 ```
 api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
@@ -236,7 +235,7 @@ GET https://api.openweathermap.org/data/2.5/weather?lat={{lat}}&lon={{lon}}&unit
 
 В **Android**-е есть встроенные функции работы с **http**-запросами, но стандартный код для сетевых запросов сложен, излишен и в реальном мире почти не используется. Используются библиотеки. Самые популярные: [OkHttp](https://square.github.io/okhttp/) и Retrofit.
 
-Рассмотрим работу к **OkHttp**
+Рассмотрим работу с **OkHttp**
 
 >[Примеры синхронных и асинхронных запросов на котлине](https://square.github.io/okhttp/recipes/)
 
@@ -274,7 +273,8 @@ implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 private val client = OkHttpClient()
 
 fun httpGet(
-    url: Any, // тип Any - тут может быть строка для GET запроса, или готовый Request
+    // тип Any - тут может быть строка для GET запроса, или готовый Request
+    url: Any, 
     callback: (response: Response?, error: Exception?)->Unit
 ) {
     var request: Request = when (url) {
@@ -359,7 +359,7 @@ runOnUiThread {
 
 Мы получили результат в виде JSON-строки, теперь нужно преобразовать её в JSON-объект и достать нужные нам данные
 
-Для преобразования строки в JSON-объект используется конструктор JSONObject
+Для преобразования строки в JSON-объект используется конструктор **JSONObject**
 
 ```kt
 val json = JSONObject(someJsonString)
@@ -471,10 +471,6 @@ httpGet("https://openweathermap.org/img/w/${icoName}.png")
 
 Разобрать все перечисленные выше параметры погоды и вывести их на экран
 
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/layout_orientation.md">Смена ориентации, жизненный цикл activity, сохранение данных
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/weather2.md">Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная)
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Смена ориентации, жизненный цикл activity, сохранение данных](./layout_orientation.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Intent (намерение)](./intents.md)
