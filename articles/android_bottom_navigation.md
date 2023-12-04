@@ -1,10 +1,6 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="./fragments.md">Фрагменты
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="./android_auth.md">Проект "база". Авторизация на сервере (Basic auth, token).
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Фрагменты](./fragments.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Анимация](./animation.md)
 
 # Навигация в приложении. Начало работы с Navigation Architecture Component. Знакомство с BottomNavigationView.
 
@@ -370,10 +366,6 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 [Реализация навигации в Android приложениях с помощью Navigation Architecture Component](https://habr.com/ru/post/416025/)
 
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="./fragments.md">Фрагменты
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="./android_auth.md">Проект "база". Авторизация на сервере (Basic auth, token).
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Фрагменты](./fragments.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Анимация](./animation.md)
