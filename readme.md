@@ -175,8 +175,9 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
     + [Фрагменты](./articles/fragments.md)
     + [Android Navigation. Знакомство с BottomNavigationView.](./articles/android_bottom_navigation.md)
     + [Анимация](./articles/animation.md)
-    + TODO по итогам курсов сюда сделать каршеринг [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
-    + [Работа с картами](./articles/map_yandex.md)
+    + [Проект "каршеринг" Часть 1. Регистрация/Авторизация.](./articles/android_auth.md)
+    + [Проект "каршеринг" Часть 2. Профиль пользователя.](./articles/android_profile.md)
+    + [Проект "каршеринг" Часть 3. Работа с Яндекс картами](./articles/map_yandex.md)
     + [Wear OS (умные часы)](./articles/wear_os.md)
     + [Android TV](./articles/android_tv.md)
 
@@ -476,9 +477,11 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Анимация](./articles/animation.md)
 
-1. TODO по итогам курсов сюда сделать каршеринг [Проект "база". Авторизация на сервере (Basic auth, token).](./articles/android_auth.md)
+1. [Проект "каршеринг" Часть 1. Регистрация/Авторизация.](./articles/android_auth.md)
 
-1. [Работа с картами](./articles/map_yandex.md)
+1. [Проект "каршеринг" Часть 2. Профиль пользователя.](./articles/android_profile.md)
+
+1. [Проект "каршеринг" Часть 3. Работа с Яндекс картами](./articles/map_yandex.md)
 
 1. [Wear OS](./articles/wear_os.md)
 
