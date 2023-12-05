@@ -11,7 +11,7 @@
 >Этот вариант написан для [Яндекс.карт](https://yandex.ru/dev/maps/mapkit/doc/intro/concepts/about.html?from=mapkit)
 
 >Описание API каршеринга доступно по ссылке:
->http://swagger.kolei.ru/?url=http://carsharing.kolei.ru/swagger/api.yml
+>https://swagger.kolei.ru/?url=https://carsharing.kolei.ru/swagger/api.yml
 
 ### Шаг 1. Получите ключ для работы с MapKit
 
@@ -62,6 +62,8 @@ implementation 'com.yandex.android:maps.mobile:4.2.2-lite'
     ```
 
 1. Установите ваш API-ключ в методе *onCreate()* вашего наследника **Application** (судя по названию класса это должен быть наш класс **MyApp**, но я устанавливаю ключ в активности с картой):
+
+    Координаты текущей позиции я в примере задал фиксированные, вы в рамках практики используете определение координат по геолокации.
 
     ```kt
     private lateinit var mapView: MapView
