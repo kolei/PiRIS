@@ -160,7 +160,7 @@ REQUEST_JPG_FROM_GALERY -> {
 
 ### Отправка **multipart** запроса
 
->Класс **StreamHelper** лежит в файле [`../data/StreamHelper.kt`](../data/StreamHelper.kt) этого репозитория.
+>Класс **StreamHelper** лежит в файле [`../shpora/StreamHelper.kt`](../shpora/StreamHelper.kt) этого репозитория.
 
 ```kt
 private fun sendFile(
@@ -189,7 +189,7 @@ private fun sendFile(
             .build()
 
         val request = Request.Builder()
-            .url("http://carsharing.kolei.ru/user/photo")
+            .url("https://carsharing.kolei.ru/user/photo")
             .post(requestBody)
             .build()
 
