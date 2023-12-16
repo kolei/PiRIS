@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  nodejs:
+    build:
+      context: .
+    container_name: cinema
+    restart: always
+    ports:
+      - 3019:3019

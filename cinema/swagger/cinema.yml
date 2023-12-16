@@ -11,14 +11,14 @@ info:
     
     Требования к email: email должен соответствовать паттерну **name@domenname.ru**, где имя и домен второго уровня могут состоять только из маленьких букв и цифр, домен верхнего уровня - только из маленьких букв. Длина домена верхнего уровня - не более 3х символов.
     
-    **BASE URL**: http://cinema.kolei.ru
+    **BASE URL**: https://cinema.kolei.ru
     
-    **BASE URL** Для видео: http://cinema.kolei.ru/up/video/
+    **BASE URL** Для видео: https://cinema.kolei.ru/up/video/
     
-    **BASE URL** Для изображений и аватаров: http://cinema.kolei.ru/up/images/
+    **BASE URL** Для изображений и аватаров: https://cinema.kolei.ru/up/images/
 
 servers:
-  - url: http://cinema.kolei.ru
+  - url: https://cinema.kolei.ru
 
 tags:
   - name: auth

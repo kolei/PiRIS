@@ -1,4 +1,5 @@
-@url=http://cinema.kolei.ru
+#@url=http://cinema.kolei.ru
+@url=http://localhost:3019
 
 # http://swagger.kolei.ru?url=http://cinema.kolei.ru/swagger/cinema.yml
 
