@@ -1,12 +1,32 @@
-#@url=http://cinema.kolei.ru
-@url=http://localhost:3019
+@url=https://cinema.kolei.ru
+#@url=http://localhost:3019
 
-# http://swagger.kolei.ru?url=http://cinema.kolei.ru/swagger/cinema.yml
+# https://swagger.kolei.ru?url=https://cinema.kolei.ru/swagger/cinema.yml
+
+### регистрация
+POST {{url}}/auth/register
+Content-Type: application/json
+
+{
+    "email":"nothere@inthe.net",
+    "password":"qwerty",
+    "firstName":"qq",
+    "lastName":"ww"
+}
+
+### Авторизация
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+    "email":"nothere@inthe.net",
+    "password":"qwerty"
+}
 
 
 ### Получение списка фильмов
 GET {{url}}/movies?filter=new
-Authorization: Bearer 1
+Authorization: Bearer 430857s
 
 ### Получение картинки
 GET {{url}}/up/images/duna.webp

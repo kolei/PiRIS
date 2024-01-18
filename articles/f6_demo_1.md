@@ -1,9 +1,7 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="./android_tv.md">Android TV
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Android TV](./android_tv.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | &nbsp;
+
 
 # Разбор заданий прошлых лет
 
@@ -1202,9 +1200,7 @@ Email проверяется на удовлетворение шаблону и
 Презентация содержит описание приложения для часов | 0.3
 **Итого** | 0.7
 
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="./android_tv.md">Android TV
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Android TV](./android_tv.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | &nbsp;
+

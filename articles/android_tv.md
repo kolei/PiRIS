@@ -1,10 +1,7 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="./wear_os.md">Wear OS
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/f6_demo_1.md">Разбор заданий прошлых лет
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Wear OS](./wear_os.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Разбор заданий прошлых лет](./f6_demo_1.md)
+
 
 # Android TV
 
@@ -1019,10 +1016,6 @@ https://corochann.com/construction-of-browsefragment-android-tv-application-hand
 https://www.kodeco.com/20747024-android-tv-getting-started -->
 
 
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="./wear_os.md">Wear OS
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/f6_demo_1.md">Разбор заданий прошлых лет
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Wear OS](./wear_os.md) | [Содержание](../readme.md#практика-разработка-мобильных-приложений) | [Разбор заданий прошлых лет](./f6_demo_1.md)
