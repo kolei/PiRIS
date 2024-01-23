@@ -294,8 +294,8 @@ var analytics = new Analytics();
 // подгатавливаем массив тестовых данных
 var srcDates = new List<DateTime>()
 {
-    new DateTime(2023,12,1,0,0,0),
-    new DateTime(2023,11,1,0,0,0),
+    new DateTime(2023,12,10,0,0,0),
+    new DateTime(2023,11,11,0,0,0),
 };
 
 // выполняем метод и получаем результат
