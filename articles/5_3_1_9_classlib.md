@@ -184,9 +184,11 @@ public class Analytics
 
 
 ```cs
-public List<DateTime> PopularMonths(List<DateTime> dates) 
+public List<DateTime> PopularMonths(
+    List<DateTime> dates) 
 {
-    var dateTimeWithCounterList = new List<Tuple<DateTime, int>>();
+    var dateTimeWithCounterList = 
+        new List<Tuple<DateTime, int>>();
 
     int previousYear = DateTime.Now.Year - 1;
     foreach (DateTime iterDate in dates)
@@ -222,7 +224,8 @@ public List<DateTime> PopularMonths(List<DateTime> dates)
                     который создаем статическим методом
                 */
                 dateTimeWithCounterList[index] = Tuple.Create(
-                    dateTimeWithCounterList[index].Item1, dateTimeWithCounterList[index].Item2 + 1);
+                    dateTimeWithCounterList[index].Item1, 
+                    dateTimeWithCounterList[index].Item2 + 1);
             }
         }
     }
