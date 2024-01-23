@@ -83,7 +83,9 @@ public class Analytics
 В [спецификации](#Спецификация-метода) задано и название метода, его параметры и возвращаемый результат - запишем (не забывая про модификатор доступа **public**):
 
 ```cs
-public List<DateTime> PopularMonths(List<DateTime> dates) {
+public List<DateTime> PopularMonths(
+    List<DateTime> dates) 
+{
     return dates;
 } 
 ```
@@ -104,7 +106,7 @@ public List<DateTime> PopularMonths(List<DateTime> dates) {
 Для перебора элементов списка используется цикл **foreach**:
 
 ```cs
-foreach (DateTime IterDate in dates) {
+foreach (DateTime iterDate in dates) {
     ...
 }
 ```
