@@ -143,8 +143,8 @@ public void PopularMonths_UniqueDates_OnlySort()
     // Arrange - подготовка исходных данных
     var srcDates = new List<DateTime>()
     {
-        new DateTime(2023,12,18,0,0,0),
-        new DateTime(2023,11,21,0,0,0),
+        new DateTime(2023,12,18,12,30,0),
+        new DateTime(2023,11,21,20,10,0),
     };
     
     /**
