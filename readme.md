@@ -119,67 +119,24 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 * [МДК 05.02. Разработка кода ИС](#мдк-0502-разработка-кода-информационных-систем)
 
   - [Основы проектирования информационных систем](#основы-проектирования-информационных-систем)
-  
-    + [Основные понятия и определения ИС.](./articles/5_1_1_1_intro2.md)
-    + [Анализ предметной области. Основные понятия системного и структурного анализа.](./articles/5_1_1_4_analiz.md)
-    + [UML](./articles/uml.md)
-    + [Диаграмма вариантов использования (прецедентов, use case)](./articles/5_1_1_10_uml_use_case.md)
-    + [Спецификация вариантов использования (прецедентов)](./articles/5_1_1_10_uml_uc_spec.md)
-    + [Диаграмма состояний](./articles/uml_state.md)
-    + [Прототипы экранов и окон пользовательского интерфейса (wireframe)](./articles/wireframe.md)
-    + [Диаграммы взаимодействия (последовательности и коммуникации)](./articles/uml_sequence.md)
-    + [Диаграмма деятельности](./articles/uml_activity.md) недописана 
-    + [Диаграмма классов](./articles/uml_class_alt.md)
 
   - [Проектирование баз данных](#проектирование-баз-данных)
 
-    + [Основы проектирования баз данных.](./articles/5_1_1_1_erd2.md)
-    + [Словарь данных](./articles/5_1_1_1_data_dictionary.md)
-    + [Создание ER-диаграммы](./articles/5_1_1_1_erd_workbench.md)
-    + [Основы SQL](./articles/sql_for_beginner.md)
-    + [Создание базы данных. Импорт данных.](./articles/sql_import.md)
-    + [Импорт данных (вариант 22).](./articles/sql_import_22.md)
-    + [Представления (View)](./articles/sql_view.md)
-    + [Хранимые процедуры. Триггеры.](./articles/sql_trigger.md)
-
   - [C# и MySQL](#c-и-mysql)
-
-    + [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection3.md)
-    + [Вывод данных согласно макету (ListBox, Image). Вывод данных плиткой.](./articles/cs_layout2.md)
-    + [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination2.md)<!-- datepicker -->
-    + [Подсветка элементов по условию. Массовая смена цены продукции.](./articles/cs_coloring2.md)
-    + [Создание, изменение, удаление продукции](./articles/cs_edit_product2.md)
-    + [Вывод списка материалов продукта. CRUD материалов продукта](./articles/cs_product_material.md)
-    + [Разное](./articles/cs_misc.md)
 
   - [Разработка API](#разработка-своего-api)
 
-    + [API. REST API. Создание сервера ASP.NET Core. Swagger.](./articles/api_asp_net_core.md)
-    + [Авторизация и аутентификация. Методы авторизации. Basic-авторизация.](./articles/api_auth.md)
-    + [HTTP запросы в C#. Получение списка материалов выбранного продукта](./articles/cs_http.md)
+  - [Документирование ИС](#документирование-ис)
 
-  - [Практика. Разработка мобильных приложений.](#практика-разработка-мобильных-приложений)
+  - [Практика. Разработка мобильных приложений.](#практика-разработка-мобильных-приложений-android-studio-kotlin)
 
-    + [Основы языка Kotlin](./articles/kotlin.md)
-    + [Первый проект в Android Studio](./articles/android_studio.md)
-    + [Стили и темы. Ресурсы. Фигуры. Обработчики событий.](./articles/themes.md)
-    + [Смена ориентации, жизненный цикл activity, сохранение данных](./articles/layout_orientation.md)
-    + [Проект погода (начало): геолокация, http(s)-запросы, разбор json, ImageView.](./articles/weather.md)
-    + [Intent (намерение)](./articles/intents.md)
-    + [Проект погода (продолжение): SplashScreen (заставка). Выбор города. Выбор и отображение массива значений (почасовая, ежедневная). Разбор XML.](./articles/weather2.md)
-    + [Фрагменты](./articles/fragments.md)
-    + [Android Navigation. Знакомство с BottomNavigationView.](./articles/android_bottom_navigation.md)
-    + [Анимация](./articles/animation.md)
-    + [Проект "каршеринг" Часть 1. Регистрация/Авторизация.](./articles/android_auth.md)
-    + [Проект "каршеринг" Часть 2. Профиль пользователя.](./articles/android_profile.md)
-    + [Проект "каршеринг" Часть 3. Работа с Яндекс картами](./articles/map_yandex.md)
-    + [Wear OS (умные часы)](./articles/wear_os.md)
-    + [Android TV](./articles/android_tv.md)
-
-1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
-
+  - [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
 
 * [МДК 05.03. Тестирование информационных систем](#мдк-0503-тестирование-информационных-систем)
+
+* [Практика №2, разработка web-приложений](#практика-№2-разработка-web-приложений)
+
+* [Полезное](#полезное)
 
 ## МДК. 05.02 Разработка кода информационных систем
 
@@ -448,9 +405,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Руководство пользователя](./articles/user_manual.md)
 
-## Практика, разработка мобильных приложений
-
-### Разработка мобильных приложений. Android Studio. Kotlin.
+### Практика, разработка мобильных приложений. Android Studio. Kotlin.
 
 1. [Основы языка Kotlin](./articles/kotlin.md)
 
