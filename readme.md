@@ -549,12 +549,17 @@ tablayout
 
 
 ## Практика №2, разработка web-приложений
+
 <!-- (articles/praktika_I.md) -->
 
 1. [Основы WEB-разработки](./articles/web_basic.md)
 1. [Знакомство с VUE.js](./articles/vue_intro.md)
 
-## [Курсовой проект (ПМ 06)](./articles/kp2.md)
+## Полезное
+
+1. [Настройка подключения к базе данных (DBeaver)](./articles/dbeaver_connect_mysql.md)
+
+<!-- ## [Курсовой проект (ПМ 06)](./articles/kp2.md) -->
 
 <!--
 CREATE USER 'login'@'%' IDENTIFIED BY 'password';
