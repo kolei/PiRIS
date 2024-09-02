@@ -202,11 +202,9 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 ### Проектирование баз данных
 
-1. [Основы проектирования баз данных.](./articles/5_1_1_1_erd2.md)
+1. [Основы проектирования баз данных. ERD.](./articles/5_1_1_1_erd2.md)
 
 1. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
-
-1. [Создание ER-диаграммы](articles/5_1_1_1_erd_workbench.md)
 
 1. [Основы SQL](./articles/sql_for_beginner.md)
 
@@ -237,6 +235,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 ---
 
 **Лабораторные**
+
+1. [Создание ER-диаграммы](articles/5_1_1_1_erd_workbench.md)
 
 1. [Подключение к базе данных. Создание скрипта создания БД.](./articles/sql_create_db.md)
 
