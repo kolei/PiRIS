@@ -202,7 +202,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 ### Проектирование баз данных
 
-1. [Основы проектирования баз данных.](articles/5_1_1_1_erd2.md)
+1. [Основы проектирования баз данных.](./articles/5_1_1_1_erd2.md)
 
 1. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
 
