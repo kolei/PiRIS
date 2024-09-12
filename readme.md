@@ -202,8 +202,6 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 1. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 
-1. [Импорт данных (вариант 22).](./articles/sql_import_22.md)
-
 1. [Представления (View)](./articles/sql_view.md)
 
 1. [Хранимые процедуры. Триггеры.](./articles/sql_trigger.md)
@@ -222,6 +220,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Создание ER-диаграммы](articles/5_1_1_1_erd_workbench.md)
 
 1. [Подключение к базе данных. Создание скрипта создания БД.](./articles/sql_create_db.md)
+
+1. [Импорт данных (вариант 22).](./articles/sql_import_22.md)
 
 <!-- 
 1. ~~Практическая работа «Анализ предметной области различными методами: контент-анализ, вебометрический анализ, анализ ситуаций, моделирование и др.»~~

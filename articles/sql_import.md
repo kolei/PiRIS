@@ -1,10 +1,6 @@
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/sql_for_beginner.md">Основы SQL
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/cs_mysql_connection3.md">Создание подключения к БД MySQL. Получение данных с сервера.
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Основы SQL](./sql_for_beginner.md) | [Содержание](../readme.md#проектирование-баз-данных) | [Представления (View)](./sql_view.md)
 
 # Восстановление базы данных из скрипта. 
 
@@ -504,10 +500,6 @@
 
 [Продолжение (вариант22)](./sql_import_22.md)
 
-<table style="width: 100%;"><tr><td style="width: 40%;">
-<a href="../articles/sql_for_beginner.md">Основы SQL
-</a></td><td style="width: 20%;">
-<a href="../readme.md">Содержание
-</a></td><td style="width: 40%;">
-<a href="../articles/cs_mysql_connection3.md">Создание подключения к БД MySQL. Получение данных с сервера.
-</a></td><tr></table>
+Предыдущая лекция | &nbsp; | Следующая лекция
+:----------------:|:----------:|:----------------:
+[Основы SQL](./sql_for_beginner.md) | [Содержание](../readme.md#проектирование-баз-данных) | [Представления (View)](./sql_view.md)
