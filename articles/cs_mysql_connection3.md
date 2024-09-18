@@ -44,44 +44,94 @@
 
         Есть более легковесные альтернативы, например **Dapper**. Это микро-фреймворк, который тоже может результат SQL-запроса поместить в модель, но при этом модель мы должны "нарисовать" сами и знать SQL-синтаксис.
 
-* Загрузака с помощью **DataAdapter** в наборы данных (**DataSet**). Для наборов данных можно даже установить связи между таблицами. Эта технология широко применялась в эпоху **Windows Forms**
+* Загрузка с помощью **DataAdapter** в наборы данных (**DataSet**). Для наборов данных можно даже установить связи между таблицами. Эта технология широко применялась в эпоху **Windows Forms**
 
 ## Примеры работы с Dapper
 
-1. В приложении прописать строку подключения (где-нибудь в глобальном статическом классе)
+1. Создать модели для нужных таблиц (нам пока нужен только класс "Продукты").
 
-    ```cs
-    static string connectionString = "Server=kolei.ru; User ID=esmirnov; Password=111103; Database=esmirnov";
-    ```
-
-1. Создать модели для нужных таблиц (мне лень все поля переписывать, смысл должен быть понятен).
+    >Переписывать все свойства класса не обязательно, достаточно указать только те поля, которые используются в программе. 
 
     ```cs
     public class Product
     {
         public int ID { get; set; }
-        public string Title { get; set; }
+        public required string Title { get; set; }
+        public string? Image { get; set; }
+        public int ProductTypeID { get; set; }
+        public required string ProductTypeTitle { get; set; }
+        public required string ArticleNumber { get; set; }
+        public double? MaterialCost { get; set; }
+        public string? MaterialString { get; set; }
     }
     ```
 
-1. Чтение данных:
+    * поле "Изображение" (_Image_) не обязательное, поэтому используем нуллабельный тип
+
+    * поля _ProductTypeTitle_ в исходной таблице нет, мы его вытащим из связанной таблицы
+
+    * поля _MaterialCost_ и _MaterialString_ реализуем позже, они будут вычисляемыми
+
+1. Создаём интерфейс "Поставщик Данных" (**IDataProvider**)
 
     ```cs
-    public List<Product> productList { get; set; }
-
-    ...
-
-    using (MySqlConnection db = new MySqlConnection(connectionString))
+    public interface IDataProvider
     {
-            productList = db.Query<Product>(
-            "SELECT ID,Title FROM Product")
-            .ToList();
+        IEnumerable<Product> getProduct();
+    }
+    ```
+
+1. Создаём класс "Поставщик данных из базы" (**DBDataProvider**), реализующий интерфейс **IDataProvider**
+
+    В классе прибиваем гвоздями статическую строку с параметрами подключения (используйте свои логин. пароль и название БД)
+
+    ```cs
+    public class DBDataProvider : IDataProvider
+    {
+        static string connectionString = "Server=kolei.ru; User ID=esmirnov; Password=123456; Database=esmirnov";
+        
+        public IEnumerable<Product> getProduct()
+        {
+            using (MySqlConnection db = new MySqlConnection(connectionString))
+            {
+                return db.Query<Product>(
+                    "SELECT p.ID, p.Title, p.ProductTypeID, p.ArticleNumber, p.Image, pt.TitleType AS ProductTypeTitle " +
+                    "FROM Product p, ProductType pt " +
+                    "WHERE p.ProductTypeID=pt.ID")
+                .ToList();
+            }
+        }
     }
     ```
 
     То есть мы считываем данные сразу в список продукции. **Обратите внимание**, названия полей в БД должны соответствовать свойствам модели. В этом ничего страшного нет, названия полей можно поменять при выборке используя конструкцию `AS`, например: `SELECT id AS ID FROM Product`.
 
-1. Получение одной записи (здесь и далее непроверенный код из гугла)
+1. Создаём глобальную статическую переменную для хранения экземпляра поставщика данных
+
+    ```cs
+    class Globals
+    {
+        public static IDataProvider dataProvider;
+    }
+    ```
+
+1. Чтение данных (в конструкторе класса окна):
+
+    ```cs
+    public List<Product> productList { get; set; }
+
+    public MainWindow()
+    {
+        InitializeComponent();
+        DataContext = this;
+        Globals.dataProvider = new DBDataProvider();
+        productList = Globals.dataProvider.getProduct();
+    }
+    ```
+
+Дополнительные примеры использования **Dapper** (не связаны с нашей предметной областью)
+
+1. Получение одной записи
 
     ```cs
     db.Query<User>(
@@ -121,8 +171,6 @@
 
 ## Создание проекта, подключение пакетов для работы с БД.
 
-Рассмотрим реализацию задания по выводу списка продукции.
-
 1. Создайте **WPF** проект.
 
 1. Через **NuGet** или в консоли установить пакеты: **MySqlConnector** и **Dapper**
@@ -132,61 +180,13 @@
     dotnet add package Dapper
     ```
 
-<!-- ## Получение данных с сервера и вывод на экран. -->
-
-<!-- Для демонстрации работы в `MainWindow.xaml` добавим DataGrid:
-
-```xml
-<DataGrid 
-    Name="productsGrid"
-    AutoGenerateColumns="False"
-    x:DataType="model:Product"
-    ItemsSource="{Binding #root.productList}"
->
-    <DataGrid.Columns>
-        <DataGridTextColumn
-            Header="Название"
-            Binding="{Binding Title}"
-        />
-        <DataGridTextColumn
-            Header="Номер"
-            Binding="{Binding ArticleNumber}"
-        />
-        <DataGridTextColumn
-            Header="Изображение"
-            Binding="{Binding Image}"
-        />
-    </DataGrid.Columns>
-</DataGrid>
-``` -->
-
-<!-- Полученик данные из БД:
-
-```cs
-public partial class MainWindow : Window
-{
-    public IEnumerable<Product> productList { get; set; }
-    public MainWindow()
-    {
-        // считываем данные ДО инициализации окна, 
-        // иначе без INotifyPropertyChanged
-        // авалония не понимает, что данные изменились
-        using (var context = new esmirnovContext())
-        {
-            productList = context.Products.ToList();
-        }
-        InitializeComponent();
-    }
-}
-```
-
->Обратите внимание, *context.Products* это не модель, а виртуальный **DbSet** (коллекция сущностей), объявленный в классе контекста: `public virtual DbSet<Product> Products { get; set; }`. При чтении этой коллекции как раз и происходит обращение к БД (посылка SQL-команд) -->
-
-<!-- **Всё работает!!!**
-
-![](../img/rider011.png) -->
+Реализацию графической части я не делаю - используйте лекции по **ОАП**
 
 ---
+
+**Задание:**
+
+Реализовать вывод списка продукции по шаблону из начала лекции.
 
 Предыдущая лекция |  | Следующая лекция
 :----------------:|:----------:|:----------------:
