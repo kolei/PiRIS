@@ -204,19 +204,19 @@ SELECT
 FROM 
 	Product p
 LEFT JOIN 
-    ProductType pt on p.ProductTypeID = pt.ID
+    ProductType pt ON p.ProductTypeID = pt.ID
 LEFT JOIN 
-	(
-        select 
-		    pm.ProductID, 
+    (
+        SELECT 
+            pm.ProductID, 
             SUM(pm.`Count` * m.Cost) AS MaterialCost,
             GROUP_CONCAT(m.Title, ',') AS MaterialString
-	    FROM 
-		    ProductMaterial pm,
-		    Material m 
-	    WHERE
-		    pm.MaterialID=m.ID
-	    GROUP BY 
+        FROM 
+            ProductMaterial pm,
+            Material m 
+        WHERE
+            pm.MaterialID=m.ID
+        GROUP BY 
             pm.ProductID	
     ) AS qq ON qq.ProductID=p.ID ;
 ```
