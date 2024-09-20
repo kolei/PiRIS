@@ -11,6 +11,9 @@
 * [Фильтрация](#фильтрация)
 * [Поиск](#поиск)
 
+При работе с базой данных нужно учитывать, что объем выборки может быть очень большой. Соответственно фильтр, поиск и пагинацию нужно делать запросами к базе. Но такой вариант усложняет SQL-запросы, поэтому на демо экзамене можно выбрать всю таблицу целиком, а потом использовать LINQ-запросы в геттере (как мы до этого и делали). В рамках лекции мы рассмотрим оба варианта: _правильный_ вариант с запросами к базе вы будете использовать в курсовом проекте, а _простой_ на демо экзамене.
+
+
 ## Пагинация
 
 >В случае если в базе более 20 продуктов, то вывод должен осуществляться постранично (по 20 продуктов на страницу). Для удобства навигации по страницам необходимо вывести список их номеров (как на макете) с возможностью перехода к выбранной странице, а также предусмотреть переходы к предыдущей и следующей страницам.
@@ -28,7 +31,9 @@
 
 ## Постраничный вывод данных
 
-Тут всё просто. Нам в любом случае придется делать *геттер* для фильтрованного списка продукции. Сразу в этом геттере и сделаем выборку данных порциями. Для этого используются методы LINQ-запросов **Skip(N)** (пропустить) и **Take(N)** (получить), где N - количество пропускаемых и выбираемых элементов соответсвенно.
+### Простой вариант
+
+Тут всё просто. Нам в любом случае придется делать *геттер* для фильтрованного списка продукции. Сразу в этом геттере и сделаем выборку данных порциями. Для этого используются методы **LINQ**-запросов **Skip(N)** (пропустить) и **Take(N)** (получить), где `N` - количество пропускаемых и выбираемых элементов соответсвенно.
 
 ```cs
 // КЛАСС ГЛАВНОГО ОКНА
@@ -36,9 +41,11 @@
 // тут у нас будет храниться полный список продукции
 private IEnumerable<Product> _productList;
 
+// размер страницы
 private const int PAGE_LEN = 20;
+
 // тут мы храним номер текущей страницы
-private int _currentPage = 0;
+private int _currentPage = 1;
 
 // при смене текущей страницы мы должны перерисовать список (вспоминайте про INotifyPropertyChanged)
 private int currentPage {
@@ -55,13 +62,13 @@ private int currentPage {
 // и реализуем геттер и сеттер списка продукции
 public IEnumerable<Product> productList { 
     get {
-        var res = _productList;
+        var result = _productList;
 
         // тут будет поиск, сортировка и фильтрация
 
-        res = res.Skip(PAGE_LEN * currentPage).Take(PAGE_LEN);
+        result = result.Skip(PAGE_LEN * currentPage).Take(PAGE_LEN);
 
-        return res;
+        return result;
     } 
     set {
         _productList = value;
@@ -70,16 +77,137 @@ public IEnumerable<Product> productList {
 }
 ```
 
+### Сложный вариант
+
+1. В глобальные переменные добавим размер страницы (можно его хранить и в классе окна, но тогда придётся добавлять дополнительный параметр в метод _getProduct_)
+
+    ```cs
+    class Globals
+    {
+        public static IDataProvider dataProvider;
+        public static int PAGE_LEN = 20;
+    }
+    ```
+
+1. В интерфейсе **IDataProvider** в метод _getProduct_ добавляем параметр "номер страницы"
+
+    ```cs
+    public interface IDataProvider
+    {
+        IEnumerable<Product> getProduct(int pageNum);
+    }
+    ```
+
+1. В классе **DBDataProvider** дорабатываем метод _getProduct_ с учётом номера страницы
+
+    ```cs
+    public IEnumerable<Product> getProduct(int pageNum)
+    {
+        using (MySqlConnection db = new MySqlConnection(connectionString))
+        {
+            return db.Query<Product>(
+                "SELECT * FROM ProductView " +
+                "LIMIT @pageLen OFFSET @offset", 
+                new { 
+                    pageLen = Globals.PAGE_LEN, 
+                    offset = (pageNum - 1) * Globals.PAGE_LEN }
+            ).ToList();
+        }
+    }
+    ```
+
+    Здесь предполагается, что в БД создано представление (view) **ProductView** в котором производится выборка, которую мы написали на одном из прошлых занатий.
+
+    * **LIMIT** - оператор MySQL, который выбирает указанное количество записей
+
+    * **OFFSET** - пропустить указанное количество записей 
+
+1. При получении данных (в классе окна) указываем параметр
+
+    ```cs
+    productList = Globals.dataProvider.getProduct(currentPage);
+    ```
+
 ## Динамический вывод номеров страниц 
+
+### Определение количества записей
+
+Для начала мы должны знать сколько всего записей в базе
+
+В **простом** варианте мы можем просто использовать **LINQ** метод _Count_, который возвращает размер нашей выборки.
+
+В **сложном** варианте мы храним только часть данных, поэтому для получения количества записей в таблице запрашиваем количество из базы:
+
+1. В интерфейс **IDataProvider** добавляем метод _getProductCount_
+
+    ```cs
+    int getProductCount();
+    ```
+
+1. Реализуем этот метод в классе **DBDataProvider**
+
+    ```cs
+    public int getProductCount()
+    {
+        using (MySqlConnection db = new MySqlConnection(connectionString))
+        {
+            return db.QuerySingle<int>(
+            "SELECT count(*) FROM ProductView");
+        }
+    }
+    ```
+
+    >Для получения скалярных данных используется метод _QuerySingle_
+
+### Реализация пагинатора
+
+1. В **классе окна** объявить массив строк **pageList**
+
+    ```cs
+    public List<String> pageList { get; set; } = new List<String>();
+    ```
+
+1. В **геттере списка продукции** заполнять его
+
+    >Я реализую только **сложный** вариант
+
+    ```cs
+    private int productCount;
+
+    public IEnumerable<Product> productList { 
+        get {
+            // перечитываю данные из БД
+            var result = Globals.dataProvider.getProduct(currentPage);
+
+            // получаю количество записей в БД
+            productCount = Globals.dataProvider.getProductCount();
+
+            // очищаю список страниц и заполняю его заново
+            pageList.Clear();
+            pageList.Add("<");
+            for (int i = 1; i < (productCount / Globals.PAGE_LEN) + 1; i++)
+            {
+                pageList.Add(i.ToString());
+            }
+            pageList.Add(">");
+
+            // данные пишу напрямую в визуальный компонент
+            PageListListBox.ItemsSource = pageList;
+
+            return result;
+        } 
+    }
+    ```
 
 >Для пагинатора используем третью строку главной сетки
 
-1. В вёрстке использовать горизонтальный **ListBox** (есть в прошлой версии про вёрстку плиткой)
+1. В вёрстке использовать горизонтальный **ListBox** 
 
     ```xml
     <ListBox
-        x:DataType="system:String"
-        ItemsSource="{Binding PageList}"
+        x:Name="PageListListBox"
+        ItemsSource="{Binding pageList}"
+        Grid.Column="1"
         Grid.Row="2">
 
         <ListBox.ItemsPanel>
@@ -97,42 +225,7 @@ public IEnumerable<Product> productList {
                     PreviewMouseDown="InputElement_OnPointerPressed"/>
             </DataTemplate>
         </ListBox.ItemTemplate>
-    </ListView>
-    ```
-
-1. В **классе окна** объявить массив **pageList** и в **геттере списка продукции** заполнять его
-
-    ```cs
-    public List<String> pageList { get; set; } = new List<String>();
-
-    ...
-
-    // в геттере списка продукции после поиска и фильтрации
-    pageList.Clear();
-    pageList.Add("<");
-    for (int i = 1; i < (res.Count() / PAGE_LEN) + 1; i++){
-        pageList.Add(i.ToString());
-    }
-    pageList.Add(">");
-
-    // не забываем уведомить визуальный интерфейс о том, что список страниц изменился
-    Invalidate("pageList");
-    
-    res = res.Skip(PAGE_LEN*currentPage).Take(PAGE_LEN);
-
-    return res;
-    ```
-
-1. Метод **Invalidate** с указанием изменившегося элемента
-
-    ```cs
-    private void Invalidate(string ComponentName = "productList") 
-    {
-        if (PropertyChanged != null)
-            PropertyChanged(
-                this, 
-                new PropertyChangedEventArgs(ComponentName));
-    }
+    </ListBox>
     ```
 
 1. Реализация обработчика клика по кнопкам пагинатора:
@@ -145,17 +238,17 @@ public IEnumerable<Product> productList {
         {
             case "<":
                 // переход на предыдущую страницу с проверкой счётчика
-                if (currentPage > 0) currentPage--;
+                if (currentPage > 1) currentPage--;
                 return;
             case ">":
                 // переход на следующую страницу с проверкой счётчика
-                if (currentPage < productList.Count() / PAGE_LEN) currentPage++;
+                if (currentPage < productCount / Globals.PAGE_LEN) currentPage++;
                 return;
             default:
                 // в остальных элементах просто номер странцы
-                // учитываем, что номера страниц начинаются с 0
                 currentPage = Convert.ToInt32(
-                    (sender as TextBlock).Text) - 1;
+                    (sender as TextBlock).Text
+                );
                 return;
         }
     }
@@ -203,8 +296,7 @@ public IEnumerable<Product> productList {
             VerticalContentAlignment="Center"
             MinWidth="200"
             SelectionChanged="SortTypeComboBox_SelectionChanged"
-            x:DataType="system:String"
-            ItemsSource="{Binding #root:sortList}"/>
+            ItemsSource="{Binding sortList}"/>
     </WrapPanel>    
     ```
 
@@ -227,25 +319,96 @@ public IEnumerable<Product> productList {
     }
     ```
 
-1. И дорабатываем геттер списка продукции
+1. И дорабатываем геттер списка продукции. Я реализую только **сложный** вариант, **простой** вы можете посмотреть в лекциях за прошлый год
 
     ```cs
     get {
-        var res = _productList;
-
+        // ДО выборки данных устанавливаем или сбрасываем условие сортировки (я реализовал только первые 2, остальные реализуйте сами по аналогии)
         switch (sortType)
         {
-            // сортировка по названию продукции
+            case 0:
+                Globals.dataProvider.setOrder("");
+                break;
             case 1:
-                res = res.OrderBy(p => p.Title);
+                Globals.dataProvider.setOrder("Title");
                 break;
             case 2:
-                res = res.OrderByDescending(p => p.Title);
+                Globals.dataProvider.setOrder("Title DESC");
                 break;
-            // остальные сортировки реализуйте сами
         }
+
+        var result = Globals.dataProvider.getProduct(currentPage);
+
         ...
-    } 
+    ```
+
+    В интерфейс **IDataProvider** добавляем метод _setOrder_
+
+    ```cs
+    void setOrder(string condition);
+    ```
+
+    И реализуем его в **DBDataProvider**
+
+    ```cs
+     private string orderCondition = "";
+    public void setOrder(string condition)
+    {
+        orderCondition = condition;
+    }
+    ```
+
+    В методе _getProduct_ мы должны учесть сортировку:
+
+    При добавлении сортировок и условий выборки код усложняется, например для добавления сортировки придётся нарисовать такой код:
+
+    ```cs
+    var sql = "SELECT * FROM ProductView ";
+
+    if (orderCondition.Length > 0)
+        sql += " ORDER BY "+orderCondition;
+
+    sql += " LIMIT @pageLen OFFSET @offset";
+
+    return db.Query<Product>(
+        sql, 
+        new { 
+            pageLen = Globals.PAGE_LEN, 
+            offset = (pageNum - 1) * Globals.PAGE_LEN }
+    ).ToList();
+    ```
+
+    Получается очень сложно, но в счастью есть библиотеки облегчающие нам жизнь. 
+
+    Установите через **NuGet** пакет **Dapper.SqlBuilder**
+
+    С учётом построителя запросов получится такой код:
+
+    ```cs
+    public IEnumerable<Product> getProduct(int pageNum)
+    {
+        using (MySqlConnection db = new MySqlConnection(connectionString))
+        {
+            var builder = new SqlBuilder();
+
+            // добавляем сортировку
+            if (orderCondition.Length>0) 
+                builder.OrderBy(orderCondition);
+
+            // формируем шаблон запроса
+            var template = builder.AddTemplate(
+                "SELECT * FROM ProductView /**where**/ /**orderby**/ LIMIT @pageLen OFFSET @offset",
+                new { 
+                    pageLen = Globals.PAGE_LEN, 
+                    offset = (pageNum - 1) * Globals.PAGE_LEN }
+            );
+
+            // выполняем запрос
+            return db.Query<Product>(
+                template.RawSql,
+                template.Parameters).ToList();        
+        }
+    }
     ```
 
 ## Фильтрация
@@ -264,12 +427,14 @@ public IEnumerable<Product> productList {
 
 1. Создаем список типов продукции, заполняем его данными из базы (в конструкторе главного окна, там же где получали список продукции) и добавляем в начало пункт "Все типы продукции"
 
+    >Я не показываю реализацию метода _getProductTypes_, с этим вы уже должны справиться сами
+
     ```cs
-    public List<ProductType> ProductTypeList { get; set; }
+    public List<ProductType> productTypeList { get; set; }
 
     ...
 
-    ProductTypeList = context.ProductTypes.ToList();
+    productTypeList = context.ProductTypes.ToList();
     ProductTypeList.Insert(0, new ProductType { Title = "Все типы продукции" });
     ```
 
@@ -281,8 +446,7 @@ public IEnumerable<Product> productList {
         x:Name="ProductTypeFilter"
         SelectedIndex="0"
         SelectionChanged="ProductTypeFilter_SelectionChanged"
-        x:DataType="model:ProductType"
-        ItemsSource="{Binding #root.productTypeList}"/>
+        ItemsSource="{Binding productTypeList}"/>
     ```
 
     Элементами списка являются не строки, а объекты. В прошлом году я показывал как делать шаблон элемента списка, но как мне кажеться шаблон здесь излишен (его имеет смысл использовать если кроме названия выводится ещё что-то)
@@ -298,29 +462,74 @@ public IEnumerable<Product> productList {
 1. Реализуем обработчик выбора элемента фильтра    
 
     ```cs
-    private int ProductTypeFilterId = 0;
+    private int productTypeFilterId = 0;
 
     private void ProductTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         // запоминаем ID выбранного типа
-        ProductTypeFilterId = (ProductTypeFilter.SelectedItem as ProductType).ID;
+        productTypeFilterId = (ProductTypeFilter.SelectedItem as ProductType).ID;
         Invalidate();
     }
     ```
 
 1. И опять дорабатываем геттер списка продукции
 
+    >Так как в SQL запросе теперь появляются условия (where), то в интерфейс добавляем методы для добавления и очистки списка условий:
+    >
+    >```cs
+    >private Dictionary<string, object> filters = new >Dictionary<string, object>();
+    >public void addFilter(string name, string value)
+    >{
+    >    filters.Add(name, value);
+    >}
+    >
+    >public void clearFilter()
+    >{
+    >    filters.Clear();
+    >}
+    >```
+
+    Перед получением данных добавляем фильтр
+
     ```cs
     ...
-    var res = _productList;
 
-    // действия, которые уменьшают размер выборки помещаем вверх
+    Globals.dataProvider.clearFilter();
     if (productTypeFilterId > 0)
-        res = res.Where(
-            p => p.ProductTypeId == productTypeFilterId);
+        Globals.dataProvider.addFilter(
+            "ProductTypeID = @ProductTypeID", 
+            new {ProductTypeID = productTypeFilterId}
+        );
 
-    switch (sortType)
     ...
+    ```
+
+    В поставщике данных при получении данных учитываем фильтры
+
+    ```cs
+    using (MySqlConnection db = new MySqlConnection(connectionString))
+    {
+        var builder = new SqlBuilder();
+
+        if (orderCondition.Length>0) 
+            builder.OrderBy(orderCondition);
+
+        if (filters.Count>0)
+        {
+            foreach (var item in filters)
+                builder.Where(item.Key, item.Value);
+        }
+
+
+        var template = builder.AddTemplate(
+            "SELECT * FROM ProductView /**where**/ /**orderby**/ LIMIT @pageLen OFFSET @offset",
+            new { pageLen = Globals.PAGE_LEN, offset = (pageNum - 1) * Globals.PAGE_LEN }
+        );
+
+        return db.Query<Product>(
+            template.RawSql,
+            template.Parameters).ToList();
+    }
     ```
 
 ## Поиск
