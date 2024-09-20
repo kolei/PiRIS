@@ -434,9 +434,9 @@ public IEnumerable<Product> productList {
 
     ...
 
-    productTypeList = context.ProductTypes.ToList();
-    ProductTypeList.Insert(0, new ProductType { Title = "Все типы продукции" });
-    ```
+    productTypeList = Globals.dataProvider.getProductTypes().ToList();
+    productTypeList.Insert(0, new ProductType { Title = "Все типы продукции" });
+      ```
 
 1. В разметке в панель элементов управления (WrapPanel) добавляем выпадающий список
 
