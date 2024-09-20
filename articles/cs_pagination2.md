@@ -477,7 +477,7 @@ public IEnumerable<Product> productList {
     >Так как в SQL запросе теперь появляются условия (where), то в интерфейс добавляем методы для добавления и очистки списка условий:
     >
     >```cs
-    >private Dictionary<string, object> filters = new >Dictionary<string, object>();
+    >private Dictionary<string, object> filters = new Dictionary<string, object>();
     >public void addFilter(string name, string value)
     >{
     >    filters.Add(name, value);
@@ -532,6 +532,27 @@ public IEnumerable<Product> productList {
     }
     ```
 
+1. При использовании фильтров нужно учитывать, что количество записей, соответствующих фильтру меньше, чем количество записей в таблице. Т.е. мы должны учитывать фильтр и в методе _getProductCount_
+
+    ```cs
+    using (MySqlConnection db = new MySqlConnection(connectionString))
+    {
+        var builder = new SqlBuilder();
+        if (filters.Count > 0)
+        {
+            foreach (var item in filters)
+            {
+                builder.Where(item.Key, item.Value);
+            }
+        }
+        var template = builder.AddTemplate( 
+            "SELECT count(*) FROM ProductView /**where**/");
+        return db.QuerySingle<int>(
+            template.RawSql, 
+            template.Parameters);
+    }
+    ```
+
 ## Поиск
 
 >Пользователь должен иметь возможность искать конкретную продукцию, используя поисковую строку.
@@ -573,14 +594,17 @@ public IEnumerable<Product> productList {
 
     ```cs
     // ищем вхождение строки фильтра в названии и описании объекта без учета регистра
-    if (searchFilter != "")
-        res = res.Where(
-            p => p.Title.IndexOf(searchFilter, 
-                    StringComparison.OrdinalIgnoreCase) >= 0 ||
-                 p.Description?.IndexOf(searchFilter, 
-                    StringComparison.OrdinalIgnoreCase) >= 0
+    if (searchFilter.Length > 0)
+    {
+        Globals.dataProvider.addFilter(
+            //"(Title LIKE @search OR Description LIKE @search)",
+            "(Title LIKE @search)",
+            new { search = $"%{searchFilter}%" }
         );
+    }
     ```
+
+    Правильный вариант закомментирован, т.к. в нашем представлении (**ProductView**) нет поля _Description_. Необходимо переписать представление.
     
 ---
 
