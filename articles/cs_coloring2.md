@@ -43,7 +43,65 @@
 
 ## Получение данных
 
-Можно в методе получения данных с сервера добавить **Include** для виртуального списка **ProductSales**, но я уже упоминал в лекциях, что списки лучше загружать динамически. Мы это сделаем на следующем шаге, при получении цвета ячейки.
+Для получения количества продаж за последний месяц пишем SQL запрос:
+
+```sql
+SELECT 
+    ProductID, count(*) as qty
+FROM 
+    ProductSale ps
+WHERE 
+    ps.SaleDate > DATE_SUB(NOW(), INTERVAL 1 MONTH) 
+GROUP BY 
+    ProductID;
+```
+
+Функция **DATE_SUB** вычитает из указанной даты (**NOW** - сейчас) нужное количество месяцев (можно в интервале указать дни, минуты и т.д.)
+
+И добаляем этот подзапрос в наш **ProductView**:
+
+```sql
+CREATE VIEW ProductView AS
+SELECT 
+    -- выбираю все поля из Product
+	p.*,
+	pt.TitleType AS ProductTypeTitle,
+	qq.MaterialCost, 
+    qq.MaterialString,
+    -- добавляю поле "количество продаж за последний месяц"
+	ps.LastMonthSaleQuantity
+FROM 
+	Product p
+LEFT JOIN 
+    ProductType pt ON p.ProductTypeID = pt.ID
+LEFT JOIN 
+    (
+        SELECT 
+            pm.ProductID, 
+            SUM(pm.`Count` * m.Cost) AS MaterialCost,
+            GROUP_CONCAT(m.Title, ',') AS MaterialString
+        FROM 
+            ProductMaterial pm,
+            Material m 
+        WHERE
+            pm.MaterialID=m.ID
+        GROUP BY 
+            pm.ProductID	
+    ) qq ON qq.ProductID=p.ID
+-- добавляю подзапрос для выборки количества продаж за последний месяц    
+LEFT JOIN 
+    (
+        SELECT 
+            ProductID, 
+            count(*) as LastMonthSaleQuantity
+        FROM 
+            ProductSale
+        WHERE 
+            SaleDate > DATE_SUB(NOW(), INTERVAL 1 MONTH) 
+        GROUP BY 
+            ProductID
+    ) ps ON ps.ProductID=p.ID;
+```
 
 ## Раскраска по условию
 
@@ -61,25 +119,14 @@
 И добавляем в модель **Product** геттер *BackgroundColor*
 
 ```cs
+public int? LastMonthSaleQuantity { get; set; }
 public string BackgroundColor
 {
     get
     {
-        // вычисляем дату для сравнения ("сегодня" минус 30 дней)
-        var compareDate = DateTime.Now.AddDays(-30);
-        
-        using (var context = new esmirnovContext())
-        {
-            // ищем количество продаж, совершённых позже указанной даты
-            // фильтруя продажи по Id продукта
-            var saleCount = context.ProductSales
-                .Where(ps => ps.ProductId==this.Id)
-                .Count(ps => ps.SaleDate >= compareDate);
-
-            // возвращаем цвет, в зависимости от количества продаж 
-            if (saleCount > 0) return "#fff"; // белый
-            return "#fee"; // розовый
-        }
+        // возвращаем цвет, в зависимости от количества продаж 
+        if (LastMonthSaleQuantity == null || LastMonthSaleQuantity == 0) return "#fee"; // белый
+        return "#fff"; // розовый
     }
 }
 ```
@@ -133,33 +180,23 @@ private void ProductListBox_OnSelectionChanged(
 
 ### Отображение кнопки "Изменить стоимость на ..."
 
-Сначала просто добавляем эту кнопку в разметку (можно в панель управления, можно в левую панель)
+Сначала просто добавляем эту кнопку в разметку (можно в панель управления, можно в левую панель) и, чтобы видимость кнопки зависела от количества выделенных элементов, мы привязываем атрибут *Visibility* к свойству *costChangeButtonVisible*
 
 ```xml
 <Button
     x:Name="CostChangeButton"
-    IsVisible="True"
-    Content="Изменить стоимость на..."
-    />
-```
-
-Теперь, чтобы видимость кнопки зависела от количества выделенных элементов, мы привязываем атрибут *IsVisible* к свойству *costChangeButtonVisible* (дописав аттрибут `DataType`)
-
-```xml
-<Button
-    x:Name="CostChangeButton"
-    x:DataType="system:Boolean"
-    IsVisible="{Binding #root.costChangeButtonVisible}"
-    Content="Изменить стоимость на..."
-    />
+    Visibility="{Binding costChangeButtonVisible}"     Content="Изменить стоимость на..."
+/>
 ```
 
 И реализуем это свойство в коде ОКНА
 
 ```cs
-public string costChangeButtonVisible {
-    get {
-        return productsSelectedCount > 1;
+public string costChangeButtonVisible
+{
+    get
+    {
+        return productsSelectedCount > 1 ? "Visible" : "Hidden";
     }
 }
 ```
@@ -173,11 +210,10 @@ public string costChangeButtonVisible {
     ```xml
     <Button
         x:Name="CostChangeButton"
-        x:DataType="system:Boolean"
-        IsVisible="{Binding #root.costChangeButtonVisible}"
-        Click="CostChangeButton_OnClick"
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        Visibility="{Binding costChangeButtonVisible}"
         Content="Изменить стоимость на..."
+        Click="CostChangeButton_Click"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     />
     ```
 
@@ -222,18 +258,36 @@ public string costChangeButtonVisible {
 
     **Во-первых**, в конструктор добавляем параметр (средняя цена). **Во-вторых**, записываем эту цену в текстовое поле.
 
-1. По условиям задачи мы должны вычислить среднюю цену для выделенных элементов списка (я на вскидку не нашёл как преобразовать **IList** в **IEnumerable**, поэтому тупо перебираем список выбранных элементов, считаем сумму и, заодно, собираем список идентификаторов для последующего переопределения цены)
+    И пишем обработчик клика на кнопку "Изменить":
 
-    >В **авалонии** окна запускаются асинхронно, поэтому если мы хотим получить результат выполнения диалога (а нам нужна сумма), то нужно использовать конструкцию *async/await*: метод, в котором нужно ждать выполнения асинхронной задачи должен иметь модификатор **async**, а перед функцией открытия окна должен быть модификатор **await**
+    ```cs
+    // объявляем публичную переменную из которой
+    // будем считывать результат
+    public decimal Result;
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // пробуем сконвертировать в число
+            Result = Convert.ToDecimal(CostTextBox.Text);
+            // при присвоении результата свойству DialogResult модальное окно закрывается
+            DialogResult = true;
+        }
+        catch (Exception)
+        {
+            MessageBox.Show("Стоимость должна быть числом");
+        }
+    }
+    ```
+
+1. По условиям задачи мы должны вычислить среднюю цену для выделенных элементов списка (я на вскидку не нашёл как преобразовать **IList** в **IEnumerable**, поэтому тупо перебираем список выбранных элементов, считаем сумму и, заодно, собираем список идентификаторов для последующего переопределения цены)
 
     ```cs
     /* 
         обработчик события клика по кнопке "Изменить стоимость на..." в главном окне
-        так как нам нужно дождаться результата ввода, то запускаем асинхронно
     */
-    async private void CostChangeButton_OnClick(
-        object? sender, 
-        RoutedEventArgs e)
+    private void CostChangeButton_Click(object sender, RoutedEventArgs e)    
     {
         decimal sum = 0;
         List<int> idList = new List<int>();
@@ -246,32 +300,8 @@ public string costChangeButtonVisible {
         var newWindow = new EnterMinCostForAgentWindow(
             sum / ProductListBox.SelectedItems.Count);
 
-        // показываем МОДАЛЬНОЕ окно и ЖДЕМ результат
-        var res = await newWindow.ShowDialog<decimal?>(this);
-    }
-    ```
-
-    >Обратите внимание, в угловых скобках после *ShowDialog* указывается тип результата, возвращаемый окном. Результата может и не быть (хакрыли окно крестиком), поэтому тип нуллабельный.
-
-1. Проверка на ввод только числового значения.
-
-    ```cs
-    private void Button_OnClick(
-        object? sender, 
-        RoutedEventArgs e)
-    {
-        try
-        {
-            // пробуем сконвертировать в число
-            decimal Result = Convert.ToDecimal(CostTextBox.Text);
-            // при присвоении результата свойству DialogResult модальное окно закрывается
-            Close(Result);
-        }
-        catch (Exception)
-        {
-            // в авлонии нет MessageBox, поэтому его надо реализовать как обычное окно
-            (new MessageBox("Стоимость должна быть числом")).ShowDialog(this);
-        }
+        // показываем МОДАЛЬНОЕ окно
+        newWindow.ShowDialog();
     }
     ```
 
@@ -279,46 +309,18 @@ public string costChangeButtonVisible {
 
 1. Запись новой цены в БД и обновление списка.
 
-    Редактируем пункт 3, добавляя анализ результата модального окна
+    Добавляем анализ результата модального окна
 
     ```cs
-    ...
-    var res = await newWindow.ShowDialog<decimal?>(this);
-    if (res != null)
+    if ((bool)newWindow.ShowDialog())
     {
-        using (var context = new esmirnovContext())
-        {
-            try
-            {
-                // перебираем выделенные продукты
-                foreach (var id in idList)
-                {
-                    var product = context.Products.Where(p => p.Id == id).FirstOrDefault();
-                    if (product != null)
-                    {
-                        // меняем сумму для агента
-                        product.MinCostForAgent = res ?? 0;
-                    }
-                }
-                // сохраняем изменения
-                context.SaveChanges();
-            }
-            catch (Exception exception)
-            {
-                (new MessageBox(exception.Message)).ShowDialog(this);
-            }
-
-            /* 
-                перечитываем список продукции (так как эта операция повторяется, 
-                то лучше её вынести в отдельный метод)
-            */
-            productList = context.Products
-                .Include(product => product.ProductType)
-                .Include(product => product.ProductMaterials)
-                .ToList();
-        }
+        Globals.dataProvider.setMinCostForAgent(
+            newWindow.Result, 
+            idList.ToArray());
     }
     ```
+
+    Этот код **во-первых** стоит завернуть в блок **try..catch**, чтобы приложение не падало при ошибках и, **во-вторых** после сохранения суммы вывести MessageBox с сообщением, что сумма успешно изменена.
 
 ---
 
