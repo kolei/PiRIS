@@ -317,10 +317,26 @@ public string costChangeButtonVisible
         Globals.dataProvider.setMinCostForAgent(
             newWindow.Result, 
             idList.ToArray());
+        Invalidate();
     }
     ```
 
-    Этот код **во-первых** стоит завернуть в блок **try..catch**, чтобы приложение не падало при ошибках и, **во-вторых** после сохранения суммы вывести MessageBox с сообщением, что сумма успешно изменена.
+    Этот код **во-первых** стоит завернуть в блок **try..catch**, чтобы приложение не падало при ошибках и, **во-вторых** после сохранения суммы вывести _MessageBox_ с сообщением, что сумма успешно изменена.
+
+    Реализация метода _setMinCostForAgent_:
+
+    ```cs
+    public void setMinCostForAgent(decimal minCostForAgent, int[] ids)
+    {
+        using (MySqlConnection db = new MySqlConnection(connectionString))
+        {
+            db.Execute("UPDATE Product SET MinCostForAgent=@newCost WHERE ID in @idList",
+            new { 
+                newCost = minCostForAgent, 
+                idList = ids });
+        }
+    }
+    ```
 
 ---
 
