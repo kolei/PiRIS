@@ -306,31 +306,28 @@
 ```cs
 private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
 {
-    using (var context = new esmirnovContext())
+    try
     {
-        try
-        {
-            // проверки, требуемые по ТЗ
+        // проверки, требуемые по ТЗ
 
-            // TODO исключение, если есть продажи
-            var saleCount = Globals.dataProvider.saleCount(currentProduct.ID);
+        // TODO исключение, если есть продажи
+        var saleCount = Globals.dataProvider.saleCount(currentProduct.ID);
 
-            if (saleCount > 0)
-                throw new Exception("Нельзя удалять продукт с продажами");
+        if (saleCount > 0)
+            throw new Exception("Нельзя удалять продукт с продажами");
 
-            // TODO удаление списка материалов продукта
-            Globals.dataProvider.removeProductMaterial(currentProduct.ID);
+        // TODO удаление списка материалов продукта
+        Globals.dataProvider.removeProductMaterial(currentProduct.ID);
 
-            // TODO удаление истории изменения цен (если есть)
+        // TODO удаление истории изменения цен (если есть)
 
-            // TODO удаление продукта
-            Globals.dataProvider.removeProduct(currentProduct.ID);
-            DialogResult = true;
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);            
-        }
+        // TODO удаление продукта
+        Globals.dataProvider.removeProduct(currentProduct.ID);
+        DialogResult = true;
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show(ex.Message);            
     }
 }
 ```
