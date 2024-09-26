@@ -64,14 +64,14 @@
 
 ## Создание окна редактирования продукции
 
-Для добавления и редактирования мы будем использовать одно и то же окно. Заголовок окна будем вычислять по наличию ID у продукции (у новой записи это поле равно `0`)
+Для добавления и редактирования мы будем использовать одно и то же окно. Заголовок окна будем вычислять по наличию поля **ID** у продукции (у новой записи это поле равно `0`)
 
 1. Создайте новое окно: **EditProductWindow** (в папке **Windows** - не забываем про логическую структуру проекта)
 
 1. В классе окна **EditProductWindow** добавьте **свойство** *currentProduct*, в котором будет храниться добавляемый/редактируемый экземпляр продукции:
 
     ```cs
-    public Product currentProduct { get; set; };
+    public Product currentProduct { get; set; }
     ```
 
 1. В разметке окна вставьте аттрибут *Name*
@@ -85,11 +85,12 @@
 1. В конструктор окна добавьте параметр типа **Product**, присвойте его ранее объявленному свойству. Задайте заголовок окна:
 
     ```cs
-    public EditWindow(Product EditProduct)
+    public EditProductWindow(Product editProduct)
     {
-        currentProduct = editProduct;
         InitializeComponent();
-        root.Title = currentProduct.Id == 0 ? "Новый продукт" : "Редактирование продукта";
+        DataContext = this;
+        currentProduct = editProduct;
+        root.Title = currentProduct.ID == 0 ? "Новый продукт" : "Редактирование продукта";
     }
     ```
 
@@ -114,59 +115,52 @@
 
         <Label Content="Артикул"/>
         <TextBox
-            Text="{Binding #root.currentProduct.ArticleNumber}"/>
+            Text="{Binding currentProduct.ArticleNumber}"/>
 
         <Label Content="Наименование продукта"/>
-        <TextBox Text="{Binding #root.currentProduct.Title}"/>
+        <TextBox Text="{Binding currentProduct.Title}"/>
 
         ...
 
     </StackPanel>
     ```
 
-    Обычные поля наклепайте по шаблону сами, а я подробнее остановлюсь на полях: *тип продукта*, *изображение* и *описание*:
+    Обычные поля (числовые и строковые) наклепайте по шаблону сами, а я подробнее остановлюсь на полях: _тип продукта_, _изображение_ и _описание_:
 
     * Выбор типа продукта из списка
 
-        В классе окна объявляем свойство *productTypeList* - список типов продукции
+        В классе окна объявляем свойство _productTypeList_ - список типов продукции
 
         ```cs
-        public IEnumerable<ProductType> productTypeList { get; set; }
+        public List<ProductType> productTypeList { get; set; }
         ```
 
         И в конструкторе получаем его из БД:
 
         ```cs
-        using (var context = new ksmirnovContext())
-        {
-            productTypeList = context.ProductTypes.ToList();
-        }        
+        productTypeList = Globals.dataProvider.getProductTypes().ToList();
         ```
 
-        В вёрстке окна редактирования продукции мы можем использовать выпадающий список, атрибут *SelectedItem* которого позволяет отобразить **текущее** значение редактируемого элемента
+        В вёрстке окна редактирования продукции мы можем использовать выпадающий список, атрибут _SelectedIndex_ которого позволяет отобразить **текущее** значение редактируемого элемента
 
         ```xml
         <ComboBox 
-            ItemsSource="{Binding #root.productTypeList}"
-            SelectedItem="{Binding #root.currentProduct.ProductType}"/>
+            ItemsSource="{Binding productTypeList}"
+            SelectedIndex="{Binding selectedProductIndex}"/>
         ```
 
-        >Из документации: *Класс ComboBox выполняет поиск указанного объекта с помощью **IndexOf** метода. Этот метод, в свою очередь, использует метод **Equals** для определения равенства (объектов)*.
-
-        А метод **Equals** сравнивает объекты по уникальному идентификатору (встроенное свойство у базового класса в C#, не путать с полем `id` таблицы БД), т.е. свойство **ProductType** у экземпляра продукции **НЕ РАВНО** экземпляру элемента списка *productTypeList*
-
-        Чтобы исправить эту неприятность нужно переопределить метод **Equals** у класса **ProductType**:
+        Чтобы получить индекс (позицию в списке) текущего продукта нужно после получения списка типов продуктов добавить поиск:
 
         ```cs
-        public override bool Equals(object obj)
-        {
-            return (obj != null) && 
-                (obj is ProductType) && 
-                (this.Id == (obj as ProductType).Id);
+        // в классе окна
+        public int selectedProductIndex { get; set; } = -1;
+        ...
+
+        // в конструкторе окна
+        if (currentProduct.ID > 0) {
+            selectedProductIndex = productTypeList.FindIndex(pt =>  pt.ID == currentProduct.ProductTypeID);
         }
         ```
-
-        Здесь мы проверяем определён ли вообще объект (у нового продукта его ещё нет), нужного ли он типа и совпадет ли его **Id** с **Id** текущего типа продукции 
 
     * смена изображения продукции
 
@@ -177,7 +171,7 @@
             Name="CurrentProductImage"
             Width="200" 
             Height="200"
-            Source="{Binding #root.currentProduct.ImageBitmap}" />
+            Source="{Binding currentProduct.ImageUri}" />
         ```
 
         А для смены изображения используем стандартный диалог открытия файлов, повесив его на кнопку *Сменить картинку* (кнопку добавьте сами в центральную колонку)
@@ -187,31 +181,21 @@
         ```cs
         private void ChangeImage_Click(object sender, RoutedEventArgs e)
         {
-            var getImageDialog = new OpenFileDialog();
+            OpenFileDialog GetImageDialog = new OpenFileDialog();
 
             // задаем фильтр для выбираемых файлов
-            getImageDialog.Filters.Add(
-                new FileDialogFilter() {
-                    Name = "Файлы изображений", 
-                    Extensions = {"png", "jpg", "jpeg"}});
+            // до символа "|" идет произвольный текст, а после него шаблоны файлов разделенные точкой с запятой
+            GetImageDialog.Filter = "Файлы изображений: (*.png, *.jpg)|*.png;*.jpg";
 
             // чтобы не искать по всему диску задаем начальный каталог
-            // В ТЕКУЩЕЙ ВЕРСИИ АВАЛОНИИ ТАКОГО СВОЙСТВА НЕТ
-            // getImageDialog.InitialDirectory = Environment.CurrentDirectory;
-
-            // открываем СИНХРОННО диалог
-            // в ответ получим массив выбранных файлов
-            var files = await getImageDialog.ShowAsync(this);
-            if (files != null)
+            GetImageDialog.InitialDirectory = Environment.CurrentDirectory;
+            if (GetImageDialog.ShowDialog() == true)
             {
                 // перед присвоением пути к картинке обрезаем начало строки, т.к. диалог возвращает полный путь
-                currentProduct.Image = files[0].Substring(Environment.CurrentDirectory.Length);
+                currentProduct.Image = GetImageDialog.FileName.Substring(Environment.CurrentDirectory.Length);
 
-                // тут нужно либо реализовать интерфейс InotifyPropertyChanged
-                // и обновить информацию о картинке
-
-                // либо тупо поменять свойство нужного контрола
-                CurrentProductImage.Source = currentProduct.ImageBitmap;
+                // обратите внимание, это другое окно и другой Invalidate, который реализуйте сами
+                Invalidate();
             }
         }
         ```
@@ -225,7 +209,7 @@
         <TextBox 
             AcceptsReturn="True"
             Height="200"
-            Text="{Binding #root.currentProduct.Description}"/>
+            Text="{Binding currentProduct.Description}"/>
         ```
 
 1. Сохранение введенных данных
@@ -233,50 +217,56 @@
     В разметку добавьте кнопку **Сохранить** и напишите обработчик
 
     ```cs
-    private void Button_Click(object sender, RoutedEventArgs e)
+    private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        using (var context = new esmirnovContext())
+        // перед сохранением мы должны выполнить несколько проверок, поэтому заворачиваем в исключение
+        try
         {
-            // вся работа с БД должна быть завернута в исключения
-            try
+            // могли изменить тип продукта - сохраняем ID
+            if (ProductTypeComboBox.SelectedItem != null) 
             {
-                Product product = null;
-                if (currentProduct.Id != 0)
-                    product = context.Products.Find(currentProduct.Id);
-                else
-                    product = new Product();
-
-                if (product != null)
-                {
-                    // сюда добавлять проверки
-
-                    product.Title = currentProduct.Title;
-                    product.ArticleNumber = currentProduct.ArticleNumber;
-
-                    ...
-
-                    product.ProductTypeId = currentProduct.ProductType.Id;
-
-                    if (product.Id==0)
-                        context.Products.Add(product);
-                    else
-                        context.Products.Update(product);
-
-                    if (context.SaveChanges() > 0)
-                    {
-                        Close(true);
-                    }
-                    
-                }
-            }
-            catch (Exception ex)
+                currentProduct.ProductTypeID = ((ProductType)ProductTypeComboBox.SelectedItem).ID;
+            } else
             {
-                // if(ex.InnerException != null)
-                //     MessageBox.Show(ex.InnerException.Message);
-                // else
-                //     MessageBox.Show(ex.Message);            
+                throw new Exception("Не выбран тип продукта");
             }
-        }    
+
+            // TODO проверить стоимость продукции (не более двух знаков после запятой и положительное число)
+
+            // TODO проверка артикула (найти в базе запись с таким же артикулом и отличающимся ID)
+
+            Globals.dataProvider.saveProduct(currentProduct);
+            DialogResult = true;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }   
+    }
+    ```
+
+1. Реализация метода _saveProduct_
+
+    ```cs
+    public void saveProduct(Product product)
+    {
+        using (MySqlConnection db = new MySqlConnection(connectionString))
+        {
+            if (product.ID == 0)
+            {
+                // TODO новый продукт
+            }
+            else
+            {
+                // изменение существующего
+                db.Execute("UPDATE Product SET Title=@Title, ProductTypeID=@ProductTypeID, " +
+                    "ArticleNumber=@ArticleNumber, Description=@Description, " +
+                    "Image=@Image, ProductionPersonCount=@ProductionPersonCount, " +
+                    "ProductionWorkshopNumber=@ProductionWorkshopNumber, " +
+                    "MinCostForAgent=@MinCostForAgent " +
+                    "WHERE ID=@ID", product);
+            }
+        }
     }
     ```
 
@@ -287,15 +277,13 @@
     ```cs
     private void ProductListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        var currentProduct = (sender as ListBox).SelectedItem as Product;
-        // в создаваемое окно передаем выбранный продукт
+        var product = (sender as ListBox).SelectedItem as Product;
 
+        // в создаваемое окно передаем выбранный продукт
         var newEditWindow = new EditProductWindow(product);
-        var res = await newEditWindow.ShowDialog<bool>(this);
-        if (res)
+        if ((bool)newEditWindow.ShowDialog())
         {
-            // эту функцию реализуйте сами - тут перечитывание списка продукции из базы
-            getProductList();   
+            Invalidate();
         }
     }
     ```
@@ -307,41 +295,11 @@
     ...
     ```
 
-## Проверки перед сохранением продукта
-
-Все проверки вставляем в обработчик кнопки "Сохранить" окна редактирования,  до вызова метода сохранения продукта
-
-* Стоимость продукции не может быть отрицательной
-
-    ```cs
-    if (currentProduct.MinCostForAgent < 0)
-        throw new Exception("Цена продукта не может быть отрицательной");
-    ```
-
-* Стоимость продукции записывается только с точностью до сотых
-
-* Реализована проверка артикула на уникальность
-
-    Тут надо делать запрос к базе c методом `Where`
-
-    ```cs
-    var dublicateArticle = context.Products
-        .Where(p => p.ArticleNumber == currentProduct.ArticleNumber)
-        .FirstOrDefault();
-
-    if (dublicateArticle != null)
-        throw new Exception("Такой артикул уже есть в базе");
-    ```
-
 ## Удаление продукции
 
 >В окне редактирования продукта должна присутствовать кнопка “Удалить”, которая удаляет продукт из базы данных. При этом должны соблюдаться следующие условия. Если у продукта есть информация о материалах, используемых при его производстве, или история изменения цен, то эта информация должна быть удалена вместе с продуктом. Но если у продукта есть информация о его продажах агентами, то удаление продукта из базы данных должно быть запрещено. После удаления продукта система должна сразу вернуть пользователя обратно к списку продукции.
 
-Добавьте кнопку *Удалить* в среднюю колоку (рядом с кнопкой *сохранить*). Атрибут **IsVisible** привяжите к **Id** продукта (т.е. у нового продукта кнопки удалить быть не должно). Можно реализовать через _Binding_, но можно задать в конструкторе
-
-```cs
-DeleteButton.IsVisible = currentProduct.Id > 0;
-```
+Добавьте кнопку *Удалить* в среднюю колоку (рядом с кнопкой *сохранить*). Атрибут **Visible** привяжите к **ID** продукта (т.е. у нового продукта кнопки удалить быть не должно). Можно реализовать через _Binding_, но можно задать в конструкторе
 
 И реализуйте обработчик клика по этой кнопке
 
@@ -352,49 +310,34 @@ private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            // тут вставляем проверки, требуемые по ТЗ
+            // проверки, требуемые по ТЗ
 
-            // + исключение, если есть продажи
-            var saleCount = context.ProductSales
-                .Count(ps => ps.ProductId == currentProduct.Id);
+            // TODO исключение, если есть продажи
+            var saleCount = Globals.dataProvider.saleCount(currentProduct.ID);
 
             if (saleCount > 0)
                 throw new Exception("Нельзя удалять продукт с продажами");
 
-            // - удаление списка материалов продукта (НЕ ПРОВЕРЯЛ)
-            context.ProductMaterials.RemoveRange(
-                context.ProductMaterials.Where(pm => pm.ProductId == currentProduct.Id)
-            );
+            // TODO удаление списка материалов продукта
+            Globals.dataProvider.removeProductMaterial(currentProduct.ID);
 
-            // - удаление истории изменения цен (если есть)
+            // TODO удаление истории изменения цен (если есть)
 
-            var product = context.Products.Find(currentProduct.Id);
-            context.Products.Remove(product);
-            if (context.SaveChanges() > 0)
-            {
-                Close(true);
-            }
+            // TODO удаление продукта
+            Globals.dataProvider.removeProduct(currentProduct.ID);
+            DialogResult = true;
         }
         catch (Exception ex)
         {
-            // if(ex.InnerException != null)
-            //    MessageBox.Show(ex.InnerException.Message);
-            // else
-            //    MessageBox.Show(ex.Message);            
+            MessageBox.Show(ex.Message);            
         }
     }
 }
 ```
 
->Метод **RemoveRange** не рекомендуется использовать в больших базах, в инетах пишут, что он вытягивает всю таблицу в ОЗУ. Лучше использовать либо одиночное удаление в цикле, либо "чистый" SQL запрос:
->```cs
->context.Database.ExecuteSqlRaw($"DELETE FROM ProductMaterial WHERE ProductId={currentProduct.Id}");
->// также можно удалить и сам продукт
->context.Database.ExecuteSqlRaw($"DELETE FROM Product WHERE Id={currentProduct.Id}");
->```
->Но в случае использования "чистых" SQL-запросов нужно учитывать, что **EntityFramework** не будет знать сколько записей затронуто и нужно убрать проверку количества измененных записей в **SaveChanges** (собственно и сам этот метод не нужно вызывать, если всё сделано "чистыми" SQL-запросами)
+**Задание**
 
-[Подробнее про RAW SQL](https://learn.microsoft.com/en-us/ef/core/querying/sql-queries)
+Самостоятельно реализовать код помеченный комментарием **TODO**
 
 ---
 
