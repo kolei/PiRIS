@@ -9,14 +9,14 @@
 >**Задание:**
 >Необходимо реализовать вывод списка материалов, используемых при производстве продукции, с указанием количества. В список можно добавлять новые позиции и удалять существующие. При добавлении материалы должны выбираться из выпадающего списка с возможностью поиска по наименованию.
 
-Сначала хотел, чтобы этот материал вы сделали самостоятельно, но при реализации возникло несколько новых моментов, поэтому распишу в этой лекции
-
-* [Read](#read-вывод-списка)
-* [Delete](#delete-удаление-материала-продукта)
-
 В итоге должно получиться что-то подобное (список материалов продукта под картинкой):
 
 ![](../img/cs008.png)
+
+Этот материал вы уже можете сделать самостоятельно, я лишь остановлюсь на паре новых моментов:
+
+* [Read](#read-вывод-списка)
+* [Delete](#delete-удаление-материала-продукта)
 
 ## Read (вывод списка)
 
@@ -28,39 +28,14 @@
     
     Материалы продукта (в принципе это очевидно по названию) хранятся в таблице **ProductMaterial**. Это, так называемая, **таблица связей**  - реализация отношения *многие (продукты) - ко - многим (материалам)*. При чтении надо учитывать, что нам нужны материалы только редактируемого продукта, т.е. указать фильтр по редактируемому продукту при выборке: 
 
-    >Далее старый код от WPF, адаптируйте сами, отличий не много
-
+    
     ```cs
-    public IEnumerable<ProductMaterial> ProductMaterialList { get; set; }
-
-    public EditProductWindow(Product EditProduct)
-    {
-        InitializeComponent();
-        CurrentProduct = EditProduct;
-        using (var context = new dbContext())
-        {
-            ProductTypeList = context.ProductTypes.ToList();
-        }
-
-        // то что выше у вас уже было
-
-        // чтение списка материалов завернём в отдельный метод,
-        // т.к. его придётся перечитывать при удалении, редактировании и добавлении   
-        LoadProductMaterials();
-    }
-
-    private LoadProductMaterials()
-    {
-        using (var context = new dbContext())
-        {
-            ProductMaterialList = context.ProductMaterials
-                // фильтр по продукту
-                .Where(pm => pm.ProductId == CurrentProduct.Id)
-                // включая информацию о материалах (нам нужно название)
-                .Include(pm => pm.Material)
-                .ToList();
-        }
-        Invalidate("ProductMaterialList");
+    // реализуем геттер списка матриалов продукта
+    public IEnumerable<ProductMaterial> productMaterialList { 
+        get {
+            // TODO чтение списка материалов
+            return Globals.dataProvider.getProductMaterials(currentProduct.ID);
+        } 
     }
     ```
 
@@ -70,8 +45,7 @@
 
     ```xml
     <ListView
-        ItemsSource="{Binding ProductMaterialList}"
-        x:Name="ProductMaterialtListView" 
+        ItemsSource="{Binding productMaterialList}"
         MouseDoubleClick="ProductMaterialtListView_MouseDoubleClick"
     >
         <ListView.ItemContainerStyle>
@@ -94,7 +68,7 @@
                     </Grid.ColumnDefinitions>
                     <!-- тут вы уже должны сами сообразить как получить название материала -->
                     <TextBlock 
-                        Text="{Binding Material}"/>
+                        Text="{Binding MaterialTitle}"/>
                     <!-- этой колонке добавим границы слева и справа -->
                     <TextBlock     
                         Grid.Column="1" 
@@ -131,26 +105,13 @@ private void DeleteMaterialTextBlock_MouseDown(object sender, MouseButtonEventAr
     // (sender as TextBlock).Tag as ProductMaterial - атрибут Tag мы приводим к классу ProductMaterial
     var productMaterial = (sender as TextBlock).Tag as ProductMaterial;
 
-    using (var context = new dbContext())
-    {
-        // при поиске удаляемого материала нужно учитывать, 
-        // что у него составной первичный ключ и указывать поля ключа 
-        // в том же порядке, в котором они перечислены в первичном ключе
-
-        var deletedProductMaterial = context.ProductMaterials
-            .Find(productMaterial.ProductId, productMaterial.MaterialId);
-
-        context.ProductMaterials.Remove(deletedProductMaterial);
-        
-        if (context.SaveChanges() > 0)
-            LoadProductMaterials();
-
-        // Вместо этого кода можно использовать RAW SQL запрос удаления учитывая, что искать надо по двум ключам
-    }
+    // TODO удаление материала
+    Globals.dataProvider.deleteProductMaterial(productMaterial);
+    Invalidate("productMaterialList");
 }
 ```
 
-Составной первичный ключ в таблице **ProductMaterial**
+При удалении матриала продукта нужно учитывать, что в этой таблице составной первичный ключ, поэтому для удаления нужно указывать оба поля в условии `WHERE`
 
 ![](../img/cs009.png)
 
