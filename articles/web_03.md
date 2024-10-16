@@ -6,6 +6,8 @@
 
 1. [#2 Реактивность - Vue.js: концепции](https://www.youtube.com/watch?v=LV235z6qOUI)
 
+https://rutube.ru/video/2eb01a0b4be4931b02c2c95abf2bf315/
+
 1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/polyfills)
 
 ---

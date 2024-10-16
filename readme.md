@@ -330,13 +330,16 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ## [Code Review](./articles/code_review.md) -->
 
-<!-- ## Введение в WEB-разработку -->
+## Введение в WEB-разработку
 
 <!-- codesandbox -->
 
-<!-- 1. [Intro](./articles/web_01.md)
+1. [Intro](./articles/web_01.md)
 1. [Зачем нужен Vue.js? - Vue.js: концепции](./articles/web_02.md)
 1. [Реактивность - Vue.js: концепции](./articles/web_03.md)
+
+<!-- 
+
 1. [Двустороннее связывание - Vue.js: концепции](./articles/web_04.md)
 1. [Как во Vue.js использовать Х - Vue.js: нюансы](./articles/web_05.md)
 1. [Знакомство - Vue.js: практика](./articles/web_06.md)
