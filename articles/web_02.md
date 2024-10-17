@@ -8,7 +8,7 @@
 
 * [Оригинальное видео на YouTube](https://www.youtube.com/watch?v=4xyb_tA-uw0&list=PLvTBThJr861yMBhpKafII3HZLAYujuNWw&index=2)
 * [Копия на РуТубе](https://rutube.ru/video/5813a6f4551d7579b32dae1527769256/)
-* [S3](https://s3.timeweb.com/5fea8834-pub/#1+Зачем+нужен+Vue.js_+-+Vue.js_+концепции.mp4)
+* [S3](https://s3.timeweb.com/5fea8834-pub/Зачем_нужен_Vue.js_концепции.mp4)
 
 ## Структура проекта
 
