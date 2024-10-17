@@ -211,7 +211,11 @@ HTTP-запросы используются для фетчинга ресур�
 * ssr
 * vite
 
-## Создание проекта. Структура проекта.
+## [Vue.js Введение](https://ru.vuejs.org/guide/introduction.html)
+
+---
+
+**Задание на дом**
 
 1. Установить Node.js
 
@@ -219,15 +223,15 @@ HTTP-запросы используются для фетчинга ресур�
 
 При создании приложения система задаст несколько вопросов. Если не понимаете вопрос отвечайте `нет`
 
-* ✔ Project name: … vue-project
-* ✔ Add TypeScript? … No / Yes
-* ✔ Add JSX Support? … No / Yes
+* ✔ Project name: … _vue-project_
+* ✔ Add TypeScript? … **No** / Yes
+* ✔ Add JSX Support? … **No** / Yes
 * ✔ Add Vue Router for Single Page Application development? … No / Yes
 * ✔ Add Pinia for state management? … No / Yes
-* ✔ Add Vitest for Unit Testing? … No / Yes
-* ✔ Add an End-to-End Testing Solution? › No
-* ✔ Add ESLint for code quality? … No / Yes
-* ✔ Add Vue DevTools 7 extension for debugging? (experimental) … No / Yes
+* ✔ Add Vitest for Unit Testing? … **No** / Yes
+* ✔ Add an End-to-End Testing Solution? › **No**
+* ✔ Add ESLint for code quality? … **No** / Yes
+* ✔ Add Vue DevTools 7 extension for debugging? (experimental) … **No** / Yes
 
 
 
