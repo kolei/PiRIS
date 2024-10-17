@@ -9,9 +9,7 @@
 * [Оригинальное видео на YouTube](https://www.youtube.com/watch?v=4xyb_tA-uw0&list=PLvTBThJr861yMBhpKafII3HZLAYujuNWw&index=2)
 * [Копия на РуТубе](https://rutube.ru/video/5813a6f4551d7579b32dae1527769256/)
 
-<video width="720" height="500" controls>
-  <source src="https://s3.timeweb.com/5fea8834-pub/Зачем_нужен_Vue.js_концепции.mp4" type="video/mp4">
-</video>
+<!-- https://s3.timeweb.com/5fea8834-pub/Зачем_нужен_Vue.js_концепции.mp4 -->
 
 ## Структура проекта
 
