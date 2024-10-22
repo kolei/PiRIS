@@ -6,6 +6,8 @@
 
 1. [#3 Двустороннее связывание - Vue.js: концепции](https://www.youtube.com/watch?v=U2ZJCMiQuo8)
 
+https://rutube.ru/video/edabe508b9e3bc97099b0e897d63c4e8/
+
 1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/garbage-collection)
 
 ---

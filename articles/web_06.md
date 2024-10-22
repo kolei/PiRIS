@@ -6,6 +6,8 @@
 
 1. [#5 Знакомство - Vue.js: практика](https://www.youtube.com/watch?v=LN29isbbmsk)
 
+https://rutube.ru/video/782d95c6226ad0939e54e45b05543d63/
+
 1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/array)
 
 >[Упомянутый codesandbox](https://codesandbox.io/s/vuex-lagging-getter-forked-n2stm)

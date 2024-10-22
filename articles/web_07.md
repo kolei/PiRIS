@@ -4,6 +4,8 @@
 
 1. [#6 Декларативность - Vue.js: концепции](https://www.youtube.com/watch?v=pp-VE5m9pvc)
 
+https://rutube.ru/video/22f26483a02a5b1a6d60df898982db46/
+
 1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/advanced-functions)
 
 ---
