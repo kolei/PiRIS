@@ -337,6 +337,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Intro](./articles/web_01.md)
 1. [Зачем нужен Vue.js? - Vue.js: концепции](./articles/web_02.md)
 1. [Реактивность - Vue.js: концепции](./articles/web_03.md)
+1. [Бизнес логика или детали реализации? - Vue.js: концепции](./articles/web_04.md)
 
 <!-- 
 

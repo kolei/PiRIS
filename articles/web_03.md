@@ -23,12 +23,18 @@
 * [YouTube](https://www.youtube.com/watch?v=orWKmX4xO1g)
 * [RuTube](https://rutube.ru/video/6f51b9dcda036a5b6903b4c745bac322/)
 
-## Декларативность
+## #6 Декларативность
 
 >13 минут
 
 * [YouTube](https://www.youtube.com/watch?v=pp-VE5m9pvc)
 * [RuTube](https://rutube.ru/video/22f26483a02a5b1a6d60df898982db46/)
+
+## #7 Теория ограничений
+
+>12 минут
+
+* [RuTube](https://rutube.ru/video/90f0f17fd64a34130c123a7cfef4b7f2/)
 
 ---
 

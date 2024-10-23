@@ -1,21 +1,55 @@
 [К содержанию](../readme.md#введение-в-web-разработку)
 
-# Двустороннее связывание - Vue.js: концепции
+# Vue.js: концепции
 
-<!-- 6 минут -->
+## #8 Бизнес логика или детали реализации?
 
-1. [#3 Двустороннее связывание - Vue.js: концепции](https://www.youtube.com/watch?v=U2ZJCMiQuo8)
+> 10 минут
 
-https://rutube.ru/video/edabe508b9e3bc97099b0e897d63c4e8/
+* [YouTube](https://www.youtube.com/watch?v=U2ZJCMiQuo8)
+* [RuTube](https://rutube.ru/video/dd892631a12710bea4ef59c5dc40eeef/)
 
-1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/garbage-collection)
+## #9 Учимся учиться
+
+> 5 минут
+
+* [YouTube](https://www.youtube.com/watch?v=ekrzshM4AHI)
+* [RuTube](https://rutube.ru/video/100ab08808ebc706fe69ff9e8d9a132a/)
+
+
+## #10 Криптономикон-1 - Vue.js: практика
+
+> 39 минут 
+
+* [YouTube](https://www.youtube.com/watch?v=0MEpPU3rWCk)
+* [RuTube](https://rutube.ru/video/5a7fa691b1fae3c7fa0d0dbf47dbfbdd/)
+
+**Содержание**
+
+* описание проекта
+* создание нового проекта
+* удаление лишего
+* добавление вёрстки и стилей
+* data, methods
+* привязка (v-model), интерполяция
+* подписывание на события (v-on)
+* структурные директивы (v-for, v-if)
+* добавление/удаление тикеров
+
+**Материалы**
+
+1. [Исходный HTML/CSS для самостоятельного повторения](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon-html)
+
+1. Материалы к изучению: под роликом на ютубе куча ссылок, но в принципе там раздел "Основы" от [Синтаксиса шаблонов](https://v3.ru.vuejs.org/ru/guide/template-syntax.html) до "Работы с формами"
+
+1. [Исходный код урока](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon/-/tree/lesson1)
+
+1. [API для получения ключа:](https://www.cryptocompare.com/)
 
 ---
 
 **Задание**
 
-1. Пересмотреть видео [#3 Двустороннее связывание - Vue.js: концепции](https://www.youtube.com/watch?v=U2ZJCMiQuo8), записать все непонятные слова.
-
-1. Перечитать и осмыслить первую часть [Учебника](https://learn.javascript.ru/garbage-collection) до раздела "Тип данных Symbol"
+Повторите практическое задание (Криптономикон)
 
 [Назад](./web_03.md) | [Дальше](./web_05.md)
