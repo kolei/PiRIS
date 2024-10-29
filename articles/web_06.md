@@ -1,23 +1,60 @@
 [К содержанию](../readme.md#введение-в-web-разработку)
 
-# Знакомство - Vue.js: практика
+# Vue.js
 
-<!-- 1 час 6 минут, но кодинга пока нет -->
+## #12 Реализация реактивности (нюансы)
 
-1. [#5 Знакомство - Vue.js: практика](https://www.youtube.com/watch?v=LN29isbbmsk)
+>17 минут
 
-https://rutube.ru/video/782d95c6226ad0939e54e45b05543d63/
+* [YouTube](https://www.youtube.com/watch?v=tt6VERYoBwE)
+* [RuTube](https://rutube.ru/video/01f5dfb906d549d0b70d823c6f65c08e/)
 
-1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/array)
+## #13 Компоненты
 
->[Упомянутый codesandbox](https://codesandbox.io/s/vuex-lagging-getter-forked-n2stm)
+>Live: 1 час
 
----
+* [YouTube](https://www.youtube.com/watch?v=Mu3S9LBvuf8)
+* [RuTube](https://rutube.ru/video/3d2d34498a53b4de7ce938add681c80c/?t=230&r=plwd)
 
-**Задание**
+## #14 Криптономикон-3: vue-cli и tailwind
 
-1. Пересмотреть видео [#5 Знакомство - Vue.js: практика](https://www.youtube.com/watch?v=LN29isbbmsk), записать все непонятные слова.
+>17 минут
 
-1. Перечитать и осмыслить первую часть [Учебника](https://learn.javascript.ru/array) до раздела "Продвинутая работа с функциями"
+* [YouTube](https://www.youtube.com/watch?v=p5y4lPbYee4)
+* [RuTube](https://rutube.ru/video/5ea99b949996ae7e38fb927a76be3f0d/)
+
+
+**Расшифровка**
+
+>На момент написания этого текста в проекте вместо **webpack** используется **vite**, но смысл в принципе тот же - собрать из исходных файлов итоговые html, css и js, понятные любому более менее современному браузеру
+
+1. Устанавливаем плагин **tailwind**
+
+    ```
+    npx @vue/cli add tailwind
+    ```
+
+1. Устанавливаем **@tailwindcss/forms**
+
+    ```
+    npm install @tailwindcss/forms
+    ```
+
+1. Дописываем плагин в `tailwind.config.js`
+
+    ```js
+    plugins: [require('@tailwindcss/forms')],
+    ```
+
+1. Удаляем файл `app.css` и импорт этого файла из `main.js`
+
+В видео на этом этапе всё заработало, но у меня появилась ошибка сборки проекта: 
+
+```
+[Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /home/kei/temp/Криптономикон1): [ReferenceError] module is not defined in ES module scope
+This file is being treated as an ES module because it has a '.js' file extension and '/home/kei/temp/Криптономикон1/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+```
+
+В принципе тут более менее понятно написано, что нужно поменять расширение файла `postcss.config.js` на `postcss.config.cjs`
 
 [Назад](./web_05.md) | [Дальше](./web_07.md)
