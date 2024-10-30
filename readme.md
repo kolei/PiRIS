@@ -342,6 +342,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Vue.js: концепции. Бизнес логика или детали реализации? Практика (Криптономикон)](./articles/web_04.md)
 1. [Vue.js: Практика (Криптономикон)](./articles/web_05.md)
 1. [Vue.js: Реализация реактивности (нюансы), Компоненты, tailwind](./articles/web_06.md)
+1. [Криптономикон-4 - Самостоятельная работа. Promise, async/await.](./articles/web_07.md)
 
 <!-- 
 
