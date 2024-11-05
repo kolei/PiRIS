@@ -345,6 +345,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Криптономикон-4 - Самостоятельная работа. Promise, async/await.](./articles/web_07.md)
 1. [Vue.js: LocalStorage, фильтрация, пагинация, наблюдатели, history](./articles/web_08.md)
 1. [Vue.js практика: computed, watch](./articles/web_09.md)
+1. [Vue.js: рефакторинг](./articles/web_10.md)
 
 <!-- 
 
