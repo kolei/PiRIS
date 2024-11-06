@@ -1,38 +1,43 @@
 [К содержанию](../readme.md#введение-в-web-разработку)
 
-# Криптономикон-1 - Vue.js: практика
+# Vue.js
 
-<!-- 39 мин -->
+## #19 Криптономикон ещё раз о рефакторинге
 
-1. [#10 Криптономикон-1 - Vue.js: практика](https://www.youtube.com/watch?v=0MEpPU3rWCk)
+>15 минут
 
-    * описание проекта
-    * создание нового проекта
-    * удаление лишего
-    * добавление вёрстки и стилей
-    * data, methods
-    * привязка (v-model), интерполяция
-    * подписывание на события (v-on)
-    * структурные директивы (v-for, v-if)
-    * добавление/удаление тикеров
+* [YouTube](https://youtu.be/FrqI90g-XRk?feature=shared)
+* [RuTube](https://rutube.ru/video/82169ed3f240f9231fc3aa99bd3657dd/)
 
-1. Продолжаем изучать [JavaScript](https://learn.javascript.ru/modules)
+## #20 YAGNI
 
-## Материалы
+>12 минут
 
-1. [Исходный HTML/CSS для самостоятельного повторения](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon-html)
+* [YouTube](https://youtu.be/r_8tFwodtwg?feature=shared)
+* [RuTube](https://rutube.ru/video/bd8caf25bb70c63387f2d0d10ef553bd/)
 
-1. Материалы к изучению: под роликом на ютубе куча ссылок, но в принципе там раздел "Основы" от [Синтаксиса шаблонов](https://v3.ru.vuejs.org/ru/guide/template-syntax.html) до "Работы с формами"
+## #21 Улучшаем АПИ
 
-1. [Исходный код урока](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon/-/tree/lesson1)
-1. [API для получения ключа:](https://www.cryptocompare.com/)
+>10 минут
+
+* [YouTube](https://youtu.be/DBTNTNIPrx8?feature=shared)
+* [RuTube](https://rutube.ru/video/5454fa2e25f100b5edfa60a8c2f11a6e/)
 
 ---
 
-## Задание
+**Задание**
 
-1. Пересмотреть видео [#10 Криптономикон-1 - Vue.js: практика](https://www.youtube.com/watch?v=0MEpPU3rWCk). Желательно повторить урок самостоятельно, как минимум склонировать [Исходный код урока](https://gitlab.com/vuejs-club/youtube-course/cryptonomicon/-/tree/lesson1) и разобраться что там происходит.
+- посмотреть видео 
+- несуществующие монетки выделять цветом
 
-1. Перечитать и осмыслить первую часть [Учебника](https://learn.javascript.ru/modules) до конца первой части (Язык JavaScript)
+    Если кто-то реализовал работу через **WebSocket**, то используйте его. Иначе можете просто по наличию монетки в списке
+
+- курс валют через BTC
+
+    На дополнительную оценку для тех кто реализовал **WebSocket**
+
+- работа с несколькими вкладками (Shared Worker)
+
+    На дополнительную оценку для тех кто реализовал **WebSocket**
 
 [Назад](./web_10.md) | [Дальше](./web_12.md)

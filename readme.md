@@ -346,12 +346,10 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Vue.js: LocalStorage, фильтрация, пагинация, наблюдатели, history](./articles/web_08.md)
 1. [Vue.js практика: computed, watch](./articles/web_09.md)
 1. [Vue.js: рефакторинг](./articles/web_10.md)
+1. [Vue.js: самостоятельная работа (выделение цветом)](./articles/web_11.md)
 
 <!-- 
 
-1. [Криптономикон: рефакторинг - Vue.js: практика (computed)](./articles/web_18.md)
-1. [Криптономикон: рефакторинг - Vue.js: практика (часть 2)](./articles/web_19.md)
-1. [Криптономикон: ещё раз о рефакторинге - Vue.js: практика. #20 YAGNI - Vue.js: практика.](./articles/web_20.md)
 1. [Криптономикон: улучшаем API - Vue.js: практика. #22 Криптономикон: refs - Vue.js: практика. #23 nextTick - Vue.js: нюансы](./articles/web_21.md)
 1. [Криптономикон: компоненты - Vue.js: практика](./articles/web_22.md)
 1. [Введение в HTML](./articles/web_html_1.md)
