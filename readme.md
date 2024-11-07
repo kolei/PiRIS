@@ -347,6 +347,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Vue.js практика: computed, watch](./articles/web_09.md)
 1. [Vue.js: рефакторинг](./articles/web_10.md)
 1. [Vue.js: самостоятельная работа (выделение цветом)](./articles/web_11.md)
+1. [Vue.js: refs](./articles/web_12.md)
 
 <!-- 
 
