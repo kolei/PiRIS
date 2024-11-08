@@ -1,19 +1,16 @@
 [К содержанию](../readme.md#введение-в-web-разработку)
 
-# Компоненты - Vue.js: концепции
+# Vue.js: компоненты
 
-<!-- 1 ч 7 мин -->
+>30 минут
 
-1. [#13 Компоненты - Vue.js: концепции](https://www.youtube.com/watch?v=Mu3S9LBvuf8)
+## #24 Криптономикон: компоненты
 
-1. Продолжаем изучать вторую часть учебника [JavaScript (Интерфейсные события)](https://learn.javascript.ru/event-details) 
+* [YouTube](https://www.youtube.com/watch?v=Ql5nV-G-nOs&list=PLvTBThJr861yMBhpKafII3HZLAYujuNWw&index=25)
+* [RuTube](https://rutube.ru/video/e6045a3ec72b655e9bfac5c77b40a9a9/)
+
 
 ---
 
-## Задание
-
-1. Пересмотреть видео [#13 Компоненты - Vue.js: концепции](https://www.youtube.com/watch?v=Mu3S9LBvuf8). 
-
-1. Перечитать и осмыслить раздел "Интерфейсные события" второй части часть [Учебника](https://learn.javascript.ru/event-details)
 
 [Назад](./web_13.md) | [Дальше](./web_15.md)
