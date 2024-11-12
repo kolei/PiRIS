@@ -350,11 +350,10 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Vue.js: refs](./articles/web_12.md)
 1. [Vue.js: nextTick](./articles/web_13.md)
 1. [Vue.js: компоненты](./articles/web_14.md)
+1. [Vue.js: Нативные события](./articles/web_15.md)
 
 <!-- 
 
-1. [Криптономикон: улучшаем API - Vue.js: практика. #22 Криптономикон: refs - Vue.js: практика. #23 nextTick - Vue.js: нюансы](./articles/web_21.md)
-1. [Криптономикон: компоненты - Vue.js: практика](./articles/web_22.md)
 1. [Введение в HTML](./articles/web_html_1.md)
 1. [Введение в CSS](./articles/web_css_1.md) -->
 
