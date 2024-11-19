@@ -351,6 +351,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Vue.js: nextTick](./articles/web_13.md)
 1. [Vue.js: компоненты](./articles/web_14.md)
 1. [Vue.js: Нативные события](./articles/web_15.md)
+1. [Vue.js: Single-page application, маршрутизация](./articles/web_16.md)
 
 <!-- 
 
