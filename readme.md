@@ -388,9 +388,11 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Руководство пользователя](./articles/user_manual.md)
 
-### Практика, разработка мобильных приложений. Android Studio. Kotlin.
+### Практика, разработка Web-приложений. VueJs.
 
-1. [Основы языка Kotlin](./articles/kotlin.md)
+1. [Разработка мобильного приложения для управления коллекцией фильмов](./articles/vue_film.md)
+
+<!-- 1. [Основы языка Kotlin](./articles/kotlin.md)
 
 1. [Первый проект в Android Studio](./articles/android_studio.md)
 
@@ -420,7 +422,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Android TV](./articles/android_tv.md)
 
-1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md)
+1. [Разбор заданий прошлых лет](./articles/f6_demo_1.md) -->
 
 <!-- 
 

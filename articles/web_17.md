@@ -121,4 +121,38 @@ const { increment } = store
 </script>
 ```
 
+## Использование **localStorage** для хранения данных при перезапуске приложения
+
+В браузере есть два хранилища типа "ключ" - "значение" ("ключ" - строка, "значение" - скалярные данные (целое, строка и т.п.)): 
+
+* **localStorage** - постоянное хранилище (работает всегда)
+* **sessionStorage** - временное хранилище, пропадает при закрытии браузера
+
+Например, если нам нужно сохранить данные авторизации, то мы можем использовать **localStorage**:
+
+```js
+export const useApiStore = defineStore('api', () => {
+  const authData = ref(null)
+  const isAuthenticated = computed(() => authData.value != null)
+
+  // считываем данные из localStorage
+  const storedAuthData = localStorage.getItem('authData')
+  // если там что-то есть
+  if (storedAuthData != null) {
+    // десериализуем данные в нужный объект
+    authData.value = JSON.parse(storedAuthData)
+  }
+
+  function setAuthData (newAuthData) {
+    // при сохранении сериализуем (преобразуем в строку)
+    localStorage.setItem(
+      'authData', 
+      JSON.stringify(newAuthData)
+    )
+  }
+
+  return { authData, isAuthenticated, setAuthData }
+})
+```
+
 [Назад](./web_16.md) | [Дальше](./web_18.md)
