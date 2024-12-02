@@ -83,6 +83,74 @@ const map = ref(null)
 </template>
 ```
 
-Не дописано, следите за обновлениями
+## Отображение своих маркеров на карте
+
+Для добавления маркеров на карту необходимо добавить компоненты `<yandex-map-marker>`. В компоненте есть [примеры](https://yandex-maps-unofficial.github.io/vue-yandex-maps/examples/objects/marker-custom-icon.html)
+
+Например, отображение маркеров со своим изображением:
+
+```vue
+import { 
+    YandexMap, 
+    YandexMapDefaultSchemeLayer, 
+    YandexMapMarker, 
+    YandexMapDefaultFeaturesLayer 
+} from 'vue-yandex-maps'
+
+...
+
+const cars = [
+{
+    "lat": 56.639053,
+    "lon": 47.893739,
+    "model": "Лада Гранта",
+    "number": "A100AA12",
+    "tarif": 8.99,
+    "km_left": 600,
+    "kreslo": true,
+    "kpp": "manual",
+    "photo": "granta.webp"
+},
+...
+]
+</script>
+
+<template>
+    <yandex-map
+        v-model="map"
+        :settings="{
+            location: {
+                center: [47.889641, 56.639053],
+                zoom: 16,
+            },
+        }"
+        width="100%"
+        height="100vh"
+    >
+        <yandex-map-default-scheme-layer/>
+        <yandex-map-default-features-layer/>
+        <yandex-map-marker
+            v-for="(car, index) in cars"
+            :key="index"
+            position="top-center left-center"
+            :settings="{ coordinates: [car.lon, car.lat] }"
+        >
+            <img
+                src="/src/assets/car.png"
+                width="48px" height="48px"
+                @click="showCar"
+            />
+        </yandex-map-marker>
+    </yandex-map>
+</template>
+```
+
+![](../img/web_028.png)
+
+Обратите внимание:
+
+* должен быть объявлен компонент `<yandex-map-default-features-layer/>`
+* у маркера должен быть аттрибут `settings`, в котором заданы координаты маркера
+
 
 [Назад](./web_18.md) | [Дальше](./web_20.md)
