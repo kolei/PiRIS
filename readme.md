@@ -353,6 +353,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Vue.js: Нативные события](./articles/web_15.md)
 1. [Vue.js: Single-page application, маршрутизация](./articles/web_16.md)
 1. [Vue.js: Управление состоянием (pinia)](./articles/web_17.md)
+1. [Vue.js: "Карусель"](./articles/web_18.md)
+1. [Vue.js: Работа с Яндекс картами](./articles/web_19.md)
 
 <!-- 
 
@@ -390,7 +392,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ### Практика, разработка Web-приложений. VueJs.
 
-1. [Разработка мобильного приложения для управления коллекцией фильмов](./articles/vue_film.md)
+1. [Разработка web приложения для управления коллекцией фильмов](./articles/vue_film.md)
+1. [Разработка web приложения для каршеринга](./articles/vue_carsharing.md)
 
 <!-- 1. [Основы языка Kotlin](./articles/kotlin.md)
 
