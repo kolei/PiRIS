@@ -9,7 +9,7 @@
 >Дизайн только в виде скринов, фигмы нет.
 
 Описание протокола API в формате OpenAPI (Swagger) доступно по ссылке:
-https://swagger.kolei.ru/?url=https://carsharing.kolei.ru/swagger/api.yml
+https://carsharing.kolei.ru/swagger
 
 1. Создайте проект. Настройте иконку приложения согласно макету.
 
