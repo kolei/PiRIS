@@ -356,6 +356,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Vue.js: "Карусель"](./articles/web_18.md)
 1. [Vue.js: Работа с Яндекс картами](./articles/web_19.md)
 1. [Vue.js: Валидация форм](./articles/web_20.md)
+1. [Swipe to delete (смахнуть для удаления)](./articles/web_21.md)
 
 <!-- 
 
