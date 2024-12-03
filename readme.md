@@ -358,6 +358,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [Vue.js: Валидация форм](./articles/web_20.md)
 1. [Swipe to delete (смахнуть для удаления)](./articles/web_21.md)
 1. [Совмещение API и стора, кеширование данных](./articles/web_22.md)
+1. [Tailwind CSS, примеры](./articles/web_23.md)
 
 <!-- 
 
