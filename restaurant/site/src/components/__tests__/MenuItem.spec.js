@@ -27,17 +27,18 @@ describe('MenuItem', () => {
     expect(wrapper.text()).toContain('test')
   })
 
-  it('У элемента меню есть кнопка и при клике на неё цена перезжает в описание', () => {
+  it('У элемента меню есть кнопка и при клике на неё цена переезжает в описание', async () => {
     // метод find ищет в компоненте элемент или класс (тема css-селекторы)
     // и генерирует на нём событие click
-    wrapper.find('.price-button').trigger('click')
+    await wrapper.find('.price-button').trigger('click')
 
     // все события, генерируемые компонентом, собираются в очередь
     // и мы просто проверяем длину очереди событий
     // expect(wrapper.emitted('click')).toHaveLength(1)
 
     // в название должна переехать цена
-    expect(wrapper.text()).toContain('100')
+    const title = wrapper.find('.title')
+    expect(title.text()).toContain('100')
   })
 
   it.skip('Элемент меню генерирует событие click', () => {
