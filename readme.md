@@ -128,8 +128,6 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
 * [МДК 05.03. Тестирование информационных систем](#мдк-0503-тестирование-информационных-систем)
 
-<!-- * [Практика №2, разработка web-приложений](#практика-№2-разработка-web-приложений) -->
-
 * [Полезное](#полезное)
 
 ## МДК. 05.02 Разработка кода информационных систем
@@ -328,7 +326,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ## [Code Review](./articles/code_review.md) -->
 
-## Введение в WEB-разработку
+## Практика №1. Введение в WEB-разработку
 
 <!-- codesandbox -->
 
@@ -501,12 +499,17 @@ tablayout
 -->
 
 
-## Практика №2, разработка web-приложений
+## Практика №2. Docker.
 
-<!-- (articles/praktika_I.md) -->
+1. [Как работает Docker](./articles/docker01.md)
+1. [Создание контейнера для сервера АПИ](./articles/docker02.md)
+1. Создание контейнера для web-приложения (на примере vue.js)
+1. Ci/Cd
 
-1. [Основы WEB-разработки](./articles/web_basic.md)
-1. [Знакомство с VUE.js](./articles/vue_intro.md)
+<!-- [Разработка мобильных приложений](articles/praktika_I.md) -->
+
+<!-- 1. [Основы WEB-разработки](./articles/web_basic.md)
+1. [Знакомство с VUE.js](./articles/vue_intro.md) -->
 
 ## Полезное
 
