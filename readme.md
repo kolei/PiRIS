@@ -501,7 +501,7 @@ tablayout
 
 ## Практика №2. Разработка АПИ на express.js + ORM Sequelize.
 
-1. [Постановка задачи. Создание сервера express.js. Структура проекта express.js.](./api/express01.md)
+1. [Постановка задачи. Создание сервера express.js. Подключение и настройка sequelize.](./api/express01.md)
 
 <!-- 
 TODO перенести в 4-й курс
