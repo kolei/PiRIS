@@ -499,12 +499,17 @@ tablayout
 -->
 
 
-## Практика №2. Docker.
+## Практика №2. Разработка АПИ на express.js + ORM Sequelize.
+
+1. [Постановка задачи. Создание сервера express.js. Структура проекта express.js.](./api/express01.md)
+
+<!-- 
+TODO перенести в 4-й курс
 
 1. [Как работает Docker](./articles/docker01.md)
 1. [Создание контейнера для сервера АПИ](./articles/docker02.md)
 1. Создание контейнера для web-приложения (на примере vue.js)
-1. Ci/Cd
+1. Ci/Cd -->
 
 <!-- [Разработка мобильных приложений](articles/praktika_I.md) -->
 
