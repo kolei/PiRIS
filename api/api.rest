@@ -1,0 +1,24 @@
+@url=http://localhost:3000/api
+
+### получение списка блюд
+GET {{url}}/menu-item
+
+### Добавление блюда в корзину
+POST {{url}}/cart
+Content-Type: application/json
+
+{
+    "menuItemId": 1,
+    "quantity": 1
+}
+
+### Изменение количества блюда в корзине
+PATCH {{url}}/cart/1
+Content-Type: application/json
+
+{
+    "quantity": 10
+}
+
+### Удаление блюда из корзины
+DELETE {{url}}/cart/1

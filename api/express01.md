@@ -3,8 +3,16 @@
 Напишем полноценное АПИ для проекта "ресторан" используя **express.js**.
 
 1. Создадим проект и разберемся в его структуре.
-1. Подключение к БД (познакомимся с ORM sequelize, научимся делать миграции)
-1. Разработаем конечные точки для получения меню, формирования корзины и оформления заказа
+1. Подключение к БД (познакомимся с ORM **Sequelize**, научимся делать миграции)
+1. Разработаем конечные точки для получения меню и формирования корзины
+
+**Содержание:**
+
+* [Создание проекта](#создание-проекта)
+* [Подключение к БД](#подключение-к-бд)
+* [Использование sequelize для получения данных из БД](#использование-sequelize-для-получения-данных-из-бд)
+* [Создание скрипта для наполнения БД начальными данными](#создание-скрипта-для-наполнения-бд-начальными-данными)
+* [Добавление сущностей БД, реализация REST.](#добавление-сущностей-бд-реализация-rest)
 
 ## Создание проекта
 
@@ -30,6 +38,7 @@
     ```
 
 1. Добавьте в зависимости проекта `express.js` командой `npm i express`
+
 1. Создайте файл `.gitignore`
 
     ```.gitignore
@@ -64,7 +73,7 @@
 
     * `app.get('/', (req, res) => {})` - **endpoint** (конечная точка), которая будет обрабатывать входящий запрос. В данном случае метод `GET` по пути `/`.
 
-        В параметрах лямбда функции приходят объекты `req` (request - запрос, из этого объекта мы можем извлечь параметры и тело запроса) и `res` (response - ответ, сюда мы должны вернуть результат запроса)
+        В параметрах лямбда функции приходят объекты `req` (_request_ - запрос, из этого объекта мы можем извлечь параметры и тело запроса) и `res` (_response_ - ответ, сюда мы должны вернуть результат запроса)
  
     * `app.listen(port, () => {})` - запуск сервера на указанном порту
 
@@ -86,7 +95,7 @@
 npm i mysql2 sequelize sequelize-cli
 ```
 
-* Пакет `mysql2` нужен для работы с БД MySQL (явно мы его не используем, но он нужен для sequelize) 
+* Пакет `mysql2` нужен для работы с БД MySQL (явно мы его не используем, но он нужен для **sequelize**) 
 * Пакет `sequelize` нужен для использования в нашем коде 
 * Приложение `sequelize-cli` нужно для создания и управление миграциями
 
@@ -160,7 +169,7 @@ npx sequelize-cli init
 }
 ```
 
-**Sequelize** поддерживает загрузку строки подключения из переменных окружения. Нам нужно добавить переменную окружения в таком формате:
+**Sequelize** поддерживает загрузку строки подключения из переменных окружения. Нам нужно создать переменную окружения в таком формате:
 
 ```
 DATABASE_URL=mysql://[user]:[pass]@[sqldomain]/[db name]
@@ -239,7 +248,7 @@ module.exports = {
 };
 ```
 
-В методе `up` мы должны прописать команды для создания таблиц, а в методе `down` для удаления. В первой минграции мы создадим таблицу `MenuItem` для хранения блюд (тут вроде все более менее понятно, подробно расписывать не буду - если что-то не понятно, то можно загуглить):
+В методе `up` мы должны прописать команды для создания таблиц и связей, а в методе `down` для удаления. В первой минграции мы создадим таблицу `MenuItem` для хранения блюд (тут вроде все более менее понятно, подробно расписывать не буду - если что-то не понятно, то можно загуглить):
 
 ```js
 'use strict';
@@ -306,7 +315,7 @@ Parsed url mysql://ekolesnikov:*****@kolei.ru/restaurant
 npx sequelize-cli db:migrate:undo
 ```
 
-## Использование squelize в программе для получения данных из БД
+## Использование sequelize для получения данных из БД
 
 Возвращаемся к нашему `app.js`
 
@@ -317,7 +326,7 @@ const { sequelize } = require('./models')
 const { QueryTypes } = require('sequelize')
 ```
 
-И поменяем endpoint (я добавил префикс `/api`, он нам понадобится при настройке nginx, когда будем заворачивать апи в контейнер):
+И поменяем _endpoint_ (я добавил префикс `/api`, он нам понадобится при настройке **nginx**, когда будем заворачивать апи в контейнер):
 
 ```js
 app.get('/api/menu-item', async (req, res) => {
@@ -338,7 +347,7 @@ app.get('/api/menu-item', async (req, res) => {
 ```
 
 1. Запросы к БД асинхронные, поэтому заворачиваем код в async/await
-1. Список блюд, возвращаемый запросом `sequelize.query` заворачиваем в `res.json()`.
+1. Список блюд, возвращаемый запросом `sequelize.query` заворачиваем в `res.json()`, это добавит в заголовок ответа `Content-Type: application/json`.
 
 Пока у нас таблица блюд пустая, поэтому в ответе тоже будет пустой массив
 
@@ -379,10 +388,174 @@ module.exports = {
 И запускаем добавление данных командой
 
 ```
-npx sequelize-cli db:seed:all
+npx sequelize-cli db:seed:all [--url=...]
 ```
 
-Можно откатить отдельный импорт, но накатить можно только все разом. Поэтому для заполнения словарей лучше использовать _bulkInsert_ в обычной миграции, а seeders использовать для тестов.
+Можно откатить отдельный импорт, но накатить можно только всё разом. Поэтому для заполнения словарей лучше использовать _bulkInsert_ в обычной миграции, а seeders использовать для тестов.
+
+## Добавление сущностей БД, реализация REST.
+
+Добавим в БД таблицу _Cart_ (корзина) и связи между _Cart_ и _MenuItem_
+
+```
+npx sequelize-cli migration:generate --name cart
+```
+
+И пропишем в созданном файле команды для создания таблицы с внешним ключем и команды для удаления:
+
+>В реальном проекте ещё нужно добавить таблицу пользователей и привязать корзину к пользователю
+
+```js
+'use strict';
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('Cart', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.DataTypes.INTEGER
+      },
+      menuItemId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        comment: 'для внешнего ключа'
+      },
+      quantity: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        comment: 'количество'
+      }
+    })
+
+    /**
+     * Внешний ключ корзина_блюдо
+     */
+    await queryInterface.addConstraint('Cart', {
+      fields: ['menuItemId'],
+      type: 'foreign key',
+      name: 'FK_cart_menu-item',
+      references: {
+          table: 'MenuItem',
+          field: 'id'
+      },
+      onDelete: 'no action',
+      onUpdate: 'no action'
+    })
+
+  },
+
+  async down (queryInterface, Sequelize) {
+    await queryInterface.removeConstraint('Cart', 'FK_cart_menu-item')
+    await queryInterface.dropTable('Cart')
+  }
+}
+```
+
+### CRUD для корзины
+
+Для того, чтобы тело запроса автоматически преобразовывалось в объект _body_ нужно после создания экземпляра приложения подключить _middleware_ `express.json()` (_middleware_ это функции, которые выполняются до обработки _endpoints_, используются для служебных целей, как в нашем случае, и в целях авторизации. Позже добавим jwt-авторизацию и напишем для неё _middleware_):
+
+```js
+...
+const app = express()
+app.use(express.json())
+...
+```
+
+#### Create. Для добавления записей в таблицу используется метод POST
+
+```js
+app.post('/api/cart', async function(req, res) {
+  try {
+    await sequelize.query(`
+      INSERT INTO Cart (menuItemId, quantity)
+      -- значения :menuItemId и :quantity задаются в replacements
+      VALUES (:menuItemId, :quantity)
+    `,{
+      logging: false,
+      type: QueryTypes.INSERT,
+      // объект replacements должен содержать значения для замены
+      replacements: {
+        menuItemId: req.body.menuItemId,
+        quantity: req.body.quantity
+      }
+    })
+    // ничего не возвращаем, но код ответа меняем на 201 (Created)
+    // можно и не менять, по-умолчанию возвращает 200 (OK)
+    res.status(201)
+  } catch (error) {
+    console.warn('ошибка при добавлении блюда в корзину:', error.message)
+    // при ошибке возвращаем код ошибки 500 и текст ошибки
+    res.status(500).send(error.message)
+  } finally {
+    res.end()
+  }
+})
+```
+
+#### Read. Чтение
+
+Используется метод get. Пример приводить не буду, он аналогичен запросу списка блюд
+
+#### Update. Редактирование корзины
+
+Для редактирования в REST используются методы PUT или PATCH. PUT - полная перезапись (замещение объекта), PATCH - частичная перезапись (изменение части объекта)
+
+Мы будем только менять количество, поэтому используем PATCH
+
+```js
+// в пути можно описать параметр (поставив знак ":")
+app.patch('/api/cart/:id', async (req, res) => {
+  try {
+    await sequelize.query(`
+      UPDATE Cart 
+      SET quantity=:quantity
+      WHERE id=:id
+    `,{
+      logging: false,
+      replacements: {
+        // используем параметр из пути
+        id: req.params.id,
+        quantity: req.body.quantity
+      }
+    })
+  } catch (error) {
+    console.warn('ошибка при редактировании корзины:', error.message)
+    res.status(500).send(error.message)
+  } finally {
+    res.end()
+  }
+})
+```
+
+#### Delete. Удаление блюда из корзины
+
+Тут ничего нового
+
+```js
+app.delete('/api/cart/:id', async (req, res) => {
+  try {
+    await sequelize.query(`
+      DELETE 
+      FROM Cart
+      WHERE id=:id
+    `,{
+      logging: false,
+      replacements: {
+        id: req.params.id
+      }
+    })
+  } catch (error) {
+    console.warn('ошибка при удалении блюда из корзины:', error.message)
+    res.status(500).send(error.message)
+  } finally {
+    res.end()
+  }
+}) 
+```
 
 ---
 
