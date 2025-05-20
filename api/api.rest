@@ -22,3 +22,17 @@ Content-Type: application/json
 
 ### Удаление блюда из корзины
 DELETE {{url}}/cart/1
+
+### Авторизация
+POST {{url}}/user/login
+Content-Type: application/json
+
+{
+    "login": "login",
+    "password": "123456"
+}
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZUlkIjoxLCJpYXQiOjE3NDc3MjQ4MDJ9.qX7eLwPNxXm_LE-TgA2P9Z-G-RBF5WmYD3IwJZaK4Nc
+### Получение корзины пользователя
+GET {{url}}/cart
+Authorization: Bearer {{token}}
