@@ -23,7 +23,7 @@
   </tr>
   <tr>
     <td style="text-align: center; border: none; height: 1em;">
-        г.Йошкар-Ола, 2021-2024
+        г.Йошкар-Ола, 2021-2025
     </td>
   </tr>
 </table>
@@ -197,7 +197,8 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 1. [Основы проектирования баз данных. ERD.](./articles/5_1_1_1_erd2.md)
 1. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
 1. [Основы SQL](./articles/sql_for_beginner.md)
-1. [Использование MySQL Workbench для создания ER-диаграммы и DDL-скрипта](./articles/mywb01.md)
+<!-- 1. [Использование MySQL Workbench для создания ER-диаграммы и DDL-скрипта](./articles/mywb01.md) -->
+1. [Создание ER-диаграммы](./articles/5_1_1_1_erd_workbench.md)
 1. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 1. [Представления (View)](./articles/sql_view.md)
 1. [Хранимые процедуры. Триггеры.](./articles/sql_trigger.md)
