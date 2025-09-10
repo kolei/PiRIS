@@ -500,7 +500,18 @@
         50 row(s) affected Records: 50  Duplicates: 0  Warnings: 0	0.047 sec
         ```
 
-Самостоятельно загрузите данные из файлов `products_k_import.csv` и `productmaterial_k_import.xlsx`
+---
+
+## Домашнее задание
+
+1. Создать подключение к серверу `kolei.ru`
+
+    * логин: <первая буква имени><фамилия> латиницей, например `ekolesnikov`
+    * пароль: дата рождения в формате `DDMMYY`
+
+1. Импортировать все три файла для импорта
+
+    Один из лекции и самостоятельно загрузите данные из файлов `products_k_import.csv` и `productmaterial_k_import.xlsx`
 
 [Продолжение (вариант22)](./sql_import_22.md)
 
