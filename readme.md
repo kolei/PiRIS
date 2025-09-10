@@ -201,13 +201,15 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 1. [Создание ER-диаграммы](./articles/5_1_1_1_erd_workbench.md)
 1. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 1. [Представления (View)](./articles/sql_view.md)
-1. [Хранимые процедуры. Триггеры.](./articles/sql_trigger.md)
+1. [Хранимые процедуры. Триггеры. Транзакции.](./articles/sql_trigger.md)
 
 <!-- 
 https://office-menu.ru/uroki-sql Уроки SQL
 
 В "основы" добавить 
-- count и функции работы со временем (between)  
+- count и функции работы со временем (between) 
+- транзакции
+- какая команда возвращает количество измененных строк (для триггера) 
 -->
 
 ---
