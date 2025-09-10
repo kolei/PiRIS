@@ -195,7 +195,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 ### Проектирование баз данных
 
 1. [Основы проектирования баз данных. ERD.](./articles/5_1_1_1_erd2.md)
-1. [Словарь данных](articles/5_1_1_1_data_dictionary.md)
+1. [Словарь данных](./articles/5_1_1_1_data_dictionary.md)
 1. [Основы SQL](./articles/sql_for_beginner.md)
 1. [Группировка, агрегатные функции, JOIN-ы](./articles/sql_advanced.md)
 1. [Создание ER-диаграммы](./articles/5_1_1_1_erd_workbench.md)
@@ -208,18 +208,15 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 В "основы" добавить 
 - count и функции работы со временем (between) 
-- транзакции
-- какая команда возвращает количество измененных строк (для триггера) 
 -->
 
 ---
 
 **Лабораторные**
 
-1. [Создание ER-диаграммы](articles/5_1_1_1_erd_workbench.md)
-
+1. [Создание ER-диаграммы](./articles/lab_erd.md)
+1. [Словарь данных](./articles/lab_dictionary.md)
 1. [Подключение к базе данных. Создание скрипта создания БД.](./articles/sql_create_db.md)
-
 1. [Импорт данных (вариант 22).](./articles/sql_import_22.md)
 
 <!-- 
