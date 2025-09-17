@@ -302,6 +302,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Разное](./articles/cs_misc.md)
 
+1. [Avalonia](./articles/avalonia.md)
+
 ### Разработка своего API.
 
 1. [API. REST API. Создание сервера ASP.NET Core. Swagger.](./articles/api_asp_net_core.md)
