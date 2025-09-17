@@ -118,7 +118,7 @@
 1. Чтение данных (в конструкторе класса окна):
 
     ```cs
-    public List<Product> productList { get; set; }
+    public IEnumerable<Product> productList { get; set; }
 
     public MainWindow()
     {
@@ -128,6 +128,43 @@
         productList = Globals.dataProvider.getProduct();
     }
     ```
+
+1. В принципе этого достаточно, но получение данных из внешних ресурсов желательно заворачивать в `async/await`, так как время ответа БД может быть достаточно большим
+
+    >Не забываем про интерфейс **INotifyPropertyChanged**, иначе получится, что окно отрисуется раньше, чем данные будут получены из БД
+
+    ```cs
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public void OnPropertyChanged(string prop = "productList")
+    {
+        if (PropertyChanged != null)
+            PropertyChanged(this, new PropertyChangedEventArgs(prop));
+    }
+    ```
+
+    Конструктор окна не может быть асинхронным, поэтому из него вызываем промежуточный метод _GetProduct_, в котором уже асинхронно запрашиваем данные 
+
+    ```cs
+    public MainWindow()
+    {
+        ...
+        GetProduct();
+    }
+
+    async private void GetProduct()
+    {
+        productList = await getProductAsync();
+        OnPropertyChanged();
+    }
+
+    async private Task<IEnumerable<Product>> getProductAsync()
+    {
+        return await Task.Run(() => Globals.dataProvider.getProduct());
+    }
+    ```
+
+
 
 Дополнительные примеры использования **Dapper** (не связаны с нашей предметной областью)
 
