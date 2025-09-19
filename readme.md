@@ -288,9 +288,9 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ### C# и MySQL.
 
-1. [Создание подключения к БД MySQL. Получение данных с сервера.](./articles/cs_mysql_connection3.md)
+1. [Создание подключения к БД MySQL. Получение данных с сервера. Вывод данных согласно макету (ListBox, Image). Вывод данных плиткой.](./articles/cs_mysql_connection3.md)
 
-1. [Вывод данных согласно макету (ListBox, Image). Вывод данных плиткой.](./articles/cs_layout2.md)
+<!-- 1. [Вывод данных согласно макету (ListBox, Image). Вывод данных плиткой.](./articles/cs_layout2.md) -->
 
 1. [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination2.md)<!-- datepicker -->
 
