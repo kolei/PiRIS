@@ -290,8 +290,6 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Создание подключения к БД MySQL. Получение данных с сервера. Вывод данных согласно макету (ListBox, Image). Вывод данных плиткой.](./articles/cs_mysql_connection3.md)
 
-<!-- 1. [Вывод данных согласно макету (ListBox, Image). Вывод данных плиткой.](./articles/cs_layout2.md) -->
-
 1. [Пагинация, сортировка, фильтрация, поиск](./articles/cs_pagination2.md)<!-- datepicker -->
 
 1. [Подсветка элементов по условию. Массовая смена цены продукции.](./articles/cs_coloring2.md)
@@ -304,6 +302,13 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Avalonia](./articles/avalonia.md)
 
+---
+
+#### Лабораторные работы
+
+1. [Создание Wireframe для своей предметной области](./articles/lab_wireframe.md)
+
+
 ### Разработка своего API.
 
 1. [API. REST API. Создание сервера ASP.NET Core. Swagger.](./articles/api_asp_net_core.md)
@@ -312,9 +317,15 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [HTTP запросы в C#.](./articles/cs_http.md)
 
-**Лабораторные работы**
+### Разработка мобильных приложений (MAUI)
 
-1. [Замечания по итогам и предисловие для следующих поколений](./articles/sprint_lab.md)
+1. [Что такое MAUI, создание мобильного приложения для Android используя VSC](./articles/cs_maui.md)
+
+### Разработка веб- приложений (ASP.NET)
+
+<!-- **Лабораторные работы** -->
+
+<!-- 1. [Замечания по итогам и предисловие для следующих поколений](./articles/sprint_lab.md) -->
 
 <!-- 1. [C# Параллельное программирование и асинхронность](./articles/cs_async_await.md) -->
 
