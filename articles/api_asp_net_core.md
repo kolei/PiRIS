@@ -481,11 +481,11 @@ param1 = 1, param2 = 2, pageNum = 10, pageLen =
     app.Run();
     ```
 
-    >Не забудьте добавить в проект зависимости **MySQLConnector** и **Dapper** и создать поставщик данных:
-    >
-    >```cs
-    >var dbDataProvider = new DBDataProvider();
-    >```
+    Не забудьте добавить в проект зависимости **MySQLConnector** и **Dapper** и создать поставщик данных:
+    
+    ```cs
+    var dbDataProvider = new DBDataProvider();
+    ```
 
     Добавьте **MapGet** с _конечной точкой_ `/product`: 
 
