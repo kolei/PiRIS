@@ -116,7 +116,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 
   - [C# и MySQL](#c-и-mysql)
 
-  - [Разработка API](#разработка-своего-api)
+  - [Разработка API](#разработка-api)
 
   - [Введение в WEB-разработку](#практика-1-введение-в-web-разработку)
 
