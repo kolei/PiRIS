@@ -321,6 +321,11 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 ### Разработка веб приложений (ASP.NET)
 
+1. [Введение в веб-разработку](./articles/web_intro.md)
+1. [Введение в ASP.NET Core MVC](./articles/web_cs_01.md)
+
+<!-- https://metanit.com/sharp/aspnetmvc/1.1.php -->
+
 ### Разработка мобильных приложений (MAUI)
 
 1. [Что такое MAUI, создание мобильного приложения для Android используя VSC](./articles/cs_maui.md)
