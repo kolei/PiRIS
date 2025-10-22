@@ -1,3 +1,8 @@
 {
-    "dotnet.preferCSharpExtension": true
+    "dotnet.preferCSharpExtension": true,
+    "files.watcherExclude": {
+        "**/.git/**": true,
+        "**/docker/**": true,
+        "**/node_modules/**": true
+    }
 }

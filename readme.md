@@ -322,7 +322,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 ### Разработка веб приложений (ASP.NET)
 
 1. [Введение в веб-разработку](./articles/web_intro.md)
-1. [Введение в ASP.NET Core MVC](./articles/web_cs_01.md)
+1. [Введение в ASP.NET Core MVC. Создание веб-приложения, структура проекта, контроллеры](./articles/web_cs_01.md)
 
 <!-- https://metanit.com/sharp/aspnetmvc/1.1.php -->
 
