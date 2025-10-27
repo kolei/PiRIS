@@ -245,7 +245,8 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [Введение в веб-разработку](./articles/web_intro.md)
 1. [Введение в ASP.NET Core MVC. Создание веб-приложения, структура проекта, контроллеры](./articles/web_cs_01.md)
-1. [MVC. Контроллер: результат действий](./articles/web_cs_02.md)
+1. [MVC. Представления](./articles/web_cs_02.md)
+1. [MVC. Маршрутизация](./articles/web_cs_03.md)
 
 ### Разработка мобильных приложений (MAUI)
 
