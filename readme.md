@@ -238,15 +238,16 @@ https://office-menu.ru/uroki-sql Уроки SQL
 
 1. [API. REST API. Создание сервера ASP.NET Core. Swagger.](./articles/api_asp_net_core.md)
 1. [Авторизация и аутентификация. Методы авторизации. Basic-авторизация.](./articles/api_auth.md)
-1. [Системы миграции данных.](./articles/migrations.md)
+1. [Системы миграции данных. DbUp.](./articles/migrations.md)
+1. [Системы миграции данных. FruentMigrator](./articles/FluentMigrator/readme.md)
 1. [HTTP запросы в C#.](./articles/cs_http.md)
 
 ### Разработка веб приложений (ASP.NET)
 
 1. [Введение в веб-разработку](./articles/web_intro.md)
 1. [Введение в ASP.NET Core MVC. Создание веб-приложения, структура проекта, контроллеры](./articles/web_cs_01.md)
-1. [MVC. Представления](./articles/web_cs_02.md)
-1. [MVC. Маршрутизация](./articles/web_cs_03.md)
+1. [ASP.NET Core MVC. Представления](./articles/web_cs_02.md)
+1. [ASP.NET Core MVC. Маршрутизация](./articles/web_cs_03.md)
 
 ### Разработка мобильных приложений (MAUI)
 

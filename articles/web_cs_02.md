@@ -811,6 +811,7 @@ public class HomeController : Controller
     [HttpPost]
     public string Index(bool isMarried) => $"isMarried: {isMarried}";
 }
+```
 
 Тогда мы могли бы определить следующий элемент input:
 
