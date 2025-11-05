@@ -249,6 +249,7 @@ https://office-menu.ru/uroki-sql Уроки SQL
 1. [ASP.NET Core MVC. Представления](./articles/web_cs_02.md)
 1. [ASP.NET Core MVC. Маршрутизация](./articles/web_cs_03.md)
 1. [ASP.NET Core MVC. Модели](./articles/web_cs_04.md)
+1. [ASP.NET Core MVC. Формы, фильтрация, поиск](./articles/web_cs_05.md)
 
 ### Разработка мобильных приложений (MAUI)
 
