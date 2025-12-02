@@ -239,18 +239,20 @@ SPA-приложение (Single Page Application — одностранично
 
 1. [Создать приложение](https://ru.vuejs.org/guide/quick-start.html)
 
-При создании приложения система задаст несколько вопросов. Если не понимаете вопрос отвечайте `нет`
+    При создании приложения система задаст несколько вопросов. Если не понимаете вопрос отвечайте `нет`
 
-* ✔ Project name: … _vue-project_
-* ✔ Add TypeScript? … **No** / Yes
-* ✔ Add JSX Support? … **No** / Yes
-* ✔ Add Vue Router for Single Page Application development? … No / Yes
-* ✔ Add Pinia for state management? … No / Yes
-* ✔ Add Vitest for Unit Testing? … **No** / Yes
-* ✔ Add an End-to-End Testing Solution? › **No**
-* ✔ Add ESLint for code quality? … **No** / Yes
-* ✔ Add Vue DevTools 7 extension for debugging? (experimental) … **No** / Yes
+    * ✔ Project name: … _vue-project_
+    * ✔ Add TypeScript? … **No** / Yes
+    * ✔ Add JSX Support? … **No** / Yes
+    * ✔ Add Vue Router for Single Page Application development? … No / Yes
+    * ✔ Add Pinia for state management? … No / Yes
+    * ✔ Add Vitest for Unit Testing? … **No** / Yes
+    * ✔ Add an End-to-End Testing Solution? › **No**
+    * ✔ Add ESLint for code quality? … **No** / Yes
+    * ✔ Add Vue DevTools 7 extension for debugging? (experimental) … **No** / Yes
 
+    >В последней версии появилась опция "Пропустить создание тестового примера и начать с пустого проекта" - можно выбрать её, что бы не вырезать потом лишнее
+    >
+    >![](../img/vue_01.png)
 
-
-[Дальше](./web_02.md)
+[К содержанию](../readme.md#практика-1-введение-в-web-разработку) | [Дальше](./web_02.md)

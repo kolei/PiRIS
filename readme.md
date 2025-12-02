@@ -454,19 +454,6 @@ tablayout
 
 1. [Постановка задачи. Создание сервера express.js. Подключение и настройка sequelize.](./api/express01.md)
 
-<!-- 
-TODO перенести в 4-й курс
-
-1. [Как работает Docker](./articles/docker01.md)
-1. [Создание контейнера для сервера АПИ](./articles/docker02.md)
-1. Создание контейнера для web-приложения (на примере vue.js)
-1. Ci/Cd -->
-
-<!-- [Разработка мобильных приложений](articles/praktika_I.md) -->
-
-<!-- 1. [Основы WEB-разработки](./articles/web_basic.md)
-1. [Знакомство с VUE.js](./articles/vue_intro.md) -->
-
 ## Полезное
 
 1. [Настройка подключения к базе данных (DBeaver)](./articles/dbeaver_connect_mysql.md)

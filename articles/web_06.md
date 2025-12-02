@@ -1,4 +1,4 @@
-[К содержанию](../readme.md#введение-в-web-разработку)
+[Назад](./web_05.md) | [К содержанию](../readme.md#практика-1-введение-в-web-разработку) | [Дальше](./web_07.md)
 
 # Vue.js
 
@@ -63,4 +63,4 @@ This file is being treated as an ES module because it has a '.js' file extension
 
 В принципе тут более менее понятно написано, что нужно поменять расширение файла `postcss.config.js` на `postcss.config.cjs`
 
-[Назад](./web_05.md) | [Дальше](./web_07.md)
+[Назад](./web_05.md) | [К содержанию](../readme.md#практика-1-введение-в-web-разработку) | [Дальше](./web_07.md)
