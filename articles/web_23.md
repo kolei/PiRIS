@@ -1,3 +1,8 @@
+```mermaid
+flowchart LR
+    A["Совмещение API и стора, кеширование данных"] --- B["Руководство пользователя"]
+    click A href "./web_22.md"
+```
 
 # Tailwind CSS, примеры
 

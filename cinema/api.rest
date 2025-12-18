@@ -26,7 +26,8 @@ Content-Type: application/json
 
 ### Получение списка фильмов
 GET {{url}}/movies?filter=new
-Authorization: Bearer 430857s
+
+### Authorization: Bearer 430857s
 
 ### Получение картинки
 GET {{url}}/up/images/duna.webp
