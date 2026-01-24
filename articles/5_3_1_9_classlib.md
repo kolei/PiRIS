@@ -244,21 +244,26 @@ public List<DateTime> PopularMonths(
                 iterDate.Month, // месяц
                 1, 0, 0, 0);    // день
 
-            // дальше не проверено
             if (dateTimeCounterDictionary.ContainsKey(dateMonthStart)) {
+                // такой ключ уже есть - увеличиваю значение (счетчик)
                 dateTimeCounterDictionary[dateMonthStart] = dateTimeCounterDictionary[dateMonthStart] + 1
             }
-            else
-            {
+            else {
+                // новая дата - создаю ключ со значением 1
                 dateTimeCounterDictionary[dateMonthStart] = 1;
             }
         }
     }
 
-    // TODO возврат списка не реализован
+    return dateTimeCounterDictionary
+        .OrderByDescending(item => item.Value)
+        .ThenBy(item => item.Key)
+        .Select(item => item.Key)
+        .ToList();
 }
 ```
 
+Со словарями тоже замечательно работают LINQ-запросы, поэтому вывод результата похож на предыдущий вариант. Только вместо названий полей используются служебные слова __Key__ и __Value__ означающие, соответственно, ключ и значение в словаре.
 
 ## Использование созданной библиотеки
 
