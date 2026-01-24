@@ -191,6 +191,7 @@ http://sergeyteplyakov.blogspot.com/2014/01/microsoft-fakes-state-verification.h
 1. [Создание базы данных. Импорт данных.](./articles/sql_import.md)
 1. [Представления (View)](./articles/sql_view.md)
 1. [Хранимые процедуры. Триггеры. Транзакции.](./articles/sql_trigger.md)
+1. [Экспорт данных (дамп базы данных)](./articles/workbench_export/readme.md)
 
 <!-- 
 https://office-menu.ru/uroki-sql Уроки SQL
