@@ -185,62 +185,13 @@ public class Analytics
                 }
             }
         }
-        ...
+
+        return DateTimeWithCounterList
+            .OrderByDescending(item => item.Counter)
+            .ThenBy(item => item.DateTimeProp)
+            .Select(item => item.DateTimeProp)
+            .ToList();
     }
-}
-```
-
-#### Вариант 2. Новый код с использованием словарей
-
-В этом варианте мы обойдемся без дополнительных классов - объявим словарь, в котором ключём будет дата, а значением - количество повторений этой даты.
-
-```cs
-public List<DateTime> PopularMonths(
-    List<DateTime> dates) 
-{
-    // создаем словарь
-    var dateTimeCounterDictionary = 
-        new Dictionary<DateTime, int>();
-
-    int previousYear = DateTime.Now.Year - 1;
-    foreach (DateTime iterDate in dates)
-    {
-        if (iterDate.Year == previousYear)
-        {
-            // вычисляем начало месяца для текущей даты
-            var dateMonthStart = new DateTime(
-                iterDate.Year,  // год
-                iterDate.Month, // месяц
-                1, 0, 0, 0);    // день
-
-            // дальше не проверено
-            if (dateTimeCounterDictionary.ContainsKey(dateMonthStart)) {
-                dateTimeCounterDictionary[dateMonthStart] = Tuple.Create(
-                    dateMonthStart, 
-                    dateTimeCounterDictionary[dateMonthStart].Item2 + 1
-                );
-            }
-            else
-            {
-                /* 
-                    дата есть - увеличиваем счетчик
-                    свойства кортежа неизменяемые, 
-                    поэтому перезаписываем текущий элемент
-                    новым кортежем, 
-                    который создаем статическим методом
-                */
-                dateTimeCounterDictionary[dateMonthStart] = Tuple.Create(
-                    dateTimeCounterDictionary[dateMonthStart].Item1, 
-                );
-            }
-        }
-    }
-
-    return dateTimeWithCounterList
-        .OrderByDescending(item => item.Item2)
-        .ThenBy(item => item.Item1)
-        .Select(item => item.Item1)
-        .ToList();
 }
 ```
 
@@ -268,6 +219,46 @@ return dateTimeWithCounterList
 **Select** - выбирает из объекта нужные свойства. Нам из этого объекта нужна только дата. (Если нужно выбрать несколько объектов, то они перечисляются через запятую: `Select(item => item.Prop1, item.Prop2, item.Prop1 + item.Prop2)`)
 
 **ToList** преобразует полученный после сортировки объект (IEnumerable) в список, который и возвращается методом. 
+
+
+#### Вариант 2. Новый код с использованием словарей
+
+В этом варианте мы обойдемся без дополнительных классов - объявим словарь, в котором ключём будет дата, а значением - количество повторений этой даты.
+
+```cs
+public List<DateTime> PopularMonths(
+    List<DateTime> dates) 
+{
+    // создаем словарь
+    var dateTimeCounterDictionary = 
+        new Dictionary<DateTime, int>();
+
+    int previousYear = DateTime.Now.Year - 1;
+    foreach (DateTime iterDate in dates)
+    {
+        if (iterDate.Year == previousYear)
+        {
+            // вычисляем начало месяца для текущей даты
+            var dateMonthStart = new DateTime(
+                iterDate.Year,  // год
+                iterDate.Month, // месяц
+                1, 0, 0, 0);    // день
+
+            // дальше не проверено
+            if (dateTimeCounterDictionary.ContainsKey(dateMonthStart)) {
+                dateTimeCounterDictionary[dateMonthStart] = dateTimeCounterDictionary[dateMonthStart] + 1
+            }
+            else
+            {
+                dateTimeCounterDictionary[dateMonthStart] = 1;
+            }
+        }
+    }
+
+    // TODO возврат списка не реализован
+}
+```
+
 
 ## Использование созданной библиотеки
 
