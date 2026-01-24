@@ -134,9 +134,11 @@ foreach (DateTime iterDate in dates) {
 }
 ```
 
+Далее реализуем подсчет повторений каждого месяца:
+
 #### Вариант 1
 
->Этот вариант устарел! Использовать его можно, но не нужно. Лучше реализовать временный список с использованием **кортежей**. Это покажет ваше владение средствами языка и уменьшит количество кода/файлов.
+>Этот вариант устарел! Использовать его можно, но не нужно. Лучше реализовать временный список с использованием **словаря**. Это покажет ваше владение средствами языка и уменьшит количество кода/файлов.
 
 Теперь нам нужно объявить список объектов, в котором будет хранится дата и количество повторений этой даты. Для этого создадим класс **DateTimeWithCounter** (вообще, по современным гайдлайнам нужно каждый класс писать в отдельном файле и на демо-экзамене помните про это)
 
@@ -160,8 +162,10 @@ public class Analytics
         // объавляем временный список объектов "ДатаСоСчетчиком"
         var DateTimeWithCounterList = new List<DateTimeWithCounter>();
     
+        // вычисляем предыдущий год
         int PreviousYear = DateTime.Now.Year-1;
         foreach (DateTime IterDate in dates) {
+            // в результат включаем только прошлогодние данные
             if (IterDate.Year == PreviousYear){
                 // вычисляем начало месяца для текущей даты
                 var DateMonthStart = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
@@ -188,12 +192,13 @@ public class Analytics
 
 #### Вариант 2. Новый код с использованием словарей
 
-Теперь нам нужно объявить словарь, в котором ключём будет дата, а значением - количество повторений этой даты.
+В этом варианте мы обойдемся без дополнительных классов - объявим словарь, в котором ключём будет дата, а значением - количество повторений этой даты.
 
 ```cs
 public List<DateTime> PopularMonths(
     List<DateTime> dates) 
 {
+    // создаем словарь
     var dateTimeCounterDictionary = 
         new Dictionary<DateTime, int>();
 
@@ -208,22 +213,12 @@ public List<DateTime> PopularMonths(
                 iterDate.Month, // месяц
                 1, 0, 0, 0);    // день
 
-            if (dateTimeCounterDictionary.ContainsKey) {
-
-            }
-
-            // ищем эту дату во временном списке
-            var index = dateTimeWithCounterList
-                .FindIndex(
-                    item => item.Item1 == dateMonthStart);
-
-            // кортежи можно создавать по-разному
-            if (index == -1)
-            {
-                // такой даты нет - добавляю (используя конструктор)
-                dateTimeWithCounterList.Add( 
-                    new Tuple<DateTime,int>(
-                        dateMonthStart, 1) );
+            // дальше не проверено
+            if (dateTimeCounterDictionary.ContainsKey(dateMonthStart)) {
+                dateTimeCounterDictionary[dateMonthStart] = Tuple.Create(
+                    dateMonthStart, 
+                    dateTimeCounterDictionary[dateMonthStart].Item2 + 1
+                );
             }
             else
             {
@@ -234,9 +229,9 @@ public List<DateTime> PopularMonths(
                     новым кортежем, 
                     который создаем статическим методом
                 */
-                dateTimeWithCounterList[index] = Tuple.Create(
-                    dateTimeWithCounterList[index].Item1, 
-                    dateTimeWithCounterList[index].Item2 + 1);
+                dateTimeCounterDictionary[dateMonthStart] = Tuple.Create(
+                    dateTimeCounterDictionary[dateMonthStart].Item1, 
+                );
             }
         }
     }
