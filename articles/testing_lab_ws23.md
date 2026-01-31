@@ -38,8 +38,8 @@ Cписок заработной платы по конкретному сотр
 Название класса | Salary | Salary | Salary
 Название метода | CalculationSalary() | CalculationSalary() | CalculationSalary()
 Статичность метода | да | да | да
-Входящие обязательные параметры | `List<WorkingDay> workingDays`,<br/>`List<Task> tasks`,<br/>`double salary` | `List<WorkingDay> workingDays`,<br/>`List<Task> tasks`,<br/>`double salary` | `workingDays: List[WorkingDay]`,<br/>`tasks: List[task]`,<br/>`salary: float`<br/>
-Возвращаемые параметры | `double[]` | `doublel[]` | `List[float]`
+Входящие обязательные параметры | List\<WorkingDay\> workingDays,<br/>List\<Task\> tasks,<br/>double salary | List\<WorkingDay\> workingDays,<br>List\<Task\> tasks,<br>double salary | workingDays: List[WorkingDay],<br/>tasks: List[task],<br>salary: float
+Возвращаемые параметры | double[] | doublel[] | List[float]
 
 ### Класс Models/Employee
 
